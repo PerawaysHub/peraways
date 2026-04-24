@@ -1,73 +1,96 @@
 "use client";
 
 import { FadeUp, StaggerContainer, StaggerItem } from "./FadeUp";
-import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
 import { 
-  HandHeart, 
-  Zap, 
+  Heart, 
+  Clock, 
   GraduationCap, 
   Languages, 
-  Clock, 
-  Home 
+  Briefcase, 
+  Home,
+  ArrowRight
 } from "lucide-react";
 
 const icons = [
-  HandHeart,
-  Zap,
+  Heart,
+  Clock,
   GraduationCap,
   Languages,
-  Clock,
+  Briefcase,
   Home,
+];
+
+const iconsEN = [
+  { icon: Heart, title: "Ethical", desc: "No recruitment fees. Debt-free relocation for all talent." },
+  { icon: Clock, title: "Fast", desc: "LEA Fast-Lane process under §81a. Decision-ready files in weeks." },
+  { icon: GraduationCap, title: "Qualified", desc: "467 documented practice hours. NITA Level 3 certified." },
+  { icon: Languages, title: "Language Ready", desc: "B1 German training completed before arrival." },
+  { icon: Briefcase, title: "Work Immediately", desc: "§16a permits 20h/week work from day 1 in Germany." },
+  { icon: Home, title: "Housing Provided", desc: "We partner with employers who offer accommodation." },
+];
+
+const iconsDE = [
+  { icon: Heart, title: "Ethisch", desc: "Keine Vermittlungsgebühren. Schuldenfreie Einreise für alle Talente." },
+  { icon: Clock, title: "Schnell", desc: "LEA Fast-Lane Verfahren nach §81a. Entscheidungsreife Akten in Wochen." },
+  { icon: GraduationCap, title: "Qualifiziert", desc: "467 dokumentierte Praxisstunden. NITA Level 3 zertifiziert." },
+  { icon: Languages, title: "Sprache bereit", desc: "B1 Deutsch VOR Anreise abgeschlossen." },
+  { icon: Briefcase, title: "Sofort arbeiten", desc: "§16a erlaubt 20h/Woche Arbeit ab Tag 1 in Deutschland." },
+  { icon: Home, title: "Wohnung inklusive", desc: "Wir arbeiten mit Arbeitgebern, die Wohnung anbieten." },
 ];
 
 export function Bridge() {
   const { lang, t } = useLanguage();
   const content = lang === "de" ? translations.de : translations.en;
-
-  const features = [
-    { title: content.bridge.f1Title, desc: content.bridge.f1Desc },
-    { title: content.bridge.f2Title, desc: content.bridge.f2Desc },
-    { title: content.bridge.f3Title, desc: content.bridge.f3Desc },
-    { title: content.bridge.f4Title, desc: content.bridge.f4Desc },
-    { title: content.bridge.f5Title, desc: content.bridge.f5Desc },
-    { title: content.bridge.f6Title, desc: content.bridge.f6Desc },
-  ];
+  const features = lang === "de" ? iconsDE : iconsEN;
 
   return (
-    <section id="loesung" className="bg-white py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4">
+    <section id="loesung" className="bg-white py-20 lg:py-32">
+      <div className="mx-auto max-w-6xl px-6">
         <FadeUp>
-          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
+          <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-secondary">
             {content.bridge.label}
           </span>
         </FadeUp>
 
-        <FadeUp delay={0.1}>
-          <h2 className="mb-8 font-heading text-3xl font-bold text-primary md:text-4xl lg:text-5xl">
+        <FadeUp delay={0.15}>
+          <h2 className="mb-16 font-heading text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
             {content.bridge.h2}
           </h2>
         </FadeUp>
 
-        <StaggerContainer className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => {
-            const Icon = icons[index];
+            const Icon = feature.icon;
             return (
-              <StaggerItem key={feature.title}>
-                <Card className="h-full border border-transparent bg-gray-50 transition-all hover:border-primary/20">
-                  <CardContent className="flex items-center gap-3 p-4">
-                    <Icon className="w-5 h-5 shrink-0 text-secondary" />
-                    <div>
-                      <h3 className="text-sm font-bold text-primary">{feature.title}</h3>
-                      <p className="text-xs text-muted-foreground">{feature.desc}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </StaggerItem>
+              <FadeUp key={feature.title} delay={0.2 + index * 0.1}>
+                <div className="group relative flex h-full min-h-[340px] flex-col rounded-2xl border border-gray-100 bg-gray-50/50 p-8 transition-all hover:border-secondary/30 hover:bg-gray-100">
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 text-secondary transition-transform group-hover:scale-110">
+                    <Icon className="h-7 w-7" strokeWidth={1.5} />
+                  </div>
+                  
+                  <div className="absolute right-6 top-8 text-4xl font-bold text-secondary/20">
+                    0{index + 1}
+                  </div>
+                  
+                  <h3 className="mb-3 text-2xl font-bold text-primary">
+                    {feature.title}
+                  </h3>
+                  
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    {feature.desc}
+                  </p>
+                  
+                  <div className="mt-auto flex items-center text-sm font-medium text-secondary opacity-0 transition-opacity group-hover:opacity-100">
+                    <span>Learn more</span>
+                    <ArrowRight className="ml-1 h-4 w-4" />
+                  </div>
+                </div>
+              </FadeUp>
             );
           })}
-        </StaggerContainer>
+        </div>
       </div>
     </section>
   );
