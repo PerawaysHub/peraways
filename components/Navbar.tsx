@@ -43,7 +43,7 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo.svg"
-            alt="PeraWays"
+            alt="Peraways"
             width={32}
             height={32}
             className="w-8 h-8"
