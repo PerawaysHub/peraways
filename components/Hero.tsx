@@ -3,61 +3,68 @@
 import { FadeUp } from "./FadeUp";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "./LanguageContext";
+import { translations } from "./translations";
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
+  const { lang, t } = useLanguage();
+  const content = lang === "de" ? translations.de : translations.en;
+
+  const h1Parts = content.hero.h1.split("{highlight}");
+  const h1 = {
+    before: h1Parts[0],
+    highlight: h1Parts[1]?.replace("{/highlight}", ""),
+    after: h1Parts[2]?.replace("{/highlight}", ""),
+  };
+
   return (
     <section className="relative min-h-screen bg-white pt-24">
-      <div className="mx-auto grid max-w-7xl gap-16 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
-        <div className="flex flex-col gap-8">
-          <FadeUp delay={0.1}>
-            <span className="inline-flex w-fit rounded-full bg-secondary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
-              Berlin × Nairobi
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
+        <div className="flex flex-col gap-5">
+          <FadeUp delay={0.15}>
+            <span className="inline-flex w-fit rounded-full bg-secondary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
+              {content.hero.label}
             </span>
           </FadeUp>
 
-          <FadeUp delay={0.2}>
-            <h1 className="font-heading text-6xl font-bold leading-[1.1] text-primary md:text-7xl lg:text-8xl">
-              Planbare
-              <br />
-              Fachkräfte.
-              <br />
-              <span className="text-secondary">Ethisch.</span> Rechtssicher. Ab Tag 1.
+          <FadeUp delay={0.25}>
+            <h1 className="font-heading text-5xl font-bold leading-[1.05] text-primary md:text-6xl lg:text-7xl">
+              {h1.before}
+              <span className="text-secondary">{h1.highlight}</span>
+              {h1.after}
             </h1>
           </FadeUp>
 
-          <FadeUp delay={0.3}>
-            <p className="max-w-xl text-xl leading-relaxed text-muted-foreground">
-              Wir bauen die Goldene P-Brücke zwischen Nairobi und Berlin — für
-              Pflegeeinrichtungen, die keine weiteren Versprechen, sondern eine echte
-              Pipeline brauchen.
+          <FadeUp delay={0.35}>
+            <p className="max-w-md text-lg text-muted-foreground">
+              {content.hero.subtitle}
             </p>
           </FadeUp>
 
-          <FadeUp delay={0.4}>
-            <div className="flex flex-wrap gap-4">
-              <Link href="#kontakt">
-                <Button size="lg" className="rounded-full text-base px-8">
-                  Erstgespräch vereinbaren
-                </Button>
-              </Link>
-              <Link href="#problem">
-                <Button variant="ghost" size="lg" className="rounded-full text-base">
-                  Mehr erfahren ↓
-                </Button>
-              </Link>
-            </div>
+          <FadeUp delay={0.45}>
+            <Link href="#kontakt">
+              <Button size="lg" className="rounded-full gap-2">
+                {content.hero.cta}
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </FadeUp>
         </div>
 
         <div className="relative">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-muted">
-            <div className="flex h-full items-center justify-center">
-              <span className="text-muted-foreground">Placeholder Image 800×600</span>
+          <FadeUp delay={0.3}>
+            <div className="relative aspect-square overflow-hidden rounded-3xl border border-border bg-muted">
+              <div className="flex h-full items-center justify-center">
+                <span className="text-muted-foreground">Image</span>
+              </div>
             </div>
-          </div>
-          <div className="absolute -right-4 top-4 rounded-2xl bg-secondary px-5 py-2.5 text-sm font-bold text-secondary-foreground shadow-sm">
-            ROI &lt; 90 Tage
-          </div>
+          </FadeUp>
+          <FadeUp delay={0.4}>
+            <div className="absolute -right-3 -bottom-3 rounded-xl bg-secondary px-4 py-2 text-sm font-bold text-secondary-foreground shadow-lg">
+              {content.hero.badge}
+            </div>
+          </FadeUp>
         </div>
       </div>
     </section>

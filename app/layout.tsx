@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Sulphur_Point, Outfit, Geist } from "next/font/google";
+import { Sulphur_Point, Outfit } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+import { LanguageProvider } from "@/components/LanguageContext";
 
 const sulphurPoint = Sulphur_Point({
   weight: ["400", "700"],
@@ -18,9 +16,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "PeraWays | Ethisches Pflegekräfte-Recruiting aus Kenia",
+  title: "PeraWays | Ethical Nursing Recruitment from Kenya",
   description:
-    "PeraWays baut die Goldene Brücke zwischen Nairobi und Berlin — für Pflegeeinrichtungen, die planbare, rechtssichere Fachkräfte ab Tag 1 brauchen.",
+    "PeraWays builds the golden bridge between Nairobi and Berlin — for care facilities that need ready-to-work nurses from day 1.",
 };
 
 export default function RootLayout({
@@ -29,11 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className={cn("scroll-smooth", "font-sans", geist.variable)}>
+    <html lang="de" className="scroll-smooth">
       <body
         className={`${sulphurPoint.variable} ${outfit.variable} min-h-full antialiased font-sans`}
       >
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

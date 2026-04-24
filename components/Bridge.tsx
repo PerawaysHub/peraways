@@ -2,78 +2,71 @@
 
 import { FadeUp, StaggerContainer, StaggerItem } from "./FadeUp";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "./LanguageContext";
+import { translations } from "./translations";
+import { 
+  HandHeart, 
+  Zap, 
+  GraduationCap, 
+  Languages, 
+  Clock, 
+  Home 
+} from "lucide-react";
 
-const pillars = [
-  {
-    number: "01",
-    title: "Ethische Mission",
-    description:
-      "Employer Pays Principle — schuldenfreie Einreise, maximale Loyalität",
-  },
-  {
-    number: "02",
-    title: "Behörden-Expertise",
-    description:
-      "LEA-Insiderwissen + Fast-Lane §81a — entscheidungsreife Akten",
-  },
-  {
-    number: "03",
-    title: "Stipendien-Modell",
-    description:
-      "Finanzielle Förderung stärkt die Bindung an den Träger",
-  },
-  {
-    number: "04",
-    title: "Klinische Vorqualifikation",
-    description:
-      "467 dokumentierte Praxisstunden (NITA Level 3) — „Ready-to-Work\"",
-  },
-  {
-    number: "05",
-    title: "Simultan-Training",
-    description:
-      "10 Monate Intensivvorbereitung: Sprache B1 + klinische Praxis",
-  },
-  {
-    number: "06",
-    title: "Logistik-Sicherheit",
-    description:
-      "Fokus auf Träger mit Wohnraum — Visum mathematisch abgesichert",
-  },
+const icons = [
+  HandHeart,
+  Zap,
+  GraduationCap,
+  Languages,
+  Clock,
+  Home,
 ];
 
 export function Bridge() {
+  const { lang, t } = useLanguage();
+  const content = lang === "de" ? translations.de : translations.en;
+
+  const features = [
+    { title: content.bridge.f1Title, desc: content.bridge.f1Desc },
+    { title: content.bridge.f2Title, desc: content.bridge.f2Desc },
+    { title: content.bridge.f3Title, desc: content.bridge.f3Desc },
+    { title: content.bridge.f4Title, desc: content.bridge.f4Desc },
+    { title: content.bridge.f5Title, desc: content.bridge.f5Desc },
+    { title: content.bridge.f6Title, desc: content.bridge.f6Desc },
+  ];
+
   return (
-    <section id="loesung" className="bg-white py-28 lg:py-36">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="loesung" className="bg-white py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4">
         <FadeUp>
-          <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
-            Die Goldene P-Brücke
+          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
+            {content.bridge.label}
           </span>
         </FadeUp>
 
         <FadeUp delay={0.1}>
-          <h2 className="mb-20 font-heading text-4xl font-bold leading-tight text-primary md:text-5xl lg:text-6xl">
-            Sechs Pfeiler für Ihren Erfolg
+          <h2 className="mb-8 font-heading text-3xl font-bold text-primary md:text-4xl lg:text-5xl">
+            {content.bridge.h2}
           </h2>
         </FadeUp>
 
-        <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {pillars.map((pillar) => (
-            <StaggerItem key={pillar.number}>
-              <Card className="h-full border-2 border-transparent bg-gray-50 transition-all hover:-translate-y-1 hover:border-primary/20">
-                <CardContent className="p-8">
-                  <span className="mb-4 text-xs font-bold text-secondary">
-                    {pillar.number}
-                  </span>
-                  <h3 className="mb-3 text-xl font-bold text-primary">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-muted-foreground">{pillar.description}</p>
-                </CardContent>
-              </Card>
-            </StaggerItem>
-          ))}
+        <StaggerContainer className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => {
+            const Icon = icons[index];
+            return (
+              <StaggerItem key={feature.title}>
+                <Card className="h-full border border-transparent bg-gray-50 transition-all hover:border-primary/20">
+                  <CardContent className="flex items-center gap-3 p-4">
+                    <Icon className="w-5 h-5 shrink-0 text-secondary" />
+                    <div>
+                      <h3 className="text-sm font-bold text-primary">{feature.title}</h3>
+                      <p className="text-xs text-muted-foreground">{feature.desc}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
+            );
+          })}
         </StaggerContainer>
       </div>
     </section>

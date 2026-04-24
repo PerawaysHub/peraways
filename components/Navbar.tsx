@@ -4,18 +4,16 @@ import { motion, useScroll } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/LanguageContext";
+import { translations } from "@/components/translations";
+import { Globe, Menu, X } from "lucide-react";
 import Image from "next/image";
-
-const navLinks = [
-  { href: "#problem", label: "Das Problem" },
-  { href: "#loesung", label: "Die Lösung" },
-  { href: "#roi", label: "ROI" },
-  { href: "#kontakt", label: "Kontakt" },
-];
 
 export function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
 
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (y) => {
@@ -23,6 +21,13 @@ export function Navbar() {
     });
     return () => unsubscribe();
   }, [scrollY]);
+
+  const navLinks = [
+    { href: "#problem", label: t(translations.de.nav.problem, translations.en.nav.problem) },
+    { href: "#loesung", label: t(translations.de.nav.loesung, translations.en.nav.loesung) },
+    { href: "#roi", label: t(translations.de.nav.roi, translations.en.nav.roi) },
+    { href: "#kontakt", label: t(translations.de.nav.kontakt, translations.en.nav.kontakt) },
+  ];
 
   return (
     <motion.nav
@@ -34,19 +39,22 @@ export function Navbar() {
         borderColor: scrolled ? "rgba(0,0,0,0.08)" : "transparent",
       }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo.svg"
             alt="PeraWays"
-            width={36}
-            height={36}
-            className="w-8 h-8 md:w-9 md:h-9"
+            width={32}
+            height={32}
+            className="w-8 h-8"
           />
-          <span className="font-heading text-xl font-bold text-primary">PeraWays</span>
+          <span className="text-xl font-bold text-primary">
+            <span className="font-heading">Pera</span>
+            <span className="text-accent font-normal">ways</span>
+          </span>
         </Link>
 
-        <div className="hidden items-center gap-8 lg:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -58,10 +66,55 @@ export function Navbar() {
           ))}
         </div>
 
-        <Link href="#kontakt">
-          <Button className="rounded-full">Erstgespräch vereinbaren</Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setLang(lang === "de" ? "en" : "de")}
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+          >
+            <Globe className="w-4 h-4" />
+            <span className="uppercase">{lang}</span>
+          </button>
+
+          <Link href="#kontakt" className="hidden sm:block">
+            <Button size="sm" className="rounded-full">
+              {t(translations.de.nav.cta, translations.en.nav.cta)}
+            </Button>
+          </Link>
+
+          <button
+            className="lg:hidden p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
+
+      {menuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="border-t bg-white px-4 py-4 lg:hidden"
+        >
+          <div className="flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="py-2 text-sm font-medium"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link href="#kontakt" onClick={() => setMenuOpen(false)}>
+              <Button className="w-full rounded-full">
+                {t(translations.de.nav.cta, translations.en.nav.cta)}
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      )}
     </motion.nav>
   );
 }

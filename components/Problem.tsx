@@ -1,60 +1,58 @@
 "use client";
 
-import { FadeUp } from "./FadeUp";
+import { FadeUp, StaggerContainer, StaggerItem } from "./FadeUp";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "./LanguageContext";
+import { translations } from "./translations";
+import { TrendingDown, Users, Clock } from "lucide-react";
 
-const problems = [
-  {
-    icon: "📉",
-    title: "Chronischer Fachkräftemangel",
-    description:
-      "Berliner Pflegeeinrichtungen und Kliniken kämpfen täglich mit offenen Stellen, die einfach nicht besetzt werden können.",
-  },
-  {
-    icon: "💸",
-    title: "Über 8.000 € Mehrkosten",
-    description:
-      "Monatlich pro unbesetzter Stelle durch teure Leiharbeit und Überstunden des bestehenden Teams.",
-  },
-  {
-    icon: "✅",
-    title: "Die Lösung",
-    description:
-      "Planbare, rechtssichere Fachkräfte-Pipeline ab Tag 1. Keine Wartelisten, keine Kompromisse.",
-  },
-];
+const icons = [TrendingDown, Users, Clock];
 
 export function Problem() {
+  const { lang, t } = useLanguage();
+  const content = lang === "de" ? translations.de : translations.en;
+
+  const stats = [
+    { number: content.problem.stat1Number, title: content.problem.stat1Title, desc: content.problem.stat1Desc },
+    { number: content.problem.stat2Number, title: content.problem.stat2Title, desc: content.problem.stat2Desc },
+    { number: content.problem.stat3Number, title: content.problem.stat3Title, desc: content.problem.stat3Desc },
+  ];
+
   return (
-    <section id="problem" className="bg-[var(--cream)] py-28 lg:py-36">
-      <div className="mx-auto max-w-7xl px-6">
+    <section id="problem" className="bg-[var(--cream)] py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4">
         <FadeUp>
-          <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
-            Das Problem
+          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
+            {content.problem.label}
           </span>
         </FadeUp>
 
-        <FadeUp delay={0.1}>
-          <h2 className="mb-20 font-heading text-4xl font-bold leading-tight text-primary md:text-5xl lg:text-6xl">
-            Unbesetzte Stellen kosten Sie über 8.000 € pro Monat.
+        <FadeUp delay={0.15}>
+          <h2 className="mb-10 font-heading text-3xl font-bold text-primary md:text-4xl lg:text-5xl">
+            {content.problem.h2.split("{highlight}")[0]}
+            <span className="text-secondary">{content.problem.h2.split("{highlight}")[1]?.replace("{/highlight}", "")}</span>
           </h2>
         </FadeUp>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {problems.map((problem, index) => (
-            <FadeUp key={problem.title} delay={0.2 + index * 0.1}>
-              <Card className="h-full border-2 border-transparent bg-white transition-all hover:border-primary/20">
-                <CardContent className="flex flex-col p-8">
-                  <span className="mb-6 text-4xl">{problem.icon}</span>
-                  <h3 className="mb-4 text-xl font-bold text-primary">
-                    {problem.title}
-                  </h3>
-                  <p className="text-muted-foreground">{problem.description}</p>
-                </CardContent>
-              </Card>
-            </FadeUp>
-          ))}
-        </div>
+        <StaggerContainer className="grid gap-4 md:grid-cols-3">
+          {stats.map((stat, index) => {
+            const Icon = icons[index];
+            return (
+              <StaggerItem key={stat.title}>
+                <Card className="h-full border border-transparent bg-white transition-all hover:border-primary/20">
+                  <CardContent className="flex flex-col p-5">
+                    <Icon className="mb-3 w-8 h-8 text-secondary" />
+                    <span className="mb-1 font-heading text-3xl font-bold text-secondary">
+                      {stat.number}
+                    </span>
+                    <h3 className="mb-1 text-base font-bold text-primary">{stat.title}</h3>
+                    <p className="text-sm text-muted-foreground">{stat.desc}</p>
+                  </CardContent>
+                </Card>
+              </StaggerItem>
+            );
+          })}
+        </StaggerContainer>
       </div>
     </section>
   );
