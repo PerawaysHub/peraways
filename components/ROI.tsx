@@ -4,7 +4,7 @@ import { FadeUp } from "./FadeUp";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
-import { PiggyBank } from "lucide-react";
+import Image from "next/image";
 
 export function ROI() {
   const { lang, t } = useLanguage();
@@ -30,7 +30,7 @@ export function ROI() {
           <FadeUp delay={0.2}>
             <Card className="border-0 bg-secondary">
               <CardContent className="flex items-center gap-3 p-4">
-                <PiggyBank className="w-6 h-6 shrink-0 text-secondary-foreground" />
+                <Image src="/roi.jpeg" alt="ROI" width={24} height={24} className="shrink-0 rounded-full" style={{ width: 'auto', height: 'auto' }} />
                 <p className="text-secondary-foreground font-medium text-sm">
                   {content.roi.card}
                 </p>
@@ -40,10 +40,8 @@ export function ROI() {
         </div>
 
         <FadeUp delay={0.2}>
-          <div className="aspect-square overflow-hidden rounded-2xl border border-border bg-muted">
-            <div className="flex h-full items-center justify-center">
-              <PiggyBank className="w-16 h-16 text-muted-foreground/30" />
-            </div>
+          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted">
+            <Image src="/roi.jpeg" alt="ROI" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
           </div>
         </FadeUp>
       </div>

@@ -7,6 +7,7 @@ import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Rive from "@rive-app/react-webgl2";
 
 export function Hero() {
   const { lang, t } = useLanguage();
@@ -20,9 +21,9 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen bg-primary pt-24 pb-12">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-8 lg:grid-cols-2 lg:items-center">
-        <div className="flex flex-col gap-5 order-2 lg:order-1">
+    <section className="relative bg-primary pt-24 pb-16 lg:pt-32 lg:pb-20">
+      <div className="mx-auto flex flex-col-reverse gap-8 px-4 max-w-7xl lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4">
           <FadeUp delay={0.15}>
             <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
               {content.hero.label}
@@ -53,9 +54,9 @@ export function Hero() {
           </FadeUp>
         </div>
 
-        <div className="relative order-1 lg:order-2">
+        <div className="relative lg:w-1/2">
           <FadeUp delay={0.3}>
-            <div className="relative aspect-4/5 lg:aspect-square w-full h-full max-w-lg mx-auto">
+            <div className="relative aspect-4/5 w-full max-w-sm lg:max-w-md mx-auto">
               <Image
                 src="/hero.svg"
                 alt="PeraWays - Ethical Nursing Recruitment"

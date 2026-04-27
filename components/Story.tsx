@@ -3,7 +3,7 @@
 import { FadeUp } from "./FadeUp";
 import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
-import { Heart } from "lucide-react";
+import Image from "next/image";
 
 export function Story() {
   const { lang, t } = useLanguage();
@@ -13,10 +13,8 @@ export function Story() {
     <section className="bg-white py-16 lg:py-24">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 lg:grid-cols-2 lg:items-center">
         <FadeUp>
-          <div className="order-2 aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-muted lg:order-1">
-            <div className="flex h-full items-center justify-center">
-              <Heart className="w-16 h-16 text-muted-foreground/30" />
-            </div>
+          <div className="relative order-2 aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-muted lg:order-1">
+            <Image src="/hands.jpeg" alt="Story" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
           </div>
         </FadeUp>
 

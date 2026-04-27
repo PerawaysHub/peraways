@@ -9,8 +9,7 @@ import {
   GraduationCap, 
   Languages, 
   Briefcase, 
-  Home,
-  ArrowRight
+  Home
 } from "lucide-react";
 
 const icons = [
@@ -82,10 +81,7 @@ export function Bridge() {
                     {feature.desc}
                   </p>
                   
-                  <div className="mt-auto flex items-center text-sm font-medium text-secondary opacity-0 transition-opacity group-hover:opacity-100">
-                    <span>Learn more</span>
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </div>
+                  
                 </div>
               </FadeUp>
             );
