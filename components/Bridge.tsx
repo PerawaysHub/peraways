@@ -32,7 +32,7 @@ const iconsEN = [
 
 const iconsDE = [
   { icon: Heart, title: "Ethisch", desc: "Keine Vermittlungsgebühren. Schuldenfreie Einreise für alle Talente." },
-  { icon: Clock, title: "Schnell", desc: "LEA Fast-Lane Verfahren nach §81a. Entscheidungsreife Akten in Wochen." },
+  { icon: Clock, title: "Schnell", desc: "LEA Fast-Lane Verfahren nach §81a. Entscheidungsreife Akten in wenigen Wochen." },
   { icon: GraduationCap, title: "Qualifiziert", desc: "467 dokumentierte Praxisstunden. NITA Level 3 zertifiziert." },
   { icon: Languages, title: "Sprache bereit", desc: "B1 Deutsch VOR Anreise abgeschlossen." },
   { icon: Briefcase, title: "Sofort arbeiten", desc: "§16a erlaubt 20h/Woche Arbeit ab Tag 1 in Deutschland." },

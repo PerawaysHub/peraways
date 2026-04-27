@@ -25,7 +25,7 @@ export const translations = {
       stat2Desc: "Bleiben im Schnitt unbesetzt",
       stat3Number: "90 Tage",
       stat3Title: "Bis ROI",
-      stat3Desc: "So schnell amortisiert sich Talent",
+      stat3Desc: "So schnell amortisiert sich in ein Talent",
     },
     story: {
       label: "Wer wir sind",
@@ -34,7 +34,7 @@ export const translations = {
     },
     bridge: {
       label: "So funktioniert's",
-      h2: "Was Sie bekommen",
+      h2: "Was Sie bekommen:",
       f1Title: "Ethisch",
       f1Desc: "Schuldenfreie Einreise",
       f2Title: "Schnell",
