@@ -9,8 +9,18 @@ import {
   GraduationCap, 
   Languages, 
   Briefcase, 
-  Home
+  Home,
+  ArrowRight
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const icons = [
   Heart,
@@ -34,9 +44,9 @@ const iconsDE = [
   { icon: Heart, title: "Ethisch", desc: "Keine Vermittlungsgebühren. Schuldenfreie Einreise für alle Talente." },
   { icon: Clock, title: "Schnell", desc: "LEA Fast-Lane Verfahren nach §81a. Entscheidungsreife Akten in wenigen Wochen." },
   { icon: GraduationCap, title: "Qualifiziert", desc: "467 dokumentierte Praxisstunden. NITA Level 3 zertifiziert." },
-  { icon: Languages, title: "Sprache bereit", desc: "B1 Deutsch VOR Anreise abgeschlossen." },
-  { icon: Briefcase, title: "Sofort arbeiten", desc: "§16a erlaubt 20h/Woche Arbeit ab Tag 1 in Deutschland." },
-  { icon: Home, title: "Wohnung inklusive", desc: "Wir arbeiten mit Arbeitgebern, die Wohnung anbieten." },
+  { icon: Languages, title: " grundlegende Deutschkenntnisse ", desc: "B1 Deutsch VOR Anreise abgeschlossen." },
+  { icon: Briefcase, title: "Sofort arbeitsbereit", desc: "§16a erlaubt 20h/Woche Arbeit ab Tag 1 in Deutschland." },
+  { icon: Home, title: "Wohnung inklusive", desc: "Wir arbeiten mit Arbeitgebern, die Wohnungen anbieten." },
 ];
 
 export function Bridge() {
@@ -64,25 +74,41 @@ export function Bridge() {
             const Icon = feature.icon;
             return (
               <FadeUp key={feature.title} delay={0.2 + index * 0.1}>
-                <div className="group relative flex h-full min-h-[340px] flex-col rounded-2xl border border-gray-100 bg-gray-50/50 p-8 transition-all hover:border-secondary/30 hover:bg-gray-100">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 text-secondary transition-transform group-hover:scale-110">
-                    <Icon className="h-7 w-7" strokeWidth={1.5} />
-                  </div>
+                <Dialog>
+                  <DialogTrigger render={<div className="group relative flex h-full min-h-[340px] cursor-pointer flex-col rounded-2xl border border-gray-100 bg-gray-50/50 p-8 transition-all hover:border-secondary/30 hover:bg-gray-100">
+                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 text-secondary transition-transform group-hover:scale-110">
+                      <Icon className="h-7 w-7" strokeWidth={1.5} />
+                    </div>
+                    
+                    <div className="absolute right-6 top-8 text-4xl font-bold text-secondary/20">
+                      0{index + 1}
+                    </div>
+                    
+                    <h3 className="mb-3 text-2xl font-bold text-primary">
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-lg leading-relaxed text-muted-foreground">
+                      {feature.desc}
+                    </p>
+                    
+                    <div className="mt-auto flex items-center text-sm font-medium text-secondary">
+                      <span className="flex items-center">
+                        Learn more
+                        <ArrowRight className="ml-1 h-4 w-4" />
+                      </span>
+                    </div>
+                  </div>} />
                   
-                  <div className="absolute right-6 top-8 text-4xl font-bold text-secondary/20">
-                    0{index + 1}
-                  </div>
-                  
-                  <h3 className="mb-3 text-2xl font-bold text-primary">
-                    {feature.title}
-                  </h3>
-                  
-                  <p className="text-lg leading-relaxed text-muted-foreground">
-                    {feature.desc}
-                  </p>
-                  
-                  
-                </div>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle className="text-xl">{feature.title}</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </FadeUp>
             );
           })}

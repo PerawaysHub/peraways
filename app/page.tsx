@@ -17,7 +17,7 @@ export default function Home() {
       <Story />
       <Bridge />
       <Stats />
-      <ROI />
+      {/* <ROI /> */}
       <Form />
       <Footer />
     </main>

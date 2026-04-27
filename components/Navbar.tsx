@@ -49,7 +49,7 @@ export function Navbar() {
             className="w-8 h-8"
           />
           <span className="text-xl font-bold text-primary">
-            <span className="font-heading">Pera</span>
+            <span className="font-logo">Pera</span>
             <span className="text-accent font-normal">ways</span>
           </span>
         </Link>

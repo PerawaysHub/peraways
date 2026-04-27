@@ -20,7 +20,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Image src="/logo.svg" alt="Peraways" width={28} height={28} className="w-7 h-7" />
               <span className="text-xl font-bold text-white">
-                <span className="font-heading">Pera</span>
+                <span className="font-logo">Pera</span>
                 <span className="font-normal text-accent">ways</span>
               </span>
             </div>

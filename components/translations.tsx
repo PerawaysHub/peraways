@@ -29,8 +29,8 @@ export const translations = {
     },
     story: {
       label: "Wer wir sind",
-      h2: "Pflege aus Überzeugung.",
-      p: "Wir vermitteln nur Talente, denen wir unsere eigene Familie anvertrauen würden. Mit LEA-Expertise und einem simplen Ziel: Dass Ihre Stelle besetzt wird.",
+      h2: "Pflege aus Überzeugung",
+      p: " Wir vermitteln nur Talente, denen wir unsere eigene Familie anvertrauen würden. Mit LEA-Expertise, strengen WHO-Vorgaben (EPP) und einem simplen Ziel: passgenaue Verstärkung für Ihr Team",
     },
     bridge: {
       label: "So funktioniert's",
@@ -71,7 +71,7 @@ export const translations = {
     form: {
       label: "Kontakt",
       h2: "Los geht's.",
-      p: "Nächster Batch: Mai 2025. Plätze limitiert.",
+      p: "Nächster Batch: Mai 2025. Anzahl der Talente ist limitiert.",
       namePlaceholder: "Name *",
       emailPlaceholder: "E-Mail *",
       phonePlaceholder: "Telefon *",
@@ -119,7 +119,7 @@ export const translations = {
     story: {
       label: "Who we are",
       h2: "Care by conviction.",
-      p: "We only place talent we'd trust with our own family. With LEA expertise and one simple goal: Filling your position.",
+      p: "We only recruit talents whom we would trust with our own families. With LEA expertise, strict WHO guidelines (EPP), and one simple goal: ensuring the perfect match for your team",
     },
     bridge: {
       label: "How it works",

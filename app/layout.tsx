@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Sulphur_Point, Outfit } from "next/font/google";
+import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 
-const sulphurPoint = Sulphur_Point({
-  weight: ["400", "700"],
-  variable: "--font-sulphur",
+const plusJakarta = Plus_Jakarta_Sans({
+  weight: ["600", "700", "800"],
+  variable: "--font-heading",
   subsets: ["latin"],
 });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="de" className="scroll-smooth">
       <body
-        className={`${sulphurPoint.variable} ${outfit.variable} min-h-full antialiased font-sans`}
+        className={`${plusJakarta.variable} ${outfit.variable} min-h-full antialiased font-sans`}
       >
         <LanguageProvider>{children}</LanguageProvider>
       </body>
