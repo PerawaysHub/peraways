@@ -56,7 +56,7 @@ export function Hero() {
 
         <div className="relative lg:w-1/2">
           <FadeUp delay={0.3}>
-            <div className="relative aspect-4/5 w-full max-w-sm lg:max-w-md mx-auto">
+            <div className="relative aspect-4/5 w-full max-w-md lg:max-w-xl mx-auto">
               <Image
                 src="/hero.svg"
                 alt="PeraWays - Ethical Nursing Recruitment"

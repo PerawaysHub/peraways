@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  weight: ["600", "700", "800"],
+const inter = Inter({
+  weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
   subsets: ["latin"],
 });
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="de" className="scroll-smooth">
       <body
-        className={`${plusJakarta.variable} ${outfit.variable} min-h-full antialiased font-sans`}
+        className={`${inter.variable} ${outfit.variable} min-h-full antialiased font-sans`}
       >
         <LanguageProvider>{children}</LanguageProvider>
       </body>

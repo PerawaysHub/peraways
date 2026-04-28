@@ -46,6 +46,7 @@ export function Navbar() {
             alt="Peraways"
             width={32}
             height={32}
+            loading="eager"
             className="w-8 h-8"
           />
           <span className="text-xl font-bold text-primary">
