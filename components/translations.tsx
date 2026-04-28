@@ -172,7 +172,7 @@ export const translations = {
       location: "Berlin",
       batches: "Batches: May & Nov",
       cta: "Book a call",
-      copyright: "© 2025 Peraways",
+      copyright: "© 2025 PeraWays",
       impressum: "Imprint",
       datenschutz: "Privacy",
     },
