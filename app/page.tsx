@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Problem } from "@/components/Problem";
 import { Story } from "@/components/Story";
+import { Services } from "@/components/Services";
 import { Bridge } from "@/components/Bridge";
 import { Stats } from "@/components/Stats";
 import { ROI } from "@/components/ROI";
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <Problem />
       <Story />
+      <Services />
       <Bridge />
       <Stats />
       {/* <ROI /> */}
