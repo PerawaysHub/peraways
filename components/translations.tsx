@@ -10,6 +10,7 @@ export const translations = {
     hero: {
       label: "Berlin × Nairobi",
       h1: "Pflegekräfte, die {highlight}funktionieren{/highlight}.",
+      tagline: "Ihre spezialisierte Pipeline für qualifizierte Pflegefachassistenz-Auszubildende (PFA) aus Kenia.",
       subtitle: "Sofort einsatzbereit. Rechtssicher. Keine Wartelisten.",
       cta: "Erstgespräch vereinbaren",
       badge: "ROI < 90 Tage",
@@ -71,7 +72,7 @@ export const translations = {
     form: {
       label: "Kontakt",
       h2: "Los geht's.",
-      p: "Nächster Batch: Mai 2025. Anzahl der Talente ist limitiert.",
+      p: "Nächster Batch: Mai 2027. Anzahl der Talente ist limitiert.",
       namePlaceholder: "Name *",
       emailPlaceholder: "E-Mail *",
       phonePlaceholder: "Telefon *",
@@ -83,7 +84,7 @@ export const translations = {
       location: "Berlin",
       batches: "Batches: Mai & Nov",
       cta: "Erstgespräch",
-      copyright: "© 2025 PeraWays",
+      copyright: "© 2026 PeraWays",
       impressum: "Impressum",
       datenschutz: "Datenschutz",
     },
@@ -99,6 +100,7 @@ export const translations = {
     hero: {
       label: "Berlin × Nairobi",
       h1: "Nurses that {highlight}actually work.{/highlight}",
+      tagline: "Your specialized pipeline for qualified nursing assistant trainees (PFA) from Kenya.",
       subtitle: "Ready to work. Legally secure. No waiting lists.",
       cta: "Book a call",
       badge: "ROI < 90 days",
@@ -160,7 +162,7 @@ export const translations = {
     form: {
       label: "Contact",
       h2: "Let's go.",
-      p: "Next batch: May 2025. Limited spots.",
+      p: "Next batch: May 2027. Limited spots.",
       namePlaceholder: "Name *",
       emailPlaceholder: "E-Mail *",
       phonePlaceholder: "Phone *",
@@ -172,7 +174,7 @@ export const translations = {
       location: "Berlin",
       batches: "Batches: May & Nov",
       cta: "Book a call",
-      copyright: "© 2025 PeraWays",
+      copyright: "© 2026 PeraWays",
       impressum: "Imprint",
       datenschutz: "Privacy",
     },

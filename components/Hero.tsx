@@ -38,6 +38,12 @@ export function Hero() {
             </h1>
           </FadeUp>
 
+          <FadeUp delay={0.3}>
+            <p className="max-w-xl text-base font-medium text-white/60">
+              {content.hero.tagline}
+            </p>
+          </FadeUp>
+
           <FadeUp delay={0.35}>
             <p className="max-w-md text-lg text-white/80">
               {content.hero.subtitle}
