@@ -24,8 +24,8 @@ export function Navbar() {
 
   const navLinks = [
     { href: "#problem", label: t(translations.de.nav.problem, translations.en.nav.problem) },
+    { href: "#leistungen", label: lang === "de" ? "Leistungen" : "Services" },
     { href: "#loesung", label: t(translations.de.nav.loesung, translations.en.nav.loesung) },
-    { href: "#roi", label: t(translations.de.nav.roi, translations.en.nav.roi) },
     { href: "#kontakt", label: t(translations.de.nav.kontakt, translations.en.nav.kontakt) },
   ];
 
@@ -70,6 +70,7 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setLang(lang === "de" ? "en" : "de")}
+            aria-label={lang === "de" ? "Switch to English" : "Auf Deutsch wechseln"}
             className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
           >
             <Globe className="w-4 h-4" />
@@ -83,6 +84,7 @@ export function Navbar() {
           </Link>
 
           <button
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
             className="lg:hidden p-2"
             onClick={() => setMenuOpen(!menuOpen)}
           >
