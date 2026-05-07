@@ -12,10 +12,10 @@ export function Stats() {
   const content = lang === "de" ? translations.de : translations.en;
 
   const stats = [
-    { value: content.stats.s1Value, suffix: content.stats.s1Suffix, label: content.stats.s1Label, desc: "Schnellster ROI im Markt" },
-    { value: content.stats.s2Value, suffix: content.stats.s2Suffix, label: content.stats.s2Label, desc: "Dokumentiert & Level 3 zertifiziert" },
-    { value: content.stats.s3Value, suffix: content.stats.s3Suffix, label: content.stats.s3Label, desc: "Sprache + Praxis vor Anreise" },
-    { value: content.stats.s4Value, suffix: content.stats.s4Suffix, label: content.stats.s4Label, desc: "Ab dem ersten Tag" },
+    { value: content.stats.s1Value, suffix: content.stats.s1Suffix, label: content.stats.s1Label, desc: content.stats.s1Desc },
+    { value: content.stats.s2Value, suffix: content.stats.s2Suffix, label: content.stats.s2Label, desc: content.stats.s2Desc },
+    { value: content.stats.s3Value, suffix: content.stats.s3Suffix, label: content.stats.s3Label, desc: content.stats.s3Desc },
+    { value: content.stats.s4Value, suffix: content.stats.s4Suffix, label: content.stats.s4Label, desc: content.stats.s4Desc },
   ];
 
   return (
@@ -37,7 +37,7 @@ export function Stats() {
         
         <FadeUp delay={0.1}>
           <p className="mx-auto mb-16 max-w-2xl text-center text-lg text-white/70">
-            Keine leeren Versprechen. Nur messbare Ergebnisse.
+            {content.stats.subtitle}
           </p>
         </FadeUp>
 
@@ -46,8 +46,8 @@ export function Stats() {
             const Icon = icons[index];
             return (
               <StaggerItem key={stat.label}>
-                <div className="group relative flex h-full min-h-[280px] flex-col rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/20">
-                  <div className="absolute left-1/2 top-[-20px] -translate-x-1/2">
+                <div className="group relative flex h-full min-h-70 flex-col rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/20">
+                  <div className="absolute left-1/2 -top-5 -translate-x-1/2">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
                       <Icon className="h-6 w-6 text-secondary-foreground" />
                     </div>

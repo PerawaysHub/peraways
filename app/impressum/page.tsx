@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Impressum | PeraWays",
-  description: "Angaben gemäß § 5 TMG",
+  description: "Angaben gemäß §5 TMG",
   robots: {
     index: false,
   },
@@ -40,8 +40,8 @@ export default function Impressum() {
               </p>
               <p>
                 E-Mail:{" "}
-                <a href="mailto:info@peraways.de" className="text-secondary hover:underline">
-                  info@peraways.de
+                <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">
+                  kontakt@peraways.de
                 </a>
               </p>
               <p>

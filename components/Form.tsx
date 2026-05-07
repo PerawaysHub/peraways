@@ -35,7 +35,7 @@ export function Form() {
 
         <FadeUp delay={0.3}>
           <form
-            action="https://formsubmit.co/info@peraways.de"
+            action="https://formsubmit.co/kontakt@peraways.de"
             method="POST"
             className="flex flex-col gap-3"
           >

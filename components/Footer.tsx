@@ -56,8 +56,8 @@ export function Footer() {
               </Link>
               <p className="text-sm leading-relaxed text-white/50">
                 {isDe
-                  ? "Die goldene Brücke zwischen Nairobi und Berlin für pflegebedürftige Einrichtungen."
-                  : "The golden bridge between Nairobi and Berlin for care facilities."}
+                  ? "Die goldene Brücke zwischen Nairobi und Berlin  für innovationsfreundliche Pflegeeinrichtungen!"
+                  : "The golden bridge between Nairobi and Berlin for care homes that embrace innovation!"}
               </p>
             </div>
           </FadeUp>
@@ -92,9 +92,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:info@peraways.de" className="flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white">
+                  <a href="mailto:kontakt@peraways.de" className="flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white">
                     <Mail className="h-3.5 w-3.5 shrink-0" />
-                    <span>info@peraways.de</span>
+                    <span>kontakt@peraways.de</span>
                   </a>
                 </li>
                 <li>
