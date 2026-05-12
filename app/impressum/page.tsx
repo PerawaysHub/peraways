@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Impressum | PeraWays",
-  description: "Angaben gemäß §5 TMG",
+  description: "Angaben gemäß § 5 TMG",
   robots: {
     index: false,
   },

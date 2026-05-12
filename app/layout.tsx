@@ -21,9 +21,9 @@ const siteUrlDe = "https://peraways.de";
 const siteUrlEn = "https://peraways.com";
 const title = "PeraWays | PFA-Azubis aus Kenia vermitteln – Ethisch & Schnell";
 const description =
-  "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia  nach §16a AufenthG. Schuldenfreie Einreise, B1-Deutsch vor Anreise, 20h/Woche ab Ankunft. ROI in 90 Tagen.";
+  "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia  nach § 16a AufenthG. Schuldenfreie Einreise, B1-Deutsch vor Anreise, 20h/Woche ab Ankunft. ROI in 90 Tagen.";
 const keywords =
-  "Pflegekräfte aus Kenia, PFA Azubi Vermittlung, Pflegepersonal rekrutieren, §16a AufenthG, Pflegefachassistenz, LEA Berlin, Pflegekräfte finden, nursing recruitment Kenya, nursing staff Germany, PFA trainee placement, healthcare staffing, debt-free relocation, §16a visa";
+  "Pflegekräfte aus Kenia, PFA Azubi Vermittlung, Pflegepersonal rekrutieren, § 16a AufenthG, Pflegefachassistenz, LEA Berlin, Pflegekräfte finden, nursing recruitment Kenya, nursing staff Germany, PFA trainee placement, healthcare staffing, debt-free relocation, § 16a visa";
 const twitterHandle = "@peraways";
 
 export const metadata: Metadata = {
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
   },
   description,
   keywords,
-  authors: [{ name: "PeraWays" }],
-  creator: "PeraWays",
-  publisher: "PeraWays",
+  authors: [{ name: "Peraways" }],
+  creator: "Peraways",
+  publisher: "Peraways",
   formatDetection: {
     email: false,
     address: false,
@@ -107,7 +107,7 @@ const jsonLd = {
       url: siteUrlDe,
       sameAs: [siteUrlEn],
       logo: `${siteUrlDe}/logo.svg`,
-      description: "Ethical nursing recruitment from Kenya — PFA trainees under §16a AufenthG.",
+      description: "Ethical nursing recruitment from Kenya — PFA trainees under § 16a AufenthG.",
       foundingDate: "2024",
       areaServed: ["DE", "AT", "CH"],
       contactPoint: [
@@ -125,7 +125,7 @@ const jsonLd = {
       provider: { "@id": `${siteUrlDe}/#organization` },
       serviceType: "Pflegekräfte-Rekrutierung",
       category: "Healthcare Staffing",
-      description: "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia nach §16a AufenthG.",
+      description: "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia nach § 16a AufenthG.",
       areaServed: "Germany",
       hasOfferCatalog: {
         "@type": "OfferCatalog",
@@ -152,7 +152,7 @@ const jsonLd = {
             itemOffered: {
               "@type": "Service",
               name: "Visa & LEA Beratung",
-              description: "Entscheidungsreife Akten gemäß §81a AufenthG.",
+              description: "Entscheidungsreife Akten gemäß § 81a AufenthG.",
             },
           },
         ],

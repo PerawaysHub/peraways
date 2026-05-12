@@ -11,6 +11,7 @@ import { Send } from "lucide-react";
 export function Form() {
   const { lang, t } = useLanguage();
   const content = lang === "de" ? translations.de : translations.en;
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://peraways.de";
 
   return (
     <section id="kontakt" className="bg-white py-16 lg:py-24">
@@ -35,13 +36,15 @@ export function Form() {
 
         <FadeUp delay={0.3}>
           <form
-            action="https://formsubmit.co/kontakt@peraways.de"
+            action="https://formsubmit.co/info@peraways.de"
             method="POST"
             className="flex flex-col gap-3"
           >
             <input type="hidden" name="_subject" value="Neue Kontaktanfrage — PeraWays" />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_next" value={`${origin}/danke?lang=${lang}`} />
+            <input type="hidden" name="_autoresponse" value={lang === "de" ? "Vielen Dank für Ihre Anfrage bei PeraWays. Wir melden uns innerhalb von 24 Stunden. Bei dringenden Fragen: info@peraways.de" : "Thank you for your inquiry to PeraWays. We will get back to you within 24 hours. For urgent matters: info@peraways.de"} />
             <input type="text" name="_honey" style={{ display: "none" }} />
 
             <div className="grid gap-3 sm:grid-cols-2">

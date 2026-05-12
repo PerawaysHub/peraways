@@ -54,7 +54,7 @@ export default function Image() {
             fontWeight: 400,
           }}
         >
-          §16a AufenthG • Debt-free Relocation • ROI in 90 Days
+          § 16a AufenthG • Debt-free Relocation • ROI in 90 Days
         </div>
       </div>
     ),
