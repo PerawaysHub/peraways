@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { MessageSquare, LayoutDashboard, Home } from "lucide-react";
+import { MessageSquare, LayoutDashboard, Home, LayoutPanelTop } from "lucide-react";
 
 const sidebarLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Contacts", icon: MessageSquare },
+  { href: "/dashboard/candidates", label: "Candidates", icon: LayoutPanelTop },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -44,7 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       <main className="flex-1 overflow-auto">
-        <div className="mx-auto max-w-6xl px-8 py-8">
+        <div className="mx-auto max-w-[1600px] px-6 py-8">
           {children}
         </div>
       </main>

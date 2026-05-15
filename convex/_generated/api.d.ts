@@ -8,8 +8,10 @@
  * @module
  */
 
+import type * as candidates from "../candidates.js";
 import type * as contact from "../contact.js";
 import type * as contacts from "../contacts.js";
+import type * as dashboard from "../dashboard.js";
 
 import type {
   ApiFromModules,
@@ -18,8 +20,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  candidates: typeof candidates;
   contact: typeof contact;
   contacts: typeof contacts;
+  dashboard: typeof dashboard;
 }>;
 
 /**
