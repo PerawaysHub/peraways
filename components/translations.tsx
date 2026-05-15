@@ -105,6 +105,7 @@ export const translations = {
       messagePlaceholder: "Nachricht *",
       submit: "Anfrage ",
       privacy: "🔒 Daten werden nicht weitergegeben.",
+      formError: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später oder schreiben Sie uns direkt an info@peraways.de.",
     },
     footer: {
       location: "Berlin",
@@ -221,6 +222,7 @@ export const translations = {
       messagePlaceholder: "Message *",
       submit: "Send",
       privacy: "🔒 Data is not shared.",
+      formError: "An error occurred. Please try again later or write us directly at info@peraways.de.",
     },
     footer: {
       location: "Berlin",

@@ -96,7 +96,7 @@ export function Bridge() {
                         <ArrowRight className="ml-1 h-4 w-4" />
                       </span>
                     </div>
-                  </div>} />
+                  </div>} nativeButton={false} />
                   
                   <DialogContent className="sm:max-w-lg overflow-hidden p-6">
                     <div className="flex items-center w-full justify-between gap-4 bg-linear-to-br from-primary/5 to-secondary/5 p-6 pb-4">

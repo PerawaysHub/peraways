@@ -1,22 +1,68 @@
 "use client";
 
 import { FadeUp } from "./FadeUp";
+import { useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
-import { Send } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
+
+const WEBHOOK_URL = process.env.NEXT_PUBLIC_WEBHOOK_URL || "YOUR_APPS_SCRIPT_URL";
 
 export function Form() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const content = lang === "de" ? translations.de : translations.en;
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const mountTime = useRef(Date.now());
+  const honeyRef = useRef<HTMLInputElement>(null);
+
   const origin = typeof window !== "undefined" ? window.location.origin : "https://peraways.de";
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // Honeypot: silently reject if bot filled hidden field
+    if (honeyRef.current?.value) {
+      window.location.href = `${origin}/danke?lang=${lang}`;
+      return;
+    }
+
+    // Time check: reject if submitted too fast (< 3s, likely a bot)
+    if (Date.now() - mountTime.current < 3000) {
+      window.location.href = `${origin}/danke?lang=${lang}`;
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    data.set("lang", lang);
+    data.set("_origin", origin);
+    data.set("_honey", honeyRef.current?.value || "");
+
+    try {
+      await fetch(WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data,
+      });
+
+      window.location.href = `${origin}/danke?lang=${lang}`;
+    } catch {
+      setError(content.form.formError);
+      setSubmitting(false);
+    }
+  }
 
   return (
     <section id="kontakt" className="bg-white py-16 lg:py-24">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-2 lg:items-start">
-        <div className="flex flex-col gap-3 items-start ">
+        <div className="flex flex-col gap-3 items-start">
           <FadeUp>
             <span className="mb-3 inline-block text-sm font-semibold uppercase tracking-widest text-secondary">
               {content.form.label}
@@ -35,18 +81,7 @@ export function Form() {
         </div>
 
         <FadeUp delay={0.3}>
-          <form
-            action="https://formsubmit.co/info@peraways.de"
-            method="POST"
-            className="flex flex-col gap-3"
-          >
-            <input type="hidden" name="_subject" value="Neue Kontaktanfrage — PeraWays" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_next" value={`${origin}/danke?lang=${lang}`} />
-            <input type="hidden" name="_autoresponse" value={lang === "de" ? "Vielen Dank für Ihre Anfrage bei PeraWays. Wir melden uns innerhalb von 24 Stunden. Bei dringenden Fragen: info@peraways.de" : "Thank you for your inquiry to PeraWays. We will get back to you within 24 hours. For urgent matters: info@peraways.de"} />
-            <input type="text" name="_honey" style={{ display: "none" }} />
-
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div className="grid gap-3 sm:grid-cols-2">
               <Input
                 type="text"
@@ -79,9 +114,32 @@ export function Form() {
               required
             />
 
-            <Button type="submit" size="lg" className="mt-2 w-full rounded-full gap-2">
+            <input
+              ref={honeyRef}
+              type="text"
+              name="_honey"
+              tabIndex={-1}
+              autoComplete="off"
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              aria-hidden="true"
+            />
+
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
+
+            <Button
+              type="submit"
+              size="lg"
+              className="mt-2 w-full rounded-full gap-2"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
               {content.form.submit}
-              <Send className="w-4 h-4" />
             </Button>
           </form>
         </FadeUp>
