@@ -4,11 +4,11 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { CANDIDATE_STATUSES } from "@/convex/schema"
-import { useRef, useState } from "react"
+import { useRef, useState, useCallback } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 
 const STATUS_COLORS: Record<string, string> = {
@@ -18,6 +18,13 @@ const STATUS_COLORS: Record<string, string> = {
   Angebot: "bg-orange-100 text-orange-700 border-orange-200",
   Visum: "bg-emerald-100 text-emerald-700 border-emerald-200",
   Gestartet: "bg-primary/10 text-primary border-primary/20",
+}
+
+const ACTIVITY_ICONS: Record<string, React.ElementType> = {
+  created: Plus,
+  status_change: ArrowRightCircle,
+  note_added: MessageSquare,
+  document_uploaded: FileUp,
 }
 
 function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
@@ -38,12 +45,40 @@ export default function CandidateDetailPage() {
   const params = useParams()
   const id = params.id as Id<"candidates">
   const candidate = useQuery(api.candidates.getById, { id })
+  const documents = useQuery(api.documents.listByCandidate, { candidateId: id })
+  const activityLog = useQuery(api.activityLog.listByCandidate, { candidateId: id })
   const updateNotes = useMutation(api.candidates.updateNotes)
   const updateStatus = useMutation(api.candidates.updateStatus)
+  const generateUploadUrl = useMutation(api.documents.generateUploadUrl)
+  const saveDocument = useMutation(api.documents.saveDocument)
+  const deleteDocument = useMutation(api.documents.remove)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
   const [saving, setSaving] = useState(false)
   const [statusOpen, setStatusOpen] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [docType, setDocType] = useState("cv")
   const statusRef = useRef<HTMLDivElement>(null)
+
+  const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const uploadUrl = await generateUploadUrl()
+      const resp = await fetch(uploadUrl, { method: "POST", body: file })
+      const { storageId } = await resp.json()
+      await saveDocument({ candidateId: id, name: file.name, type: docType, storageId })
+    } finally {
+      setUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ""
+    }
+  }, [id, docType, generateUploadUrl, saveDocument])
+
+  const handleDeleteDoc = useCallback(async (docId: Id<"documents">) => {
+    await deleteDocument({ id: docId })
+  }, [deleteDocument])
 
   if (candidate === undefined) {
     return (
@@ -150,6 +185,82 @@ export default function CandidateDetailPage() {
       </div>
 
       <div className="border border-gray-200 bg-white p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Upload className="size-4 text-primary" />
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Documents</h2>
+        </div>
+
+        <div className="flex items-center gap-2 mb-4">
+          <select
+            value={docType}
+            onChange={(e) => setDocType(e.target.value)}
+            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+          >
+            <option value="cv">CV</option>
+            <option value="zeugnis">Zeugnis</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+          <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleUpload}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            size="sm"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+            className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+          >
+            {uploading ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
+            {uploading ? "Uploading..." : "Upload"}
+          </Button>
+        </div>
+
+        {documents === undefined ? (
+          <div className="h-8 flex items-center">
+            <Loader2 className="size-3.5 animate-spin text-gray-400" />
+          </div>
+        ) : documents.length > 0 ? (
+          <div className="divide-y divide-gray-100">
+            {documents.map((doc) => (
+              <div key={doc._id} className="flex items-center justify-between py-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <FileText className="size-4 text-gray-400 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                    <p className="text-[10px] font-medium text-gray-400 uppercase">{doc.type}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  {doc.url && (
+                    <a
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                    >
+                      <Download className="size-3.5" />
+                    </a>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteDoc(doc._id)}
+                    className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 py-2">No documents uploaded yet.</p>
+        )}
+      </div>
+
+      <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Notes</h2>
@@ -170,6 +281,38 @@ export default function CandidateDetailPage() {
           {saving && <Loader2 className="size-4 animate-spin" />}
           Save Notes
         </Button>
+      </div>
+
+      <div className="border border-gray-200 bg-white p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Activity className="size-4 text-primary" />
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Activity</h2>
+        </div>
+
+        {activityLog === undefined ? (
+          <div className="h-8 flex items-center">
+            <Loader2 className="size-3.5 animate-spin text-gray-400" />
+          </div>
+        ) : activityLog.length > 0 ? (
+          <div className="relative pl-5 before:absolute before:left-[7px] before:top-1 before:bottom-1 before:w-px before:bg-gray-200">
+            {activityLog.map((entry) => {
+              const Icon = ACTIVITY_ICONS[entry.type] ?? Clock
+              return (
+                <div key={entry._id} className="relative pb-4 last:pb-0">
+                  <span className="absolute -left-[13px] flex size-[14px] items-center justify-center bg-white">
+                    <Icon className="size-3 text-gray-400" />
+                  </span>
+                  <p className="text-sm text-gray-700">{entry.description}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    {new Date(entry.timestamp).toLocaleString("de-DE")}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 py-2">No activity yet.</p>
+        )}
       </div>
     </div>
   )

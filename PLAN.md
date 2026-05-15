@@ -40,12 +40,17 @@
 - [x] Mobile responsive (padding/gap variables)
 - [x] Status colors harmonisées page détail ↔ kanban
 
-## 🔄 Phase 4 — Documents & suivi
+## ✅ Phase 4 — Documents & suivi
 
-- [ ] Upload fichiers CV, Zeugnisse via Convex file storage
-- [ ] Timeline d'activité par candidat (changements statut, notes, uploads)
-- [ ] Page `Documents` : liste des documents uploadés par candidat
-- [ ] Export CSV des candidats
+- [x] Ajout tables `documents` + `activityLog` au schema Convex
+- [x] Upload fichiers CV, Zeugnisse via Convex file storage (génération URL, upload, save)
+- [x] Timeline d'activité par candidat (création, changement statut, notes, uploads)
+- [x] Page `Documents` : liste de tous les documents uploadés + lien candidat
+- [x] Upload UI sur la page détail candidat (type selector + file input)
+- [x] Timeline visuelle sur la page détail candidat
+- [x] Sidebar link vers Documents
+- [x] Export CSV des candidats (route API `/api/export-candidates`)
+- [x] Nettoyage cascade à la suppression d'un candidat (docs + logs)
 
 ## 📋 Phase 5 — Améliorations & déploiement
 

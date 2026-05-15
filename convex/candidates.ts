@@ -40,8 +40,8 @@ export const create = mutation({
       .withIndex("by_status", (q) => q.eq("status", "Neue Bewerbung"))
       .order("desc")
       .first();
-    const maxPosition = existing ? (await ctx.db.get(existing._id))?.position ?? 0 : 0;
-    return await ctx.db.insert("candidates", {
+    const maxPosition = existing ? (existing.position ?? 0) : 0;
+    const candidateId = await ctx.db.insert("candidates", {
       name: args.name,
       email: args.email,
       telefon: args.telefon ?? "",
@@ -51,6 +51,13 @@ export const create = mutation({
       source: args.source,
       lang: args.lang,
     });
+    await ctx.db.insert("activityLog", {
+      candidateId,
+      type: "created",
+      description: "Candidate created",
+      timestamp: Date.now(),
+    });
+    return candidateId;
   },
 });
 
@@ -61,6 +68,17 @@ export const updateStatus = mutation({
     position: v.number(),
   },
   handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (!candidate) return;
+    const oldStatus = candidate.status;
+    if (oldStatus !== args.status) {
+      await ctx.db.insert("activityLog", {
+        candidateId: args.id,
+        type: "status_change",
+        description: `Status changed: ${oldStatus} → ${args.status}`,
+        timestamp: Date.now(),
+      });
+    }
     await ctx.db.patch(args.id, {
       status: args.status,
       position: args.position,
@@ -94,13 +112,38 @@ export const updateNotes = mutation({
     notes: v.string(),
   },
   handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (!candidate) return;
     await ctx.db.patch(args.id, { notes: args.notes });
+    if (args.notes && args.notes !== (candidate.notes ?? "")) {
+      await ctx.db.insert("activityLog", {
+        candidateId: args.id,
+        type: "note_added",
+        description: "Notes updated",
+        timestamp: Date.now(),
+      });
+    }
   },
 });
 
 export const remove = mutation({
   args: { id: v.id("candidates") },
   handler: async (ctx, args) => {
+    const docs = await ctx.db
+      .query("documents")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))
+      .collect();
+    for (const doc of docs) {
+      await ctx.storage.delete(doc.storageId);
+      await ctx.db.delete(doc._id);
+    }
+    const logs = await ctx.db
+      .query("activityLog")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))
+      .collect();
+    for (const log of logs) {
+      await ctx.db.delete(log._id);
+    }
     await ctx.db.delete(args.id);
   },
 });

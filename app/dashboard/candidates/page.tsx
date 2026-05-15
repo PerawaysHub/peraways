@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { LayoutPanelTop, Loader2 } from "lucide-react"
+import { LayoutPanelTop, Loader2, Download } from "lucide-react"
 
 function BoardSkeleton() {
   return (
@@ -90,16 +90,26 @@ export default function CandidatesPage() {
 
   return (
     <div className="space-y-6 pb-8">
-      <div>
-        <h1 className="font-heading text-2xl font-bold text-primary flex items-center gap-2.5">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5">
-            <LayoutPanelTop className="size-4 text-primary" />
-          </span>
-          Candidates
-        </h1>
-        <p className="text-sm text-muted-foreground/70 mt-1.5 ml-[42px]">
-          Pipeline overview — drag and drop to update status
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-heading text-2xl font-bold text-primary flex items-center gap-2.5">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5">
+              <LayoutPanelTop className="size-4 text-primary" />
+            </span>
+            Candidates
+          </h1>
+          <p className="text-sm text-muted-foreground/70 mt-1.5 ml-[42px]">
+            Pipeline overview — drag and drop to update status
+          </p>
+        </div>
+        <a
+          href="/api/export-candidates"
+          download
+          className="inline-flex items-center gap-1.5 border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 hover:text-primary hover:border-gray-300 transition-all shadow-sm"
+        >
+          <Download className="size-3.5" />
+          Export CSV
+        </a>
       </div>
 
       {candidates === undefined ? <BoardSkeleton /> : (

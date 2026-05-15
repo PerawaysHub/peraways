@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { MessageSquare, LayoutDashboard, Home, LayoutPanelTop } from "lucide-react";
+import { MessageSquare, LayoutDashboard, Home, LayoutPanelTop, FileText } from "lucide-react";
 
 const sidebarLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Contacts", icon: MessageSquare },
   { href: "/dashboard/candidates", label: "Candidates", icon: LayoutPanelTop },
+  { href: "/dashboard/documents", label: "Documents", icon: FileText },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

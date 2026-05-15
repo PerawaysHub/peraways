@@ -28,4 +28,17 @@ export default defineSchema({
     source: v.string(),
     lang: v.string(),
   }).index("by_status", ["status", "position"]),
+  documents: defineTable({
+    candidateId: v.id("candidates"),
+    name: v.string(),
+    type: v.string(),
+    storageId: v.id("_storage"),
+    uploadedAt: v.number(),
+  }).index("by_candidate", ["candidateId"]),
+  activityLog: defineTable({
+    candidateId: v.id("candidates"),
+    type: v.string(),
+    description: v.string(),
+    timestamp: v.number(),
+  }).index("by_candidate", ["candidateId"]),
 });
