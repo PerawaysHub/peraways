@@ -3,6 +3,8 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import Script from "next/script";
+import { ClerkProvider } from "@clerk/nextjs";
+import ConvexClientProvider from "./ConvexClientProvider";
 
 const inter = Inter({
   weight: ["400", "500", "600", "700"],
@@ -184,11 +186,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body
-        className={`${inter.variable} ${outfit.variable} min-h-full antialiased font-sans`}
-      >
-        <LanguageProvider>{children}</LanguageProvider>
-      </body>
+        <body
+          className={`${inter.variable} ${outfit.variable} min-h-full antialiased font-sans`}
+          >
+          <ClerkProvider>
+            <ConvexClientProvider>
+                 <LanguageProvider>{children}</LanguageProvider>
+            </ConvexClientProvider>
+          </ClerkProvider>
+        </body>
     </html>
   );
 }

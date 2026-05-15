@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Send, Loader2 } from "lucide-react";
-
-const WEBHOOK_URL = process.env.NEXT_PUBLIC_WEBHOOK_URL || "YOUR_APPS_SCRIPT_URL";
 
 export function Form() {
   const { lang } = useLanguage();
@@ -18,19 +18,18 @@ export function Form() {
   const [error, setError] = useState("");
   const mountTime = useRef(Date.now());
   const honeyRef = useRef<HTMLInputElement>(null);
+  const submitContact = useMutation(api.contact.submit);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://peraways.de";
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Honeypot: silently reject if bot filled hidden field
     if (honeyRef.current?.value) {
       window.location.href = `${origin}/danke?lang=${lang}`;
       return;
     }
 
-    // Time check: reject if submitted too fast (< 3s, likely a bot)
     if (Date.now() - mountTime.current < 3000) {
       window.location.href = `${origin}/danke?lang=${lang}`;
       return;
@@ -40,17 +39,20 @@ export function Form() {
     setError("");
 
     const form = e.currentTarget;
-    const data = new FormData(form);
-    data.set("lang", lang);
-    data.set("_origin", origin);
-    data.set("_honey", honeyRef.current?.value || "");
+    const formData = new FormData(form);
+    const name = (formData.get("Name") as string) || "";
+    const email = (formData.get("Email") as string) || "";
+    const telefon = (formData.get("Telefon") as string) || "";
+    const nachricht = (formData.get("Nachricht") as string) || "";
 
     try {
-      await fetch(WEBHOOK_URL, {
+      await submitContact({ name, email, telefon, nachricht, lang });
+
+      fetch("/api/send-contact-email", {
         method: "POST",
-        mode: "no-cors",
-        body: data,
-      });
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, telefon, nachricht, lang }),
+      }).catch(() => {});
 
       window.location.href = `${origin}/danke?lang=${lang}`;
     } catch {
