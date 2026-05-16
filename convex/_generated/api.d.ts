@@ -14,6 +14,8 @@ import type * as contact from "../contact.js";
 import type * as contacts from "../contacts.js";
 import type * as dashboard from "../dashboard.js";
 import type * as documents from "../documents.js";
+import type * as emails from "../emails.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -28,6 +30,8 @@ declare const fullApi: ApiFromModules<{
   contacts: typeof contacts;
   dashboard: typeof dashboard;
   documents: typeof documents;
+  emails: typeof emails;
+  users: typeof users;
 }>;
 
 /**

@@ -40,6 +40,7 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [cardWidth, setCardWidth] = useState(0)
+  const [announcement, setAnnouncement] = useState("")
   const columnsRef = useRef<HTMLDivElement>(null)
   const updateStatus = useMutation(api.candidates.updateStatus)
 
@@ -131,6 +132,9 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
 
   return (
     <div className="bg-white border border-gray-200 shadow-sm bg-gradient-to-br from-white via-white to-[var(--surface)]/40">
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {announcement}
+      </div>
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
@@ -161,14 +165,15 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
         <div className="relative w-60">
           <Input
             placeholder="Search candidates..."
+            aria-label="Search candidates"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 h-9 bg-gray-50/80 border-gray-200/80 text-sm placeholder:text-gray-400 focus-visible:border-primary/30 focus-visible:ring-[1.5px] focus-visible:ring-primary/15"
           />
-          {/* <Search className="pointer-events-none absolute left-3 inset-y-0 my-auto size-4 text-gray-400" /> */}
+          <Search className="pointer-events-none absolute left-3 inset-y-0 my-auto size-4 text-gray-400" aria-hidden="true" />
         </div>
         {search && (
-          <span className="text-[11px] font-medium text-gray-400 tabular-nums">
+          <span aria-live="polite" className="text-[11px] font-medium text-gray-400 tabular-nums">
             {filteredCount} / {totalCount}
           </span>
         )}

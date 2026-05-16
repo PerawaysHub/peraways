@@ -9,10 +9,13 @@ export const getStats = query({
       ctx.db.query("contacts").order("desc").take(100),
     ])
 
-    const candidatesByStatus: Record<string, number> = {}
-    for (const s of CANDIDATE_STATUSES) candidatesByStatus[s] = 0
+    const statusCounts: { status: string; count: number }[] = CANDIDATE_STATUSES.map((s) => ({
+      status: s,
+      count: 0,
+    }))
     for (const c of candidates) {
-      if (candidatesByStatus[c.status] !== undefined) candidatesByStatus[c.status]++
+      const entry = statusCounts.find((e) => e.status === c.status)
+      if (entry) entry.count++
     }
 
     const recentCandidates = candidates
@@ -28,7 +31,7 @@ export const getStats = query({
     return {
       totalCandidates: candidates.length,
       totalContacts: contacts.length,
-      candidatesByStatus,
+      statusCounts,
       activePipeline,
       placed,
       recentCandidates,

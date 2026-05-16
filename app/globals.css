@@ -128,4 +128,7 @@ body {
   html {
     @apply font-sans;
   }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring/60;
+  }
 }

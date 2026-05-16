@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { SignInButton } from "@clerk/nextjs";
 import { FadeUp } from "./FadeUp";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "./LanguageContext";
@@ -141,6 +142,11 @@ export function Footer() {
             <Link href="/datenschutz" className="text-xs text-white/35 hover:text-white/70 transition-colors">
               {content.footer.datenschutz}
             </Link>
+            <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
+              <button className="text-xs text-white/35 hover:text-white/70 transition-colors cursor-pointer">
+                {isDe ? "CRM Login" : "CRM Login"}
+              </button>
+            </SignInButton>
           </div>
         </div>
       </div>

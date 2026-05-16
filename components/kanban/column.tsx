@@ -74,36 +74,38 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
   const ids = useMemo(() => candidates.map((c) => c._id), [candidates])
 
   return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        "relative flex flex-1 flex-col border min-w-[240px] md:min-w-[260px] max-w-[320px] md:max-w-[340px]",
-        "transition-all duration-200",
-        theme.col,
-        isOver && "ring-2 ring-primary/20"
-      )}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0 border-b border-black/[0.04]">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className={cn("size-2 shrink-0 ring-[1.5px] ring-inset", theme.dot)} />
-          <h3 className="font-heading text-sm font-bold text-gray-700 truncate tracking-tight">{status}</h3>
-          <span className={cn(
-            "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
-            theme.count
-          )}>
-            {candidates.length}
-          </span>
+      <div
+        ref={setNodeRef}
+        role="region"
+        aria-label={`${status} column`}
+        className={cn(
+          "relative flex flex-1 flex-col border min-w-[240px] md:min-w-[260px] max-w-[320px] md:max-w-[340px]",
+          "transition-all duration-200",
+          theme.col,
+          isOver && "ring-2 ring-primary/20"
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0 border-b border-black/[0.04]">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className={cn("size-2 shrink-0 ring-[1.5px] ring-inset", theme.dot)} aria-hidden="true" />
+            <h3 className="font-heading text-sm font-bold text-gray-700 truncate tracking-tight">{status}</h3>
+            <span className={cn(
+              "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
+              theme.count
+            )} aria-label={`${candidates.length} candidates`}>
+              {candidates.length}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={onAddClick}
+            className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
+            aria-label={`Add candidate to ${status}`}
+          >
+            <Plus className="size-3.5" aria-hidden="true" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={onAddClick}
-          className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all"
-          aria-label={`Add to ${status}`}
-        >
-          <Plus className="size-3.5" />
-        </button>
-      </div>
 
       {/* Cards */}
       <SortableContext items={ids} strategy={verticalListSortingStrategy}>

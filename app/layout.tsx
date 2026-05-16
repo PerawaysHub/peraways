@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
+import { CookieConsent } from "@/components/CookieConsent";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "./ConvexClientProvider";
@@ -191,7 +193,12 @@ export default function RootLayout({
           >
           <ClerkProvider>
             <ConvexClientProvider>
-                 <LanguageProvider>{children}</LanguageProvider>
+           <LanguageProvider>
+             <TooltipProvider>
+              {children}
+              <CookieConsent />
+             </TooltipProvider>
+           </LanguageProvider>
             </ConvexClientProvider>
           </ClerkProvider>
         </body>

@@ -13,8 +13,8 @@
 - [x] SEO (sitemap, robots, OpenGraph, JSON-LD)
 
 ### Restant Phase 1
-- [ ] Templates email HTML bilingues (DE/EN) avec react-email
-- [ ] Cookie consent banner (GDPR)
+- [x] Templates email HTML bilingues (DE/EN) — notification team + auto-response
+- [x] Cookie consent banner (GDPR)
 
 ## ✅ Phase 2 — CRM Dashboard
 
@@ -54,12 +54,16 @@
 
 ## 📋 Phase 5 — Améliorations & déploiement
 
-- [ ] Templates email personnalisables depuis le dashboard
+- [x] Templates email bilingues (DE/EN) — auto-response + notification team via Resend
+- [x] Accessibilité (keyboard nav, screen reader, focus styles, aria-live, skip link)
+- [x] Page 404 personnalisée (`app/not-found.tsx`)
+- [x] Error boundaries pour le dashboard
+- [x] Rate limiting sur le formulaire contact (Convex: 5min/email, 10/min global)
+- [x] Sidebar shadcn (collapsible icon mode, logo SVG quand replié)
+- [x] Table `users` + rôles (admin/editor/viewer) — webhook Clerk → Convex + seeding via `CLERK_ADMIN_EMAIL`
+- [x] Page `/dashboard/users` (admin only) — gestion des rôles
+- [x] Dashboard caché (404 pour utilisateurs non authentifiés via middleware)
 - [ ] Notifications en temps réel via Convex subscriptions
-- [ ] Accessibilité (keyboard nav, screen reader, contrast)
-- [ ] Page 404 personnalisée
-- [ ] Error boundaries pour le dashboard
 - [ ] Tests E2E (Playwright ou Cypress)
 - [ ] Déploiement production (Vercel)
-- [ ] Rate limiting sur le formulaire contact
 - [ ] Analytics (Plausible ou Vercel Analytics)

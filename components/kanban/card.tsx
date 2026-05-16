@@ -101,10 +101,10 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
         <button
           type="button"
           onClick={handleDelete}
-          className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5"
+          className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
           aria-label={`Delete ${candidate.name}`}
         >
-          <X className="size-3" />
+          <X className="size-3" aria-hidden="true" />
         </button>
       </div>
 

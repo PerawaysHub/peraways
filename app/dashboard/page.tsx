@@ -43,7 +43,7 @@ export default function DashboardPage() {
     )
   }
 
-  const maxStatusCount = Math.max(...Object.values(stats.candidatesByStatus), 1)
+  const maxStatusCount = Math.max(...stats.statusCounts.map((s) => s.count), 1)
   const pipelinePercent = stats.totalCandidates > 0
     ? Math.round((stats.activePipeline / stats.totalCandidates) * 100)
     : 0
@@ -124,8 +124,7 @@ export default function DashboardPage() {
         <div className="border border-gray-200 bg-white p-5">
           <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight mb-4">Pipeline Breakdown</h2>
           <div className="space-y-3">
-            {CANDIDATE_STATUSES.map((status) => {
-              const count = stats.candidatesByStatus[status] ?? 0
+            {stats.statusCounts.map(({ status, count }) => {
               const pct = maxStatusCount > 0 ? (count / maxStatusCount) * 100 : 0
               const theme = STATUS_THEME[status] ?? { bar: "bg-gray-300", text: "text-gray-600" }
               return (

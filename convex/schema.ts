@@ -41,4 +41,10 @@ export default defineSchema({
     description: v.string(),
     timestamp: v.number(),
   }).index("by_candidate", ["candidateId"]),
+  users: defineTable({
+    clerkId: v.string(),
+    name: v.string(),
+    email: v.string(),
+    role: v.union(v.literal("admin"), v.literal("viewer"), v.literal("editor")),
+  }).index("by_clerkId", ["clerkId"]),
 });
