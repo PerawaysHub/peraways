@@ -36,12 +36,22 @@ export const submit = mutation({
       throw new Error("Too many submissions. Try again later.");
     }
 
-    await ctx.db.insert("contacts", {
+    const contactId = await ctx.db.insert("contacts", {
       name: args.name,
       email: args.email,
       telefon: args.telefon ?? "",
       nachricht: args.nachricht,
       lang: args.lang,
+    })
+
+    await ctx.db.insert("notifications", {
+      type: "new_contact",
+      title: args.lang === "de" ? "Neue Kontaktanfrage" : "New contact inquiry",
+      description: args.lang === "de"
+        ? `Von ${args.name} (${args.email})`
+        : `From ${args.name} (${args.email})`,
+      read: false,
+      relatedId: contactId,
     })
 
     const { subject: notifSubject, html: notifHtml } = teamNotification(args)

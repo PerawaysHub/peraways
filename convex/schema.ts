@@ -47,4 +47,11 @@ export default defineSchema({
     email: v.string(),
     role: v.union(v.literal("admin"), v.literal("viewer"), v.literal("editor")),
   }).index("by_clerkId", ["clerkId"]),
+  notifications: defineTable({
+    type: v.string(),
+    title: v.string(),
+    description: v.string(),
+    read: v.boolean(),
+    relatedId: v.optional(v.string()),
+  }).index("by_read", ["read"]),
 });

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
+import { Analytics } from "@vercel/analytics/react";
 import { CookieConsent } from "@/components/CookieConsent";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Script from "next/script";
@@ -196,6 +197,7 @@ export default function RootLayout({
            <LanguageProvider>
              <TooltipProvider>
               {children}
+              <Analytics />
               <CookieConsent />
              </TooltipProvider>
            </LanguageProvider>

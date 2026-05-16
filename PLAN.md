@@ -63,7 +63,7 @@
 - [x] Table `users` + rôles (admin/editor/viewer) — webhook Clerk → Convex + seeding via `CLERK_ADMIN_EMAIL`
 - [x] Page `/dashboard/users` (admin only) — gestion des rôles
 - [x] Dashboard caché (404 pour utilisateurs non authentifiés via middleware)
-- [ ] Notifications en temps réel via Convex subscriptions
+- [x] Notifications en temps réel via Convex subscriptions (toasts sonner + badge cloche)
 - [ ] Tests E2E (Playwright ou Cypress)
 - [ ] Déploiement production (Vercel)
-- [ ] Analytics (Plausible ou Vercel Analytics)
+- [x] Analytics (Vercel Analytics — gratuit, inclus avec le déploiement)
