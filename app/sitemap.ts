@@ -1,21 +1,32 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseDe = "https://peraways.de";
-  const baseEn = "https://peraways.com";
+  const base = "https://peraways.de";
 
   return [
     {
-      url: baseDe,
+      url: base,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: baseEn,
+      url: `${base}/impressum`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
+      url: `${base}/datenschutz`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
+      url: `${base}/danke`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
   ];
 }
