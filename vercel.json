@@ -2,7 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "nodeVersion": "20",
   "env": {
     "NEXT_PUBLIC_SITE_URL": "https://peraways.de"
   }
