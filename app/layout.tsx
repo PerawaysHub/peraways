@@ -23,7 +23,6 @@ const outfit = Outfit({
 
 const siteUrl = "https://peraways.de";
 const siteUrlDe = "https://peraways.de";
-// const siteUrlEn = "https://peraways.com";
 const title = "PeraWays | PFA-Azubis aus Kenia vermitteln – Ethisch & Schnell";
 const description =
   "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia  nach § 16a AufenthG. Schuldenfreie Einreise, B1-Deutsch vor Anreise, 20h/Woche ab Ankunft. ROI in 90 Tagen.";
@@ -110,7 +109,6 @@ const jsonLd = {
       "@id": `${siteUrlDe}/#organization`,
       name: "PeraWays",
       url: siteUrlDe,
-      // sameAs: [siteUrlEn],
       logo: `${siteUrlDe}/logo.svg`,
       description: "Ethical nursing recruitment from Kenya — PFA trainees under § 16a AufenthG.",
       foundingDate: "2024",
