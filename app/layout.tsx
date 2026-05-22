@@ -21,7 +21,7 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://peraways.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://peraways.de";
 const siteUrlDe = "https://peraways.de";
 const siteUrlEn = "https://peraways.com";
 const title = "PeraWays | PFA-Azubis aus Kenia vermitteln – Ethisch & Schnell";
