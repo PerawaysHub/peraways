@@ -89,7 +89,6 @@ export const metadata: Metadata = {
     canonical: siteUrl,
     languages: {
       "de-DE": siteUrlDe,
-      // "en-US": siteUrlEn,
     },
   },
   category: "healthcare recruitment",

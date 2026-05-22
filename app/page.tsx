@@ -5,7 +5,6 @@ import { Story } from "@/components/Story";
 import { Services } from "@/components/Services";
 import { Bridge } from "@/components/Bridge";
 import { Stats } from "@/components/Stats";
-import { ROI } from "@/components/ROI";
 import { Form } from "@/components/Form";
 import { Footer } from "@/components/Footer";
 
