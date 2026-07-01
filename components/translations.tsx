@@ -17,7 +17,7 @@ export const translations = {
     },
     problem: {
       label: "Die Fakten",
-      h2: "Pflegeeinrichtungen verlieren {highlight}9€/mtl.{/highlight}",
+      h2: "Pflegeeinrichtungen verlieren {highlight}9.000€/mtl.{/highlight}",
       stat1Number: "9.000€",
       stat1Title: "Pro Monat",
       stat1Desc: "Kosten pro offene Stelle durch Leiharbeit",
