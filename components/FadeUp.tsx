@@ -11,14 +11,15 @@ interface FadeUpProps {
 
 const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: {
+  visible: (delay: number) => ({
     opacity: 1,
     y: 0,
     transition: {
+      delay,
       duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94], // Custom smooth ease-out
+      ease: [0.25, 0.46, 0.45, 0.94],
     },
-  },
+  }),
 };
 
 export function FadeUp({ children, delay = 0, className = "" }: FadeUpProps) {
@@ -31,8 +32,8 @@ export function FadeUp({ children, delay = 0, className = "" }: FadeUpProps) {
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={fadeUpVariants}
+      custom={delay}
       className={className}
-      style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
     </motion.div>

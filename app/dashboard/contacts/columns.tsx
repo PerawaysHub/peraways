@@ -1,8 +1,21 @@
 "use client"
 
 import Link from "next/link"
+import { useMutation } from "convex/react"
+import { api } from "@/convex/_generated/api"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { Doc } from "@/convex/_generated/dataModel"
+import type { Doc, Id } from "@/convex/_generated/dataModel"
+import { Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { useState } from "react"
 
 function formatDate(ts: number) {
   return new Date(ts).toLocaleDateString("de-DE", {
@@ -15,6 +28,45 @@ function formatDate(ts: number) {
 }
 
 export type Contact = Doc<"contacts">
+
+function DeleteContactDialog({ id }: { id: Id<"contacts"> }) {
+  const remove = useMutation(api.contacts.remove)
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-muted-foreground hover:text-red-500 transition-colors"
+      >
+        <Trash2 className="size-4" />
+      </button>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete contact</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this contact? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              remove({ id })
+              setOpen(false)
+            }}
+          >
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 export const columns: ColumnDef<Contact>[] = [
   {
@@ -33,7 +85,12 @@ export const columns: ColumnDef<Contact>[] = [
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">{row.original.email}</span>
+      <a
+        href={`mailto:${row.original.email}`}
+        className="text-muted-foreground hover:text-primary transition-colors"
+      >
+        {row.original.email}
+      </a>
     ),
   },
   {
@@ -63,5 +120,10 @@ export const columns: ColumnDef<Contact>[] = [
         {formatDate(row.original._creationTime)}
       </span>
     ),
+  },
+  {
+    id: "actions",
+    header: () => <span className="sr-only">Actions</span>,
+    cell: ({ row }) => <DeleteContactDialog id={row.original._id} />,
   },
 ]

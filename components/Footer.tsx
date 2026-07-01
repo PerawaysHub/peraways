@@ -48,8 +48,8 @@ export function Footer() {
         <div className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           <FadeUp>
             <div className="flex flex-col gap-4">
-              <Link href="/" className="flex items-center gap-2">
-                <Image src="/logo.svg" alt="Peraways" width={28} height={28} className="w-7 h-7" />
+              <Link href="/" className="flex items-center ">
+                <Image src="/logo.svg" alt="Peraways" width={28} height={28} className="w-7 h-7 brightness-0 invert" />
                 <span className="text-xl font-bold text-white">
                   <span className="font-logo">Pera</span>
                   <span className="font-normal text-accent">ways</span>
