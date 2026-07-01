@@ -39,7 +39,7 @@ export default function Datenschutz() {
               <br />
               <br />
               E-Mail für allgemeine Anfragen:{" "}
-              <a href="mailto:info@peraways.de" className="text-secondary hover:underline">info@peraways.de</a>
+              <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>
               <br />
               E-Mail für Direktkontakt:{" "}
               <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>
@@ -191,7 +191,7 @@ export default function Datenschutz() {
             </ul>
             <p>
               Zur Ausübung Ihrer Rechte kontaktieren Sie uns bitte unter{" "}
-              <a href="mailto:info@peraways.de" className="text-secondary hover:underline">info@peraways.de</a>.
+              <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>.
               Zudem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren
               (Art. 77 DSGVO).
             </p>

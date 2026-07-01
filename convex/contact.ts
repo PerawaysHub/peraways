@@ -56,15 +56,15 @@ export const submit = mutation({
 
     const { subject: notifSubject, html: notifHtml } = teamNotification(args)
     await resend.emails.send({
-      from: "PeraWays <info@peraways.de>",
-      to: ["info@peraways.de"],
+      from: "PeraWays <kontakt@peraways.de>",
+      to: ["kontakt@peraways.de"],
       subject: notifSubject,
       html: notifHtml,
     })
 
     const { subject: replySubject, html: replyHtml } = autoResponse(args.name, args.lang)
     await resend.emails.send({
-      from: "PeraWays <info@peraways.de>",
+      from: "PeraWays <kontakt@peraways.de>",
       to: [args.email],
       subject: replySubject,
       html: replyHtml,
