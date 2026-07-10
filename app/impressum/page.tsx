@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Impressum | PeraWays",
   description: "Angaben gemäß § 5 TMG",
   robots: {
-    index: false,
+    index: true,
   },
 };
 

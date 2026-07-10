@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: ["https://peraways.de/sitemap.xml", "https://peraways.com/sitemap.xml"],
+    sitemap: ["https://peraways.de/sitemap.xml"],
   };
 }

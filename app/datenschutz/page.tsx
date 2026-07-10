@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Datenschutzerklärung | PeraWays",
   description: "Datenschutzerklärung der PeraWays UG (haftungsbeschränkt)",
-  robots: { index: false },
+  robots: { index: true },
 };
 
 export default function Datenschutz() {
