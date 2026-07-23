@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Source_Serif_4, Public_Sans } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { Analytics } from "@vercel/analytics/react";
@@ -9,13 +9,13 @@ import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "./ConvexClientProvider";
 
-const inter = Inter({
+const sourceSerif = Source_Serif_4({
   weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
+const publicSans = Public_Sans({
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-outfit",
   subsets: ["latin"],
@@ -187,7 +187,7 @@ export default function RootLayout({
         />
       </head>
         <body
-          className={`${inter.variable} ${outfit.variable} min-h-full antialiased font-sans`}
+          className={`${sourceSerif.variable} ${publicSans.variable} min-h-full antialiased font-sans`}
           >
           <ClerkProvider>
             <ConvexClientProvider>
