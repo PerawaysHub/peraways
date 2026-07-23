@@ -21,11 +21,11 @@ export function Footer() {
         <div>
           <Link href="/" className="mb-5 flex items-center">
             <Image
-              src="/logo.svg"
+              src="/logo-full-white.png"
               alt="Peraways"
-              width={36}
-              height={36}
-              className="h-9 w-auto brightness-0 invert"
+              width={993}
+              height={225}
+              className="h-9 w-auto"
             />
           </Link>
           <p className="mb-6 max-w-[300px] text-[15px] leading-relaxed text-[#7FA278]">

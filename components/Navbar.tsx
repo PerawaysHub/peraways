@@ -37,19 +37,15 @@ export function Navbar() {
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center">
           <Image
-            src="/logo.svg"
+            src="/logo-full.png"
             alt="Peraways"
-            width={32}
-            height={32}
+            width={1060}
+            height={283}
             loading="eager"
-            className="w-8 h-8"
+            className="h-9 w-auto"
           />
-          <span className="text-xl font-bold text-primary">
-            <span className="font-logo">Pera</span>
-            <span className="text-accent font-normal">ways</span>
-          </span>
         </Link>
 
         <div className="hidden items-center gap-9 lg:flex">
