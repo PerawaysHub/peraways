@@ -10,12 +10,10 @@ import Image from "next/image";
 export function Hero() {
   const content = translations.de.hero;
 
-  const h1Parts = content.h1.split("{highlight}");
-  const h1 = {
-    before: h1Parts[0],
-    highlight: h1Parts[1]?.replace("{/highlight}", ""),
-    after: h1Parts[2]?.replace("{/highlight}", ""),
-  };
+  const h1Match = content.h1.match(/^(.*?)\{highlight\}(.*?)\{\/highlight\}(.*)$/);
+  const h1 = h1Match
+    ? { before: h1Match[1], highlight: h1Match[2], after: h1Match[3] }
+    : { before: content.h1, highlight: "", after: "" };
 
   return (
     <section
