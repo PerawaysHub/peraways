@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Serif_4, Public_Sans } from "next/font/google";
+import { Fraunces, Libre_Franklin } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { Analytics } from "@vercel/analytics/react";
@@ -9,13 +9,14 @@ import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "./ConvexClientProvider";
 
-const sourceSerif = Source_Serif_4({
-  weight: ["400", "500", "600", "700"],
+const fraunces = Fraunces({
+  weight: ["400", "500", "600", "700", "900"],
+  style: ["normal", "italic"],
   variable: "--font-heading",
   subsets: ["latin"],
 });
 
-const publicSans = Public_Sans({
+const libreFranklin = Libre_Franklin({
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-outfit",
   subsets: ["latin"],
@@ -187,7 +188,7 @@ export default function RootLayout({
         />
       </head>
         <body
-          className={`${sourceSerif.variable} ${publicSans.variable} min-h-full antialiased font-sans`}
+          className={`${fraunces.variable} ${libreFranklin.variable} min-h-full antialiased font-sans`}
           >
           <ClerkProvider>
             <ConvexClientProvider>
