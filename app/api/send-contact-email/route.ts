@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, telefon, nachricht, lang } = await req.json();
+    const { name, email, lang } = await req.json();
 
     const subject =
       lang === "de"

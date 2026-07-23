@@ -10,6 +10,7 @@ export const submit = mutation({
     name: v.string(),
     email: v.string(),
     telefon: v.optional(v.string()),
+    einrichtung: v.optional(v.string()),
     nachricht: v.string(),
     lang: v.string(),
   },
@@ -40,6 +41,7 @@ export const submit = mutation({
       name: args.name,
       email: args.email,
       telefon: args.telefon ?? "",
+      einrichtung: args.einrichtung ?? "",
       nachricht: args.nachricht,
       lang: args.lang,
     })

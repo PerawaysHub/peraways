@@ -15,6 +15,7 @@ export default defineSchema({
     name: v.string(),
     email: v.string(),
     telefon: v.optional(v.string()),
+    einrichtung: v.optional(v.string()),
     nachricht: v.string(),
     lang: v.string(),
   }),

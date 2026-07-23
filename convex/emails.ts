@@ -58,6 +58,7 @@ export function teamNotification(data: {
   name: string
   email: string
   telefon?: string
+  einrichtung?: string
   nachricht: string
   lang: string
 }): { subject: string; html: string } {
@@ -70,6 +71,10 @@ export function teamNotification(data: {
     <h2>${isDE ? "Neue Kontaktanfrage" : "New Contact Inquiry"}</h2>
     <div class="label">${isDE ? "Name" : "Name"}</div>
     <div class="value">${data.name}</div>
+    ${data.einrichtung ? `
+    <div class="label">${isDE ? "Einrichtung" : "Facility"}</div>
+    <div class="value">${data.einrichtung}</div>
+    ` : ""}
     <div class="label">Email</div>
     <div class="value">${data.email}</div>
     ${data.telefon ? `

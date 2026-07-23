@@ -24,6 +24,7 @@ export function Story() {
 
   return (
     <section
+      id="mission"
       className="relative overflow-hidden py-20 lg:py-32"
       style={{
         background:

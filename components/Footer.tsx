@@ -5,21 +5,18 @@ import Image from "next/image";
 import { SignInButton } from "@clerk/nextjs";
 import { FadeUp } from "./FadeUp";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "./LanguageContext";
 import { translations } from "./translations";
 import { MapPin, Phone, Mail, Globe, ArrowUpRight } from "lucide-react";
 
-export function Footer() {
-  const { lang, t } = useLanguage();
-  const content = lang === "de" ? translations.de : translations.en;
-  const isDe = lang === "de";
+const navLinks = [
+  { href: "#mission", label: "Mission" },
+  { href: "#leistungen", label: "Leistungen" },
+  { href: "#loesung", label: "Wie es funktioniert" },
+  { href: "#kontakt", label: "Kontakt" },
+];
 
-  const navLinks = [
-    { href: "#problem", label: isDe ? "Das Problem" : "The Problem" },
-    { href: "#leistungen", label: isDe ? "Leistungen" : "Services" },
-    { href: "#loesung", label: isDe ? "Die Lösung" : "The Solution" },
-    { href: "#kontakt", label: isDe ? "Kontakt" : "Contact" },
-  ];
+export function Footer() {
+  const content = translations.de;
 
   return (
     <footer className="bg-primary">
@@ -29,10 +26,10 @@ export function Footer() {
             <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
               <div>
                 <h3 className="font-heading text-2xl font-bold text-white md:text-3xl">
-                  {isDe ? "Bereit für Ihre erste Fachkraft?" : "Ready for your first specialist?"}
+                  Bereit für Ihre erste Fachkraft?
                 </h3>
                 <p className="mt-1 text-white/60">
-                  {isDe ? "Kostenloses Erstgespräch — unverbindlich." : "Free first call — no obligation."}
+                  Kostenloses Erstgespräch — unverbindlich.
                 </p>
               </div>
               <Link href="#kontakt">
@@ -56,17 +53,18 @@ export function Footer() {
                 </span>
               </Link>
               <p className="text-sm leading-relaxed text-white/50">
-                {isDe
-                  ? "Die goldene Brücke zwischen Nairobi und Berlin  für innovationsfreundliche Pflegeeinrichtungen!"
-                  : "The golden bridge between Nairobi and Berlin for care homes that embrace innovation!"}
+                Wir verbinden Nakuru und Berlin, Schritt für Schritt und mit Substanz.
               </p>
+              <div className="text-[13px] text-white/40">
+                Bildung ermöglichen. Pflege stärken. Menschen verbinden.
+              </div>
             </div>
           </FadeUp>
 
           <FadeUp delay={0.1}>
             <div className="flex flex-col gap-4">
               <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                {isDe ? "Navigation" : "Navigation"}
+                Navigation
               </h4>
               <ul className="flex flex-col gap-2">
                 {navLinks.map((link) => (
@@ -83,7 +81,7 @@ export function Footer() {
           <FadeUp delay={0.2}>
             <div className="flex flex-col gap-4">
               <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                {isDe ? "Kontakt" : "Contact"}
+                Kontakt
               </h4>
               <ul className="flex flex-col gap-2">
                 <li>
@@ -111,7 +109,7 @@ export function Footer() {
           <FadeUp delay={0.3}>
             <div className="flex flex-col gap-4">
               <h4 className="text-sm font-semibold uppercase tracking-wider text-white/80">
-                {isDe ? "Firmensitz" : "Headquarters"}
+                Firmensitz
               </h4>
               <address className="flex flex-col gap-1 not-italic text-sm text-white/50">
                 <span className="flex items-start gap-2">
@@ -126,7 +124,7 @@ export function Footer() {
                 </span>
               </address>
               <div className="pt-2 text-xs text-white/35">
-                <p>{isDe ? "Amtsgericht Charlottenburg" : "District Court Charlottenburg"}</p>
+                <p>Amtsgericht Charlottenburg</p>
                 <p>GF: Mario Narciso Pereira</p>
               </div>
             </div>
@@ -144,7 +142,7 @@ export function Footer() {
             </Link>
             <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
               <button className="text-xs text-white/35 hover:text-white/70 transition-colors cursor-pointer">
-                {isDe ? "CRM Login" : "CRM Login"}
+                CRM Login
               </button>
             </SignInButton>
           </div>

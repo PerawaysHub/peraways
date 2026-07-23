@@ -53,7 +53,7 @@ export function Bridge() {
   const features = lang === "de" ? iconsDE : iconsEN;
 
   return (
-    <section id="loesung" className="bg-white py-20 lg:py-32">
+    <section id="loesung" className="bg-[var(--surface)] py-20 lg:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <FadeUp>
           <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -92,7 +92,7 @@ export function Bridge() {
                     
                     <div className="mt-auto flex items-center text-sm font-medium text-secondary">
                       <span className="flex items-center">
-                        Learn more
+                        Mehr erfahren
                         <ArrowRight className="ml-1 h-4 w-4" />
                       </span>
                     </div>

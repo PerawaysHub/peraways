@@ -1,10 +1,12 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
-import { Problem } from "@/components/Problem";
+import { Video } from "@/components/Video";
 import { Story } from "@/components/Story";
+import { Gstc } from "@/components/Gstc";
 import { Services } from "@/components/Services";
 import { Bridge } from "@/components/Bridge";
-import { Stats } from "@/components/Stats";
+import { Timeline } from "@/components/Timeline";
+import { ROI } from "@/components/ROI";
 import { Form } from "@/components/Form";
 import { Footer } from "@/components/Footer";
 
@@ -13,12 +15,13 @@ export default function Home() {
     <main className="flex flex-col">
       <Navbar />
       <Hero />
-      <Problem />
+      <Video />
       <Story />
+      <Gstc />
       <Services />
       <Bridge />
-      <Stats />
-      {/* <ROI /> */}
+      <Timeline />
+      <ROI />
       <Form />
       <Footer />
     </main>

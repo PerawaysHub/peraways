@@ -4,16 +4,20 @@ import { motion, useScroll } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/components/LanguageContext";
-import { translations } from "@/components/translations";
-import { Globe, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
+
+const navLinks = [
+  { href: "#mission", label: "Mission" },
+  { href: "#leistungen", label: "Leistungen" },
+  { href: "#loesung", label: "Wie es funktioniert" },
+  { href: "#kontakt", label: "Kontakt" },
+];
 
 export function Navbar() {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { lang, setLang, t } = useLanguage();
 
   useEffect(() => {
     const unsubscribe = scrollY.on("change", (y) => {
@@ -22,21 +26,14 @@ export function Navbar() {
     return () => unsubscribe();
   }, [scrollY]);
 
-  const navLinks = [
-    { href: "#problem", label: t(translations.de.nav.problem, translations.en.nav.problem) },
-    { href: "#leistungen", label: lang === "de" ? "Leistungen" : "Services" },
-    { href: "#loesung", label: t(translations.de.nav.loesung, translations.en.nav.loesung) },
-    { href: "#kontakt", label: t(translations.de.nav.kontakt, translations.en.nav.kontakt) },
-  ];
-
   return (
     <motion.nav
-      className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b"
+      className="fixed top-0 left-0 right-0 z-50 bg-[#F4F1EC]/[0.82] backdrop-blur-2xl border-b"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
       style={{
-        borderColor: scrolled ? "rgba(0,0,0,0.08)" : "transparent",
+        borderColor: scrolled ? "rgba(25,70,60,0.10)" : "transparent",
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -55,7 +52,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-9 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -68,18 +65,9 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setLang(lang === "de" ? "en" : "de")}
-            aria-label={lang === "de" ? "Switch to English" : "Auf Deutsch wechseln"}
-            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Globe className="w-4 h-4" />
-            <span className="uppercase">{lang}</span>
-          </button>
-
           <Link href="#kontakt" className="hidden sm:block">
-            <Button size="sm" className="rounded-full">
-              {t(translations.de.nav.cta, translations.en.nav.cta)}
+            <Button size="sm" className="rounded-full gap-2 bg-gradient-to-br from-primary to-[#2A6B5E]">
+              Erstgespräch vereinbaren
             </Button>
           </Link>
 
@@ -97,7 +85,7 @@ export function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border-t bg-white px-4 py-4 lg:hidden"
+          className="border-t bg-[#F4F1EC] px-4 py-4 lg:hidden"
         >
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
@@ -111,9 +99,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link href="#kontakt" onClick={() => setMenuOpen(false)}>
-              <Button className="w-full rounded-full">
-                {t(translations.de.nav.cta, translations.en.nav.cta)}
-              </Button>
+              <Button className="w-full rounded-full">Erstgespräch vereinbaren</Button>
             </Link>
           </div>
         </motion.div>

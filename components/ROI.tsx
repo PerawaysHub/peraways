@@ -1,47 +1,71 @@
 "use client";
 
 import { FadeUp } from "./FadeUp";
-import { Card, CardContent } from "@/components/ui/card";
-import { useLanguage } from "./LanguageContext";
+import { Button } from "@/components/ui/button";
 import { translations } from "./translations";
-import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function ROI() {
-  const { lang, t } = useLanguage();
-  const content = lang === "de" ? translations.de : translations.en;
+  const content = translations.de.investment;
+
+  const stats = [
+    { value: content.s1Value, label: content.s1Label },
+    { value: content.s2Value, label: content.s2Label, accent: true },
+    { value: content.s3Value, label: content.s3Label },
+    { value: content.s4Value, label: content.s4Label },
+  ];
 
   return (
-    <section id="roi" className="bg-[var(--cream)] py-16 lg:py-24">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 lg:grid-cols-2 lg:items-center">
-        <div className="flex flex-col gap-3">
+    <section
+      className="relative overflow-hidden bg-primary px-6 py-[88px]"
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse 80% 100% at 50% 100%, rgba(78,113,69,0.2) 0%, transparent 60%)",
+      }}
+    >
+      <div className="relative z-10 mx-auto grid max-w-[1100px] gap-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+        <div>
           <FadeUp>
-            <span className="inline-block text-xs font-semibold uppercase tracking-widest text-secondary">
-              {content.roi.label}
+            <span className="mb-6 inline-block rounded-full border border-secondary/30 bg-secondary/15 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
+              {content.label}
             </span>
           </FadeUp>
-
           <FadeUp delay={0.1}>
-            <h2 className="font-heading text-3xl font-bold text-primary md:text-4xl lg:text-5xl">
-              {content.roi.h2.split("{highlight}")[0]}
-              <span className="text-secondary">{content.roi.h2.split("{highlight}")[1]?.replace("{/highlight}", "")}</span>
+            <h2 className="mb-5 font-heading text-4xl font-semibold leading-tight text-white">
+              {content.h2}
             </h2>
           </FadeUp>
-
+          <FadeUp delay={0.15}>
+            <p className="mb-8 text-lg leading-relaxed text-white/85">{content.p}</p>
+          </FadeUp>
           <FadeUp delay={0.2}>
-            <Card className="border-0 bg-secondary">
-              <CardContent className="flex items-center gap-3 p-4">
-                <Image src="/roi.jpeg" alt="ROI" width={24} height={24} className="shrink-0 rounded-full" style={{ width: 'auto', height: 'auto' }} />
-                <p className="text-secondary-foreground font-medium text-sm">
-                  {content.roi.card}
-                </p>
-              </CardContent>
-            </Card>
+            <Link href="#kontakt">
+              <Button size="lg" className="rounded-full gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/90">
+                {content.cta}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </FadeUp>
         </div>
 
-        <FadeUp delay={0.2}>
-          <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted">
-            <Image src="/roi.jpeg" alt="ROI" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+        <FadeUp delay={0.25}>
+          <div className="grid grid-cols-2 gap-4">
+            {stats.map((s) => (
+              <div
+                key={s.label}
+                className="rounded-2xl border border-white/15 bg-white/10 p-7 text-center backdrop-blur-sm"
+              >
+                <span
+                  className={`font-heading text-[28px] font-semibold ${
+                    s.accent ? "text-secondary" : "text-white"
+                  }`}
+                >
+                  {s.value}
+                </span>
+                <div className="mt-2 text-xs leading-tight text-[#A9C2A2]">{s.label}</div>
+              </div>
+            ))}
           </div>
         </FadeUp>
       </div>
