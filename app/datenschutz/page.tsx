@@ -31,7 +31,7 @@ export default function Datenschutz() {
               <br />
               Vertreten durch:
               <br />
-              Herren M. Pereira
+              Herrn Mario Narciso Pereira
               <br />
               Bödikersteig 1
               <br />
@@ -39,10 +39,10 @@ export default function Datenschutz() {
               <br />
               <br />
               E-Mail für allgemeine Anfragen:{" "}
-              <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>
+              <a href="mailto:team@peraways.de" className="text-secondary hover:underline">team@peraways.de</a>
               <br />
               E-Mail für Direktkontakt:{" "}
-              <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>
+              <a href="mailto:team@peraways.de" className="text-secondary hover:underline">team@peraways.de</a>
             </address>
             <p className="text-xs text-muted-foreground">
               (Hinweis: Ein Datenschutzbeauftragter ist für unser Unternehmen gesetzlich nicht
@@ -69,6 +69,14 @@ export default function Datenschutz() {
               gespeichert, um Ihre Anfrage zu beantworten (Art. 6 Abs. 1 lit. f DSGVO bzw. Art. 6 Abs. 1
               lit. b DSGVO bei vorvertraglichen Maßnahmen). Für unser E-Mail-Postfach und CRM (AppSheet)
               nutzen wir die sichere Infrastruktur von Google Workspace, mit denen ein AVV geschlossen wurde.
+              Für die technische Zustellung der über das Kontaktformular gesendeten Nachrichten setzen wir
+              zusätzlich den E-Mail-Versanddienst <strong>Resend</strong> (Resend Inc.) ein. Zur Verwaltung
+              von Anfragen und Kandidatendaten nutzen wir außerdem <strong>Convex</strong> (Datenbank) und
+              <strong> Clerk</strong> (Login für unser internes Team).
+            </p>
+            <p className="text-xs text-muted-foreground">
+              [Bitte von Joseph bestätigen lassen: Standort der Datenverarbeitung bei Resend/Convex/Clerk
+              und ob AVVs mit diesen Anbietern bestehen.]
             </p>
           </section>
 
@@ -191,7 +199,7 @@ export default function Datenschutz() {
             </ul>
             <p>
               Zur Ausübung Ihrer Rechte kontaktieren Sie uns bitte unter{" "}
-              <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">kontakt@peraways.de</a>.
+              <a href="mailto:team@peraways.de" className="text-secondary hover:underline">team@peraways.de</a>.
               Zudem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren
               (Art. 77 DSGVO).
             </p>

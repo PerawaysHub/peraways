@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
 vielen Dank für Ihre Anfrage bei PeraWays. Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.
 
-Bei dringenden Fragen erreichen Sie uns unter kontakt@peraways.de.
+Bei dringenden Fragen erreichen Sie uns unter team@peraways.de.
 
 Mit freundlichen Grüßen,
 Ihr PeraWays-Team`
@@ -26,14 +26,14 @@ Ihr PeraWays-Team`
 
 thank you for your inquiry to PeraWays. We will get back to you within 24 hours.
 
-For urgent matters, please contact us at kontakt@peraways.de.
+For urgent matters, please contact us at team@peraways.de.
 
 Best regards,
 Your PeraWays Team`;
 
     const { error } = await resend.emails.send({
-      from: "PeraWays <kontakt@peraways.de>",
-      replyTo: "kontakt@peraways.de",
+      from: "PeraWays <team@peraways.de>",
+      replyTo: "team@peraways.de",
       to: email,
       subject,
       text: body,

@@ -24,7 +24,7 @@ function templateWrapper(body: string, lang: string): string {
   </div>
   <div class="footer">
     ${isDE ? "PeraWays UG — Berlin" : "PeraWays UG — Berlin"}<br>
-    ${isDE ? "kontakt@peraways.de" : "kontakt@peraways.de"}
+    ${isDE ? "team@peraways.de" : "team@peraways.de"}
   </div>
 </div>
 </body>
@@ -40,13 +40,13 @@ export function autoResponse(name: string, lang: string): { subject: string; htm
   const body = isDE ? `
     <h2>Hallo ${name},</h2>
     <p>vielen Dank für Ihre Nachricht. Wir haben Ihre Anfrage erhalten und werden uns innerhalb der nächsten 24 Stunden bei Ihnen melden.</p>
-    <p>Falls Sie ein dringendes Anliegen haben, erreichen Sie uns direkt unter <strong>kontakt@peraways.de</strong>.</p>
+    <p>Falls Sie ein dringendes Anliegen haben, erreichen Sie uns direkt unter <strong>team@peraways.de</strong>.</p>
     <hr>
     <p style="font-size:13px;color:#999;">Mit freundlichen Grüßen<br>Ihr PeraWays-Team</p>
   ` : `
     <h2>Hello ${name},</h2>
     <p>thank you for your message. We have received your inquiry and will get back to you within the next 24 hours.</p>
-    <p>If you have an urgent matter, you can reach us directly at <strong>kontakt@peraways.de</strong>.</p>
+    <p>If you have an urgent matter, you can reach us directly at <strong>team@peraways.de</strong>.</p>
     <hr>
     <p style="font-size:13px;color:#999;">Best regards<br>Your PeraWays Team</p>
   `

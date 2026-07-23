@@ -32,8 +32,8 @@ export default async function Danke(props: { searchParams?: Promise<{ lang?: str
 
         <p className="mt-4 text-lg text-white/70">
           {t.text}{" "}
-          <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">
-            kontakt@peraways.de
+          <a href="mailto:team@peraways.de" className="text-secondary hover:underline">
+            team@peraways.de
           </a>
         </p>
 

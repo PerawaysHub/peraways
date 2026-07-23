@@ -40,8 +40,8 @@ export default function Impressum() {
               </p>
               <p>
                 E-Mail:{" "}
-                <a href="mailto:kontakt@peraways.de" className="text-secondary hover:underline">
-                  kontakt@peraways.de
+                <a href="mailto:team@peraways.de" className="text-secondary hover:underline">
+                  team@peraways.de
                 </a>
               </p>
               <p>
@@ -58,7 +58,7 @@ export default function Impressum() {
             <div className="leading-relaxed">
               <p>Sitz der Gesellschaft: Berlin</p>
               <p>Amtsgericht Charlottenburg</p>
-              <p>Geschäftsführer: Mario Pereira</p>
+              <p>Geschäftsführer: Mario Narciso Pereira</p>
             </div>
           </section>
 

@@ -93,9 +93,9 @@ export function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="mailto:kontakt@peraways.de" className="flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white">
+                  <a href="mailto:team@peraways.de" className="flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white">
                     <Mail className="h-3.5 w-3.5 shrink-0" />
-                    <span>kontakt@peraways.de</span>
+                    <span>team@peraways.de</span>
                   </a>
                 </li>
                 <li>
@@ -127,7 +127,7 @@ export function Footer() {
               </address>
               <div className="pt-2 text-xs text-white/35">
                 <p>{isDe ? "Amtsgericht Charlottenburg" : "District Court Charlottenburg"}</p>
-                <p>GF: Mario Pereira</p>
+                <p>GF: Mario Narciso Pereira</p>
               </div>
             </div>
           </FadeUp>
