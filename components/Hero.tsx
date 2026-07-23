@@ -83,7 +83,7 @@ export function Hero() {
           </FadeUp>
 
           <FadeUp immediate delay={0.2}>
-            <div className="absolute -bottom-2 left-[-32px] min-w-[180px] rounded-2xl border border-white/12 bg-[rgba(25,70,60,0.72)] px-7 py-5 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:-bottom-2 lg:left-[-32px]">
+            <div className="floating-badge absolute -bottom-2 left-[-32px] min-w-[180px] rounded-2xl border border-white/12 bg-[rgba(25,70,60,0.72)] px-7 py-5 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:-bottom-2 lg:left-[-32px]">
               <div className="font-heading text-[28px] font-semibold leading-none text-white">
                 {content.badge}
               </div>
@@ -92,7 +92,10 @@ export function Hero() {
           </FadeUp>
 
           <FadeUp immediate delay={0.4}>
-            <div className="absolute -right-5 top-2 rounded-2xl border border-white/70 bg-white/55 px-5 py-4 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl">
+            <div
+              className="floating-badge absolute -right-5 top-2 rounded-2xl border border-white/70 bg-white/55 px-5 py-4 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl"
+              style={{ animationDelay: "2s" }}
+            >
               <GraduationCap className="mb-1 h-[22px] w-[22px] text-primary" strokeWidth={1.8} />
               <div className="text-[13px] font-bold text-primary">467 Praxisstunden</div>
               <div className="mt-0.5 text-[11px] text-[#5A5A5A]">Caregiver Level 3, UN-akkreditiert</div>
@@ -100,7 +103,10 @@ export function Hero() {
           </FadeUp>
 
           <FadeUp immediate delay={0.5}>
-            <div className="absolute -right-9 top-[44%] rounded-[14px] border border-white/70 bg-white/55 px-4.5 py-3 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl">
+            <div
+              className="floating-badge absolute -right-9 top-[44%] rounded-[14px] border border-white/70 bg-white/55 px-4.5 py-3 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl"
+              style={{ animationDelay: "3.5s" }}
+            >
               <div className="text-[11px] font-bold uppercase tracking-wider text-secondary">Employer Pays Principle</div>
               <div className="mt-0.5 flex items-center gap-1 text-xs font-semibold text-accent">
                 <Check className="h-3.5 w-3.5" strokeWidth={3} />

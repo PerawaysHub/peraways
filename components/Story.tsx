@@ -22,6 +22,10 @@ export function Story() {
     { Icon: Building2, title: content.story.f3Title, desc: content.story.f3Desc },
   ];
 
+  // Keep "UN-akkreditiert" from being hyphen-split across lines in the
+  // narrow badge card - wrap only in the middle dot instead.
+  const [badgePlace, badgeAccreditation] = content.story.badgeLocation.split(" · ");
+
   return (
     <section
       id="mission"
@@ -49,7 +53,7 @@ export function Story() {
                 className="w-[70%] object-contain"
               />
             </div>
-            <div className="absolute left-1/2 -bottom-7 w-64 -translate-x-1/2 rounded-2xl border border-white/70 bg-white/55 p-7 text-center shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+            <div className="absolute left-1/2 -bottom-7 w-72 -translate-x-1/2 rounded-2xl border border-white/70 bg-white/55 p-7 text-center shadow-[0_12px_40px_rgba(0,0,0,0.22)] backdrop-blur-xl">
               <div className="mb-2 text-xs font-bold uppercase tracking-widest text-secondary">
                 {content.story.badgeLabel}
               </div>
@@ -57,7 +61,7 @@ export function Story() {
                 {content.story.badgeName}
               </div>
               <div className="mt-1.5 text-sm text-[#5A5A5A]">
-                {content.story.badgeLocation}
+                {badgePlace} · <span className="whitespace-nowrap">{badgeAccreditation}</span>
               </div>
             </div>
           </div>

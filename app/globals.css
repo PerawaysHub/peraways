@@ -80,6 +80,24 @@ body {
     0 0 0 1px rgba(25, 70, 60, 0.08);
 }
 
+.floating-badge {
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-badge {
+    animation: none;
+  }
+}
+
 :root {
   --background: #F4F1EC;
   --foreground: oklch(0.145 0 0);

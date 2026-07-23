@@ -14,7 +14,7 @@ const features = [
     number: "01",
     title: "Ethisch",
     desc: "Die Reise- und Transferkosten trägt das Nakuru County vor. Kein Talent zahlt einen Cent. Kein Vorschuss für Sie.",
-    modalTitle: "Ethisch, weil es nicht anders geht.",
+    modalTitle: "Ethisch, weil sie es verdienen.",
     modalText:
       "Wir folgen konsequent dem Employer Pays Principle der WHO. Die Reise- und Transferkosten der Talente werden durch das Nakuru County vorfinanziert. Ihr Azubi zahlt für seinen Bildungsweg nichts, weder Agenturgebühren noch eine Rückzahlungsklausel im Arbeitsvertrag. Und Sie treten erst dann in Vorleistung, wenn Ihr Azubi seinen ersten dokumentierten Arbeitstag bei Ihnen hatte.",
     tags: [
@@ -30,7 +30,7 @@ const features = [
     desc: "LEA Fast-Lane nach § 81a. Entscheidungsreife Akten. Botschaftstermin Nairobi in Wochen statt Monaten.",
     modalTitle: "Schnell, weil wir das System von innen kennen.",
     modalText:
-      "Gründer Mario Pereira hat selbst beim Landesamt für Einwanderung Berlin gearbeitet. Diese Erfahrung nutzen wir für Sie. Das beschleunigte Fachkräfteverfahren nach § 81a AufenthG ermöglicht eine Vorabzustimmung durch das LEA, noch bevor das Talent zur Deutschen Botschaft in Nairobi fährt. Wir reichen unsere Akten erst ein, wenn sie vollständig entscheidungsreif sind. Das erspart Ihnen Rückfrageschleifen.",
+      "Unser Gründer hat selbst beim Landesamt für Einwanderung Berlin gearbeitet. Diese Erfahrung nutzen wir für Sie. Das beschleunigte Fachkräfteverfahren nach § 81a AufenthG ermöglicht eine Vorabzustimmung durch das LEA, noch bevor das Talent zur Deutschen Botschaft in Nairobi fährt. Wir reichen unsere Akten erst ein, wenn sie vollständig entscheidungsreif sind. Das erspart Ihnen Rückfrageschleifen.",
     tags: [
       "§ 81a AufenthG Vorabzustimmung",
       "LEA-Insider-Expertise",
@@ -72,10 +72,10 @@ const features = [
     desc: "§ 16a AufenthG erlaubt 20h/Woche als Pflegehilfskraft. Entlastung ab dem ersten Arbeitstag.",
     modalTitle: "Ab dem ersten Tag ein Teil Ihres Teams.",
     modalText:
-      "Nach § 16a Abs. 3 AufenthG darf ein Talent in der Vorschaltphase bis zu 20 Stunden pro Woche als Pflegehilfskraft arbeiten, das sind 3 bis 6 Monate vor dem offiziellen Ausbildungsstart. In dieser Zeit lernt Ihr neues Teammitglied Ihre Einrichtung kennen, Ihre Abläufe, Ihre Kolleginnen und Kollegen. Schon während dieser Vorschaltphase beginnt sich das Honorar zu amortisieren, deutlich vor dem offiziellen Ausbildungsstart.",
+      "Nach § 16a Abs. 3 AufenthG darf ein Talent in der Vorschaltphase bis zu 20 Stunden pro Woche als Pflegehilfskraft arbeiten. Und das bis zu 6 Monate vor dem offiziellen Ausbildungsstart. In dieser Zeit lernt Ihr neues Teammitglied Ihre Einrichtung kennen, Ihre Abläufe, Ihre Kolleginnen und Kollegen. Schon während dieser Vorschaltphase beginnt sich das Honorar zu amortisieren, deutlich vor dem offiziellen Ausbildungsstart.",
     tags: [
       "§ 16a Abs. 3 AufenthG (20h/Woche)",
-      "3 bis 6 Monate Vorschaltphase",
+      "Bis zu 6 Monate Vorschaltphase",
       "ROI startet vor Ausbildungsbeginn",
       "Team-Integration ab Tag 1",
     ],
