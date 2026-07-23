@@ -37,7 +37,10 @@ export function Story() {
       <div className="relative z-10 mx-auto grid max-w-6xl gap-16 px-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <FadeUp>
           <div className="relative">
-            <div className="relative flex aspect-3/4 items-center justify-center overflow-hidden rounded-3xl bg-white shadow-[0_32px_80px_rgba(0,0,0,0.35)]">
+            <div
+              className="relative flex aspect-3/4 items-center justify-center overflow-hidden rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.35)]"
+              style={{ background: "linear-gradient(135deg, #D5E0D3 0%, #C4D5C1 50%, #B8CCBA 100%)" }}
+            >
               <Image
                 src="/partner-logo.png"
                 alt="Partnerlogo: Gillian Sabatia Training College und PeraWays"

@@ -1,17 +1,6 @@
 "use client";
 
-import { FadeUp, StaggerContainer, StaggerItem } from "./FadeUp";
-import { useLanguage } from "./LanguageContext";
-import { translations } from "./translations";
-import { 
-  Heart, 
-  Clock, 
-  GraduationCap, 
-  Languages, 
-  Briefcase, 
-  Home,
-  ArrowRight
-} from "lucide-react";
+import { FadeUp } from "./FadeUp";
 import {
   Dialog,
   DialogContent,
@@ -20,106 +9,152 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const icons = [
-  Heart,
-  Clock,
-  GraduationCap,
-  Languages,
-  Briefcase,
-  Home,
-];
-
-const iconsEN = [
-  { icon: Heart, title: "Ethical", desc: "No recruitment fees. Debt-free relocation for all talent.", detail: "We consistently apply the 'Employer Pays Principle' following the ethical WHO code. By financing the preparation, our talents relocate completely debt-free. This creates exceptional loyalty and binds motivated personnel to your facility long-term." },
-  { icon: Clock, title: "Fast", desc: "LEA Fast-Lane process under § 81a. Decision-ready files in weeks.", detail: "Thanks to insider expertise at LEA Berlin, we deliver 100% decision-ready files under § 81a AufenthG. The German-Kenyan migration agreement also eliminates priority checks. This saves valuable time and guarantees legally secure, precise planning." },
-  { icon: GraduationCap, title: "Qualified", desc: "467 documented practice hours. NITA Level 3 certified.", detail: "Our talents are clinically pre-qualified: They bring 467 documented practice hours and the Caregiver Level 3 certificate. With this solid foundation, they are perfectly prepared to start the 18-month PFA training immediately." },
-  { icon: Languages, title: "Language Ready", desc: "B1 German training completed before arrival.", detail: "Language preparation is a core pillar of our 'Golden P-Bridge'. Our talents complete a 10-month intensive training in Kenya, aiming to securely reach B1 level before entry. This ensures smooth communication in daily care from day one." },
-  { icon: Briefcase, title: "Work Immediately", desc: "§ 16a permits 20h/week work from day 1 in Germany.", detail: "Benefit from day one: Our talents arrive two months before training starts and can immediately work 20 hours/week as nursing assistants (§ 16a Abs. 3 AufenthG). This lead time significantly relieves your teams and enables relaxed onboarding before the first school day." },
-  { icon: Home, title: "Housing Provided", desc: "We partner with employers who offer accommodation.", detail: "Housing is the critical success factor for visa approval. By providing accommodation, the mathematical subsistence guarantee under § 2 Abs. 3 AufenthG is legally secured. We work exclusively with partners who can lay this important foundation for their new specialists." },
-];
-
-const iconsDE = [
-  { icon: Heart, title: "Ethisch", desc: "Keine Vermittlungsgebühren. Schuldenfreie Einreise für alle Talente.", detail: "Wir setzen konsequent auf das 'Employer Pays Principle' nach dem ethischen WHO-Kodex. Da Sie die Vorbereitung finanzieren, reisen unsere Talente völlig schuldenfrei ein. Dies schafft eine außergewöhnlich hohe Loyalität und bindet motiviertes Fachpersonal langfristig an Ihr Haus." },
-  { icon: Clock, title: "Schnell", desc: "LEA Fast-Lane Verfahren nach § 81a. Entscheidungsreife Akten in wenigen Wochen.", detail: "Dank Insider-Expertise zum LEA Berlin liefern wir zu 100 % entscheidungsreife Akten gemäß § 81a AufenthG. Durch das deutsch-kenianische Migrationsabkommen entfällt zudem die Vorrangprüfung. Das spart wertvolle Zeit und garantiert Ihnen eine rechtssichere, präzise Planung." },
-  { icon: GraduationCap, title: "Qualifiziert", desc: "467 dokumentierte Praxisstunden. NITA Level 3 zertifiziert.", detail: "Unsere Talente sind klinisch vorqualifiziert: Sie bringen 467 dokumentierte Praxisstunden sowie das Caregiver-Level-3-Zertifikat mit. Mit diesem soliden Fundament sind sie bestens vorbereitet, um sofort fachkundig in die 18-monatige PFA-Ausbildung zu starten." },
-  { icon: Languages, title: "Grundlegende Deutschkenntnisse", desc: "B1 Deutsch VOR Anreise abgeschlossen.", detail: "Die sprachliche Vorbereitung ist ein Kernpfeiler der 'Goldenen P-Brücke'. Unsere Talente absolvieren in Kenia ein 10-monatiges Intensivtraining mit dem Ziel, das B1-Niveau bereits vor der Einreise sicher abzuschließen. Dies gewährleistet eine reibungslose Kommunikation im Pflegealltag von Beginn an." },
-  { icon: Briefcase, title: "Sofort arbeitsbereit", desc: "§ 16a erlaubt 20h/Woche Arbeit ab Tag 1 in Deutschland.", detail: "Profitieren Sie ab Tag eins: Unsere Talente landen zwei Monate vor Ausbildungsstart und dürfen direkt 20 Std./Woche als Pflegehelfer unterstützen (§ 16a Abs. 3 AufenthG). Dieser Vorlauf entlastet Ihre Teams spürbar und ermöglicht ein entspanntes Onboarding vor dem ersten Schultag." },
-  { icon: Home, title: "Wohnraum", desc: "Wir arbeiten bevorzugt mit Arbeitgebern welche Wohnraum anbieten oder aktiv bei der Suche unterstützen.", detail: "Für das Visum ist ein Mietvertrag erforderlich. Dank des 20/20-Modells trägt das Talent die Miete ab dem ersten Tag selbst. Ob Ihr Haus Wohnraum bereitstellt und direkt mit dem Talent abrechnet oder wir gemeinsam eine externe Lösung organisieren: Wir koordinieren beides in Absprache." },
+const features = [
+  {
+    number: "01",
+    title: "Ethisch",
+    desc: "Die Reise- und Transferkosten trägt das Nakuru County vor. Kein Talent zahlt einen Cent. Kein Vorschuss für Sie.",
+    modalTitle: "Ethisch, weil es nicht anders geht.",
+    modalText:
+      "Wir folgen konsequent dem Employer Pays Principle der WHO. Die Reise- und Transferkosten der Talente werden durch das Nakuru County vorfinanziert. Ihr Azubi zahlt für seinen Bildungsweg nichts, weder Agenturgebühren noch eine Rückzahlungsklausel im Arbeitsvertrag. Und Sie treten erst dann in Vorleistung, wenn Ihr Azubi seinen ersten dokumentierten Arbeitstag bei Ihnen hatte.",
+    tags: [
+      "WHO Employer Pays Principle",
+      "Nakuru County Vorfinanzierung",
+      "Kein Vorschuss für den Träger",
+      "Schuldenfreie Einreise garantiert",
+    ],
+  },
+  {
+    number: "02",
+    title: "Schnell",
+    desc: "LEA Fast-Lane nach § 81a. Entscheidungsreife Akten. Botschaftstermin Nairobi in Wochen statt Monaten.",
+    modalTitle: "Schnell, weil wir das System von innen kennen.",
+    modalText:
+      "Gründer Mario Pereira hat selbst beim Landesamt für Einwanderung Berlin gearbeitet. Diese Erfahrung nutzen wir für Sie. Das beschleunigte Fachkräfteverfahren nach § 81a AufenthG ermöglicht eine Vorabzustimmung durch das LEA, noch bevor das Talent zur Deutschen Botschaft in Nairobi fährt. Wir reichen unsere Akten erst ein, wenn sie vollständig entscheidungsreif sind. Das erspart Ihnen Rückfrageschleifen.",
+    tags: [
+      "§ 81a AufenthG Vorabzustimmung",
+      "LEA-Insider-Expertise",
+      "Botschaftstermin Nairobi in Wochen",
+      "Keine Vorrangprüfung",
+    ],
+  },
+  {
+    number: "03",
+    title: "Qualifiziert",
+    desc: "467 dokumentierte Praxisstunden. NITA Caregiver Level 3. UN-akkreditiertes GSTC.",
+    modalTitle: "467 Stunden, die Ihr Team spüren wird.",
+    modalText:
+      "Am Gillian Sabatia Training College in Nakuru absolvieren unsere Talente eine zehnmonatige Intensivausbildung, darunter 467 klinische Praxisstunden nach NITA-Standard, Caregiver Level 3. Hygiene, Vitalzeichenmessung, Mobilisation und Grundpflege werden dokumentiert und zertifiziert. Das GSTC ist UN-akkreditiert. Wenn ein Talent bei Ihnen anfängt, kennt es die Grundlagen der Pflege bereits.",
+    tags: [
+      "467 dokumentierte Praxisstunden",
+      "NITA Caregiver Level 3",
+      "UN-akkreditiertes GSTC",
+      "Grundpflege und Vitalzeichen",
+    ],
+  },
+  {
+    number: "04",
+    title: "Grundlegende Deutschkenntnisse",
+    desc: "B1-Zertifikat vor Einreise. Parallel zur klinischen Ausbildung. Kein separater Kurs für Sie.",
+    modalTitle: "B1 Deutsch, mitgebracht aus Nakuru.",
+    modalText:
+      "Das Deutschtraining läuft parallel zur klinischen Ausbildung am GSTC in Nakuru, ohne separaten Kurs und ohne zusätzlichen Aufwand für Sie. Bei Einreise verfügen alle Talente über das ÖSD-Zertifikat B1. In der Vorschaltphase führen sie den BAMF-Berufssprachkurs B2 fort. So kann Ihr neues Teammitglied vom ersten Tag an kommunizieren.",
+    tags: [
+      "ÖSD B1-Zertifikat bei Einreise",
+      "Simultantraining zur klinischen Ausbildung",
+      "BAMF-Sprachkurs B2 in der Vorschaltphase",
+      "Visumkonform nach § 16a AufenthG",
+    ],
+  },
+  {
+    number: "05",
+    title: "Sofort arbeitsbereit",
+    desc: "§ 16a AufenthG erlaubt 20h/Woche als Pflegehilfskraft. Entlastung ab dem ersten Arbeitstag.",
+    modalTitle: "Ab dem ersten Tag ein Teil Ihres Teams.",
+    modalText:
+      "Nach § 16a Abs. 3 AufenthG darf ein Talent in der Vorschaltphase bis zu 20 Stunden pro Woche als Pflegehilfskraft arbeiten, das sind 3 bis 6 Monate vor dem offiziellen Ausbildungsstart. In dieser Zeit lernt Ihr neues Teammitglied Ihre Einrichtung kennen, Ihre Abläufe, Ihre Kolleginnen und Kollegen. Schon während dieser Vorschaltphase beginnt sich das Honorar zu amortisieren, deutlich vor dem offiziellen Ausbildungsstart.",
+    tags: [
+      "§ 16a Abs. 3 AufenthG (20h/Woche)",
+      "3 bis 6 Monate Vorschaltphase",
+      "ROI startet vor Ausbildungsbeginn",
+      "Team-Integration ab Tag 1",
+    ],
+  },
+  {
+    number: "06",
+    title: "Wohnraum",
+    desc: "Wir arbeiten ausschließlich mit Trägern, die Wohnraum bereitstellen. Teil unserer gemeinsamen Verantwortung.",
+    modalTitle: "Wohnraum als Partnerschaftsbeitrag.",
+    modalText:
+      "PeraWays arbeitet ausschließlich mit Trägern zusammen, die Wohnraum für die Talente bereitstellen. Uns geht es dabei um eine einfache Überzeugung: Wer in einer fremden Stadt ankommen will, braucht zuerst einen sicheren Ort zum Leben. Erst dann kann sich ein Talent auf die Arbeit konzentrieren und bleibt langfristig im Team. Für die ersten Wochen bieten wir auch kurzzeitige Übergangslösungen an.",
+    tags: [
+      "Wohnraum als Pflichtbestandteil der Kooperation",
+      "Mindestgröße 12 qm möbliert",
+      "Unterstützung bei Wohnraumlösung",
+      "Stabilität als Grundlage für Bindung",
+    ],
+  },
 ];
 
 export function Bridge() {
-  const { lang, t } = useLanguage();
-  const content = lang === "de" ? translations.de : translations.en;
-  const features = lang === "de" ? iconsDE : iconsEN;
-
   return (
-    <section id="loesung" className="bg-[var(--surface)] py-20 lg:py-32">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="loesung" className="relative overflow-hidden bg-[var(--surface)] py-24">
+      <div
+        className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] rounded-full bg-primary/5"
+        style={{ transform: "translate(150px, -150px)" }}
+      />
+      <div className="relative z-10 mx-auto mb-16 max-w-2xl text-center">
         <FadeUp>
-          <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-secondary">
-            {content.bridge.label}
+          <span className="mb-5 inline-block rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-widest text-secondary">
+            So funktioniert&apos;s
           </span>
         </FadeUp>
-
-        <FadeUp delay={0.15}>
-          <h2 className="mb-16 font-heading text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
-            {content.bridge.h2}
+        <FadeUp delay={0.1}>
+          <h2 className="font-heading text-4xl font-semibold leading-tight text-primary">
+            Warum PeraWays
+            <br />
+            der richtige Partner ist.
           </h2>
         </FadeUp>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <FadeUp key={feature.title} delay={0.2 + index * 0.1}>
-                <Dialog>
-                  <DialogTrigger render={<div className="group relative flex h-full min-h-[340px] cursor-pointer flex-col rounded-2xl border border-gray-100 bg-gray-50/50 p-8 transition-all hover:border-secondary/30 hover:bg-gray-100">
-                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 text-secondary transition-transform group-hover:scale-110">
-                      <Icon className="h-7 w-7" strokeWidth={1.5} />
+      <div className="relative z-10 mx-auto grid max-w-[1080px] grid-cols-1 gap-6 px-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10">
+        {features.map((feature, index) => (
+          <FadeUp key={feature.title} delay={0.15 + index * 0.05}>
+            <Dialog>
+              <DialogTrigger
+                render={
+                  <div className="flex h-full cursor-pointer flex-col rounded-2xl bg-white p-7">
+                    <div className="mb-2.5 font-heading text-lg font-semibold text-secondary">
+                      {feature.number}
                     </div>
-                    
-                    <div className="absolute right-6 top-8 text-4xl font-bold text-secondary/20">
-                      0{index + 1}
-                    </div>
-                    
-                    <h3 className="mb-3 text-2xl font-bold text-primary">
-                      {feature.title}
-                    </h3>
-                    
-                    <p className="text-lg leading-relaxed text-muted-foreground">
-                      {feature.desc}
-                    </p>
-                    
-                    <div className="mt-auto flex items-center text-sm font-medium text-secondary">
-                      <span className="flex items-center">
-                        Mehr erfahren
-                        <ArrowRight className="ml-1 h-4 w-4" />
-                      </span>
-                    </div>
-                  </div>} nativeButton={false} />
-                  
-                  <DialogContent className="sm:max-w-lg overflow-hidden p-6">
-                    <div className="flex items-center w-full justify-between gap-4 bg-linear-to-br from-primary/5 to-secondary/5 p-6 pb-4">
-                      {/* <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-white">
-                        <span className="text-sm font-bold">0{index + 1}</span>
-                      </div> */}
-                      <DialogTitle className="text-2xl font-bold text-primary">
-                        {feature.title}
-                      </DialogTitle>
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-secondary/10 text-secondary">
-                        <Icon className="h-6 w-6" strokeWidth={1.5} />
-                      </div>
-                      
-                    </div>
-                    <DialogDescription className="px-6 pb-6 text-base leading-relaxed text-muted-foreground">
-                      {feature.detail}
-                    </DialogDescription>
-                  </DialogContent>
-                </Dialog>
-              </FadeUp>
-            );
-          })}
-        </div>
+                    <h3 className="mb-2 text-lg font-semibold text-primary">{feature.title}</h3>
+                    <p className="mb-3 text-sm leading-relaxed text-[#3A4A42]">{feature.desc}</p>
+                    <span className="text-[13px] font-semibold text-secondary">Mehr erfahren →</span>
+                  </div>
+                }
+                nativeButton={false}
+              />
+
+              <DialogContent className="sm:max-w-lg overflow-hidden p-6">
+                <DialogTitle className="font-heading text-2xl font-semibold text-primary">
+                  {feature.modalTitle}
+                </DialogTitle>
+                <DialogDescription className="text-base leading-relaxed text-[#3A4A42]">
+                  {feature.modalText}
+                </DialogDescription>
+                <div className="flex flex-col gap-2">
+                  {feature.tags.map((tag) => (
+                    <span key={tag} className="flex items-center gap-2 text-sm text-primary/80">
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </FadeUp>
+        ))}
       </div>
     </section>
   );

@@ -9,6 +9,7 @@ const services = [
   {
     id: "pfa-placement",
     image: "/leistung-talent.jpg",
+    objectPosition: "50% 41.6%",
     alt: "Talent in der Pflegepraxis",
     title: "s1Title",
     desc: "s1Desc",
@@ -18,6 +19,7 @@ const services = [
   {
     id: "language-training",
     image: "/leistung-sprachtraining.jpg",
+    objectPosition: "50% 15.3%",
     alt: "Deutschkurs am GSTC",
     title: "s2Title",
     desc: "s2Desc",
@@ -27,6 +29,7 @@ const services = [
   {
     id: "visa-advisory",
     image: "/leistung-visa.jpg",
+    objectPosition: "50% 25%",
     alt: "Berlin / Behörden-Motiv",
     title: "s3Title",
     desc: "s3Desc",
@@ -77,7 +80,13 @@ export function Services() {
           <FadeUp key={service.id} delay={0.2 + index * 0.1}>
             <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_8px_28px_rgba(25,70,60,0.08)]">
               <div className="relative aspect-video">
-                <Image src={service.image} alt={service.alt} fill className="object-cover" />
+                <Image
+                  src={service.image}
+                  alt={service.alt}
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: service.objectPosition }}
+                />
               </div>
               <div className="flex flex-1 flex-col p-7">
                 <div className="mb-2.5 text-[11px] font-bold uppercase tracking-widest text-secondary">
