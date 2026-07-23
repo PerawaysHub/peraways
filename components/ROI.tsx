@@ -1,6 +1,7 @@
 "use client";
 
 import { FadeUp } from "./FadeUp";
+import { CountUp } from "./CountUp";
 import { Button } from "@/components/ui/button";
 import { translations } from "./translations";
 import { ArrowRight } from "lucide-react";
@@ -10,10 +11,10 @@ export function ROI() {
   const content = translations.de.investment;
 
   const stats = [
-    { value: content.s1Value, label: content.s1Label },
-    { value: content.s2Value, label: content.s2Label, accent: true },
-    { value: content.s3Value, label: content.s3Label },
-    { value: content.s4Value, label: content.s4Label },
+    { target: 9000, suffix: " €", delay: 0, label: content.s1Label },
+    { target: 8500, suffix: " €", delay: 500, label: content.s2Label, accent: true },
+    { target: 60, prefix: "< ", suffix: " Tage", delay: 1000, label: content.s3Label },
+    { target: 0, suffix: " €", delay: 0, label: content.s4Label },
   ];
 
   return (
@@ -56,13 +57,15 @@ export function ROI() {
                 key={s.label}
                 className="rounded-2xl border border-white/15 bg-white/10 p-7 text-center backdrop-blur-sm"
               >
-                <span
+                <CountUp
+                  target={s.target}
+                  prefix={s.prefix}
+                  suffix={s.suffix}
+                  delay={s.delay}
                   className={`font-heading text-[28px] font-semibold ${
                     s.accent ? "text-secondary" : "text-white"
                   }`}
-                >
-                  {s.value}
-                </span>
+                />
                 <div className="mt-2 text-xs leading-tight text-[#A9C2A2]">{s.label}</div>
               </div>
             ))}

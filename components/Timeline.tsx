@@ -61,7 +61,7 @@ export function Timeline() {
       <div ref={containerRef} className="relative mx-auto flex max-w-[720px] flex-col">
         {line && (
           <div
-            className="absolute left-[129px] w-0.5 rounded-full"
+            className="absolute left-[129px] z-0 w-0.5 rounded-full"
             style={{
               top: line.top,
               height: line.height,

@@ -7,6 +7,14 @@ interface FadeUpProps {
   children: ReactNode;
   delay?: number;
   className?: string;
+  /**
+   * Skip the "scroll into view" gate and just animate on mount. Use this
+   * for above-the-fold content (e.g. inside Hero) that's already visible
+   * on first load - otherwise the -100px intersection margin can keep it
+   * invisible until the user scrolls, since there's nothing to scroll
+   * into view from.
+   */
+  immediate?: boolean;
 }
 
 const fadeUpVariants: Variants = {
@@ -22,15 +30,16 @@ const fadeUpVariants: Variants = {
   }),
 };
 
-export function FadeUp({ children, delay = 0, className = "" }: FadeUpProps) {
+export function FadeUp({ children, delay = 0, className = "", immediate = false }: FadeUpProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const show = immediate || isInView;
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={show ? "visible" : "hidden"}
       variants={fadeUpVariants}
       custom={delay}
       className={className}
