@@ -73,7 +73,7 @@ export function Timeline() {
         {content.steps.map((step, i) => (
           <FadeUp key={step.title} delay={0.15 + i * 0.08}>
             <div
-              className={`mb-4 flex items-start gap-7 rounded-2xl p-6 lg:p-7 ${
+              className={`card-3d mb-4 flex items-start gap-7 rounded-2xl p-6 lg:p-7 ${
                 step.highlight
                   ? "border border-secondary/20 bg-gradient-to-br from-[#FDF1EE] to-[#FAE8E3]"
                   : "bg-white"

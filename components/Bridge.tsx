@@ -124,7 +124,7 @@ export function Bridge() {
             <Dialog>
               <DialogTrigger
                 render={
-                  <div className="flex h-full cursor-pointer flex-col rounded-2xl bg-white p-7">
+                  <div className="card-3d flex h-full cursor-pointer flex-col rounded-2xl bg-white p-7">
                     <div className="mb-2.5 font-heading text-lg font-semibold text-secondary">
                       {feature.number}
                     </div>
@@ -136,7 +136,10 @@ export function Bridge() {
                 nativeButton={false}
               />
 
-              <DialogContent className="sm:max-w-lg overflow-hidden p-6">
+              <DialogContent
+                className="sm:max-w-lg overflow-hidden p-6"
+                overlayClassName="bg-[rgba(15,40,32,0.7)] backdrop-blur-sm"
+              >
                 <DialogTitle className="font-heading text-2xl font-semibold text-primary">
                   {feature.modalTitle}
                 </DialogTitle>

@@ -40,7 +40,7 @@ export function Gstc() {
         <StaggerContainer className="mx-auto grid max-w-3xl grid-cols-2 gap-5 lg:grid-cols-4">
           {stats.map((s) => (
             <StaggerItem key={s.label}>
-              <div className="rounded-2xl bg-white p-7 shadow-[0_8px_28px_rgba(25,70,60,0.08)]">
+              <div className="card-3d rounded-2xl bg-white p-7">
                 <div className="font-heading text-4xl font-semibold leading-none text-primary">
                   {s.value}
                 </div>

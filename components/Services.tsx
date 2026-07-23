@@ -78,7 +78,7 @@ export function Services() {
       <div className="relative z-10 mx-auto grid max-w-6xl gap-7 md:grid-cols-3">
         {services.map((service, index) => (
           <FadeUp key={service.id} delay={0.2 + index * 0.1}>
-            <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_8px_28px_rgba(25,70,60,0.08)]">
+            <div className="card-3d flex h-full flex-col overflow-hidden rounded-2xl bg-white">
               <div className="relative aspect-video">
                 <Image
                   src={service.image}
