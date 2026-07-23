@@ -73,7 +73,7 @@ export function Story() {
           <FadeUp delay={0.1}>
             <h2 className="mb-7 font-heading text-4xl font-semibold leading-[1.1] text-white lg:text-5xl">
               {h2.before}
-              <span className="italic text-secondary">{h2.highlight}</span>
+              <span className="text-secondary">{h2.highlight}</span>
             </h2>
           </FadeUp>
 

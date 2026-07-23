@@ -35,7 +35,7 @@ export function Hero() {
           <FadeUp delay={0.25}>
             <h1 className="font-heading text-5xl font-semibold leading-[1.05] text-primary md:text-6xl lg:text-[64px]">
               {h1.before}
-              <span className="italic" style={{ color: "#7FA278" }}>{h1.highlight}</span>
+              <span style={{ color: "#7FA278" }}>{h1.highlight}</span>
               {h1.after}
             </h1>
           </FadeUp>
