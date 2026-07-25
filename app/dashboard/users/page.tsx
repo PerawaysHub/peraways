@@ -16,22 +16,9 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import type { Doc } from "@/convex/_generated/dataModel";
+import { ROLE_LABELS as roleLabels, ROLE_COLORS as roleColors } from "@/convex/schema";
 
-const roleLabels: Record<string, string> = {
-  admin: "Admin",
-  editor: "Bearbeiter",
-  viewer: "Betrachter",
-  integrationshelfer: "Integrationshelfer",
-  gstc: "GSTC",
-};
-
-const roleColors: Record<string, string> = {
-  admin: "bg-red-100 text-red-800",
-  editor: "bg-blue-100 text-blue-800",
-  viewer: "bg-gray-100 text-gray-800",
-  integrationshelfer: "bg-purple-100 text-purple-800",
-  gstc: "bg-teal-100 text-teal-800",
-};
+const VIEW_ROLES = ["admin", "editor", "integrationshelfer"];
 
 export default function UsersPage() {
   const currentUser = useQuery(api.users.getCurrentUser);
@@ -43,14 +30,17 @@ export default function UsersPage() {
   const [deleteTarget, setDeleteTarget] = useState<Doc<"users"> | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  const canView = !!currentUser && VIEW_ROLES.includes(currentUser.role);
+  const isAdmin = currentUser?.role === "admin";
+
   useEffect(() => {
     if (currentUser === null) return;
-    if (currentUser && currentUser.role !== "admin") {
+    if (currentUser && !canView) {
       router.replace("/dashboard");
     }
-  }, [currentUser, router]);
+  }, [currentUser, canView, router]);
 
-  if (!currentUser || currentUser.role !== "admin") {
+  if (!canView) {
     return null;
   }
 
@@ -88,20 +78,26 @@ export default function UsersPage() {
                 <td className="px-4 py-3">{user.name || "—"}</td>
                 <td className="px-4 py-3 text-muted-foreground">{user.email}</td>
                 <td className="px-4 py-3">
-                  <select
-                    defaultValue={user.role}
-                    onChange={(e) => updateRole({ userId: user._id, role: e.target.value as "admin" | "editor" | "viewer" | "integrationshelfer" | "gstc" })}
-                    className={`rounded-md border px-2 py-1 text-xs font-medium ${roleColors[user.role]}`}
-                  >
-                    {Object.entries(roleLabels).map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
+                  {isAdmin ? (
+                    <select
+                      defaultValue={user.role}
+                      onChange={(e) => updateRole({ userId: user._id, role: e.target.value as "admin" | "editor" | "viewer" | "integrationshelfer" | "gstc" })}
+                      className={`rounded-md border px-2 py-1 text-xs font-medium ${roleColors[user.role]}`}
+                    >
+                      {Object.entries(roleLabels).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className={`inline-flex rounded-md px-2 py-1 text-xs font-medium ${roleColors[user.role]}`}>
+                      {roleLabels[user.role] ?? user.role}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  {user._id !== currentUser._id && (
+                  {isAdmin && user._id !== currentUser?._id && (
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(user)}
@@ -130,7 +126,7 @@ export default function UsersPage() {
           <DialogHeader>
             <DialogTitle>Nutzer entfernen</DialogTitle>
             <DialogDescription>
-              {deleteTarget?.name || deleteTarget?.email} verliert den Dashboard-Zugriff. Bei erneuter Anmeldung wird die Person automatisch wieder als Betrachter angelegt.
+              {deleteTarget?.name || deleteTarget?.email} verliert den Dashboard-Zugriff. Bei erneuter Anmeldung wird die Person automatisch wieder als &quot;Wartet auf Freischaltung&quot; angelegt und muss erneut freigeschaltet werden.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

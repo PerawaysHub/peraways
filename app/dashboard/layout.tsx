@@ -8,6 +8,7 @@ import { UserButton } from "@clerk/nextjs"
 import { useQuery, useMutation } from "convex/react"
 import { toast, Toaster } from "sonner"
 import { api } from "@/convex/_generated/api"
+import { ROLE_LABELS, ROLE_COLORS } from "@/convex/schema"
 import {
   LayoutDashboard,
   MessageSquare,
@@ -81,17 +82,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [unread, markAsRead, router])
 
-  useEffect(() => {
-    if (currentUser?.role === "gstc" && !pathname.startsWith("/dashboard/candidates")) {
-      router.replace("/dashboard/candidates")
-    }
-  }, [currentUser, pathname, router])
+  const role = currentUser?.role
 
-  const links = currentUser?.role === "gstc"
-    ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates")
-    : currentUser?.role === "admin"
-      ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
-      : sidebarLinks
+  useEffect(() => {
+    if (!role) return
+    if (role === "gstc") {
+      if (!pathname.startsWith("/dashboard/candidates")) router.replace("/dashboard/candidates")
+      return
+    }
+    if (role === "viewer") {
+      if (!pathname.startsWith("/dashboard/pending")) router.replace("/dashboard/pending")
+      return
+    }
+    // Any other (real) role stranded on the pending screen — e.g. just got
+    // promoted — should leave it automatically.
+    if (pathname.startsWith("/dashboard/pending")) router.replace("/dashboard")
+  }, [role, pathname, router])
+
+  const VIEW_USERS_ROLES = ["admin", "editor", "integrationshelfer"]
+  const links = role === "viewer"
+    ? []
+    : role === "gstc"
+      ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates")
+      : VIEW_USERS_ROLES.includes(role ?? "")
+        ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
+        : sidebarLinks
 
   return (
     <SidebarProvider className="flex h-screen w-full">
@@ -183,6 +198,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </span>
               )}
             </Button>
+            {role && (
+              <span className={`hidden sm:inline-flex items-center rounded-md px-2 py-1 text-[11px] font-medium ${ROLE_COLORS[role] ?? "bg-gray-100 text-gray-800"}`}>
+                {ROLE_LABELS[role] ?? role}
+              </span>
+            )}
             <UserButton />
           </div>
         </div>

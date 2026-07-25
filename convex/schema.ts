@@ -40,6 +40,22 @@ export const FINANZEN_STATUSES = ["Offen", "Fällig", "Bezahlt"] as const;
 
 export const HONORARBETRAG_OPTIONS = ["8500", "8000"] as const;
 
+export const ROLE_LABELS: Record<string, string> = {
+  admin: "Admin",
+  editor: "Bearbeiter",
+  integrationshelfer: "Integrationshelfer",
+  gstc: "GSTC",
+  viewer: "Wartet auf Freischaltung",
+};
+
+export const ROLE_COLORS: Record<string, string> = {
+  admin: "bg-red-100 text-red-800",
+  editor: "bg-blue-100 text-blue-800",
+  integrationshelfer: "bg-purple-100 text-purple-800",
+  gstc: "bg-teal-100 text-teal-800",
+  viewer: "bg-amber-100 text-amber-800",
+};
+
 export const COMPLIANCE_DOC_LABELS: Record<string, string> = {
   ausbildungsvertrag: "Ausbildungsvertrag",
   vorfinanzierungsvereinbarung: "Vorfinanzierungsvereinbarung (Nakuru County)",

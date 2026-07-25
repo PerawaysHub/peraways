@@ -48,10 +48,13 @@ export const upsertUser = mutation({
       .unique();
 
     if (existing) {
+      // Deliberately does not touch `role` here — this mutation is also called
+      // on every Clerk "user.updated" webhook event (profile edits, etc.), and
+      // overwriting the admin-assigned role on each of those would silently
+      // reset anyone back to the webhook's default computed role.
       await ctx.db.patch(existing._id, {
         name: args.name,
         email: args.email,
-        role: args.role,
       });
       return existing._id;
     }
@@ -125,7 +128,8 @@ export const list = query({
       .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
       .unique();
 
-    if (!currentUser || currentUser.role !== "admin") return [];
+    const viewRoles = ["admin", "editor", "integrationshelfer"];
+    if (!currentUser || !viewRoles.includes(currentUser.role)) return [];
 
     return await ctx.db.query("users").collect();
   },
