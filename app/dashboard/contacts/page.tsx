@@ -39,7 +39,14 @@ function BoardSkeleton() {
 
 export default function ContactsPage() {
   const contacts = useQuery(api.contacts.list);
+  const unread = useQuery(api.notifications.listUnread);
   const createContact = useMutation(api.contacts.create)
+
+  const newContactIds = new Set(
+    (unread ?? [])
+      .filter((n) => n.type === "new_contact" && n.relatedId)
+      .map((n) => n.relatedId as string)
+  )
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState("Neue Anfrage")
@@ -85,7 +92,7 @@ export default function ContactsPage() {
       </div>
 
       {contacts === undefined ? <BoardSkeleton /> : (
-        <KanbanBoard contacts={contacts} onAddContact={handleAddContact} />
+        <KanbanBoard contacts={contacts} onAddContact={handleAddContact} newContactIds={newContactIds} />
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

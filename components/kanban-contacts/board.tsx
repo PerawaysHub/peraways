@@ -26,6 +26,7 @@ type Contact = Doc<"contacts">
 interface KanbanBoardProps {
   contacts: Contact[] | undefined
   onAddContact: (status: string) => void
+  newContactIds?: Set<string>
 }
 
 function groupByStatus(contacts: Contact[]) {
@@ -39,7 +40,7 @@ function groupByStatus(contacts: Contact[]) {
   return map
 }
 
-export function KanbanBoard({ contacts, onAddContact }: KanbanBoardProps) {
+export function KanbanBoard({ contacts, onAddContact, newContactIds }: KanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [cardWidth, setCardWidth] = useState(0)
@@ -197,6 +198,7 @@ export function KanbanBoard({ contacts, onAddContact }: KanbanBoardProps) {
                 status={status}
                 contacts={columns[status] ?? []}
                 onAddClick={() => onAddContact(status)}
+                newContactIds={newContactIds}
               />
             ))}
           </div>

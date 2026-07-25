@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { UserButton } from "@clerk/nextjs"
 import { useQuery, useMutation } from "convex/react"
 import { toast, Toaster } from "sonner"
@@ -38,12 +38,19 @@ const sidebarLinks = [
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
 ]
 
+function notificationLink(n: { type: string; relatedId?: string }) {
+  if (n.type === "new_contact" && n.relatedId) return `/dashboard/contacts/${n.relatedId}`
+  return null
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
   const currentUser = useQuery(api.users.getCurrentUser)
   const unread = useQuery(api.notifications.listUnread)
   const unreadCount = useQuery(api.notifications.countUnread)
   const markAllAsRead = useMutation(api.notifications.markAllAsRead)
+  const markAsRead = useMutation(api.notifications.markAsRead)
 
   const seenIds = useRef<Set<string>>(new Set())
 
@@ -52,15 +59,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     for (const n of unread) {
       if (seenIds.current.has(n._id)) continue
       seenIds.current.add(n._id)
+      const link = notificationLink(n)
       toast(n.title, {
         description: n.description,
-        action: {
+        action: link
+          ? {
+              label: "Ansehen",
+              onClick: () => {
+                markAsRead({ id: n._id })
+                router.push(link)
+              },
+            }
+          : undefined,
+        cancel: {
           label: "Ok",
           onClick: () => {},
         },
       })
     }
-  }, [unread])
+  }, [unread, markAsRead, router])
 
   const links = currentUser?.role === "admin"
     ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,15 +49,23 @@ export default function ContactDetailPage() {
   const router = useRouter();
   const id = params.id as Id<"contacts">;
   const contact = useQuery(api.contacts.getById, { id });
+  const unread = useQuery(api.notifications.listUnread);
   const updateContact = useMutation(api.contacts.update);
   const updateStatus = useMutation(api.contacts.updateStatus);
   const deleteContact = useMutation(api.contacts.remove);
+  const markAsRead = useMutation(api.notifications.markAsRead);
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", telefon: "", einrichtung: "", nachricht: "", lang: "" });
+
+  useEffect(() => {
+    if (!unread) return;
+    const matching = unread.filter((n) => n.type === "new_contact" && n.relatedId === id);
+    for (const n of matching) markAsRead({ id: n._id });
+  }, [unread, id, markAsRead]);
 
   if (contact === undefined) {
     return (

@@ -31,16 +31,20 @@ function getInitials(name: string) {
     .slice(0, 2)
 }
 
-function areContactsEqual(a: { contact: Contact }, b: { contact: Contact }) {
+function areContactsEqual(
+  a: { contact: Contact; isNew?: boolean },
+  b: { contact: Contact; isNew?: boolean }
+) {
   return a.contact._id === b.contact._id
     && a.contact.status === b.contact.status
     && a.contact.position === b.contact.position
     && a.contact.name === b.contact.name
     && a.contact.email === b.contact.email
     && a.contact.einrichtung === b.contact.einrichtung
+    && a.isNew === b.isNew
 }
 
-export const KanbanCard = memo(function KanbanCard({ contact }: { contact: Contact }) {
+export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact: Contact; isNew?: boolean }) {
   const deleteContact = useMutation(api.contacts.remove)
 
   const {
@@ -90,13 +94,22 @@ export const KanbanCard = memo(function KanbanCard({ contact }: { contact: Conta
     >
       {/* Top row: name + delete */}
       <div className="flex items-start justify-between gap-2">
-        <Link
-          href={`/dashboard/contacts/${contact._id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
-        >
-          {contact.name}
-        </Link>
+        <div className="flex items-center gap-1.5 min-w-0">
+          {isNew && (
+            <span
+              className="flex size-1.5 shrink-0 rounded-full bg-secondary"
+              aria-label="Neu"
+              title="Neu"
+            />
+          )}
+          <Link
+            href={`/dashboard/contacts/${contact._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
+          >
+            {contact.name}
+          </Link>
+        </div>
 
         <button
           type="button"

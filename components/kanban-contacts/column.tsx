@@ -66,9 +66,10 @@ interface KanbanColumnProps {
   status: string
   contacts: Contact[]
   onAddClick: () => void
+  newContactIds?: Set<string>
 }
 
-export function KanbanColumn({ status, contacts, onAddClick }: KanbanColumnProps) {
+export function KanbanColumn({ status, contacts, onAddClick, newContactIds }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
   const theme = THEMES[status] ?? THEMES["Neue Anfrage"]
   const ids = useMemo(() => contacts.map((c) => c._id), [contacts])
@@ -112,7 +113,7 @@ export function KanbanColumn({ status, contacts, onAddClick }: KanbanColumnProps
         <div className="flex flex-col gap-1 md:gap-1.5 px-2 md:px-3 py-2 md:py-3 overflow-y-auto min-h-0 max-h-[calc(100vh-340px)]">
           {contacts.length > 0 ? (
             <AnimatePresence>
-              {contacts.map((c) => <KanbanCard key={c._id} contact={c} />)}
+              {contacts.map((c) => <KanbanCard key={c._id} contact={c} isNew={newContactIds?.has(c._id)} />)}
             </AnimatePresence>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center select-none">
