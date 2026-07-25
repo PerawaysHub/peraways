@@ -46,8 +46,8 @@ export function CookieConsent() {
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
               {t(
-                "Diese Website verwendet Cookies, um die Nutzererfahrung zu verbessern. Mit Klick auf &bdquo;Akzeptieren&ldquo; stimmst du der Verwendung zu.",
-                "This website uses cookies to improve your experience. By clicking &ldquo;Accept&rdquo;, you consent to their use."
+                "Diese Website verwendet Cookies, um die Nutzererfahrung zu verbessern. Mit Klick auf „Akzeptieren“ stimmst du der Verwendung zu.",
+                "This website uses cookies to improve your experience. By clicking “Accept”, you consent to their use."
               )}{' '}
               <Link href="/datenschutz" className="underline hover:text-primary transition-colors">
                 {t("Mehr erfahren", "Learn more")}
