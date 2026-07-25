@@ -183,4 +183,12 @@ export default defineSchema({
     read: v.boolean(),
     relatedId: v.optional(v.string()),
   }).index("by_read", ["read"]),
+  pushSubscriptions: defineTable({
+    userId: v.id("users"),
+    endpoint: v.string(),
+    p256dh: v.string(),
+    auth: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_endpoint", ["endpoint"]),
 });

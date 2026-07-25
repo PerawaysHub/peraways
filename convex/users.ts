@@ -80,6 +80,12 @@ export const upsertUser = mutation({
       email: args.email,
     });
 
+    await ctx.scheduler.runAfter(0, internal.pushSend.sendPushToRecipients, {
+      title: "Neue Registrierung",
+      body: `${args.name || args.email} wartet auf Freischaltung.`,
+      url: "/dashboard/users",
+    });
+
     return userId;
   },
 });

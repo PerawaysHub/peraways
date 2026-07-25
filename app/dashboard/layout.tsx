@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -17,6 +17,7 @@ import {
   Users,
   Home,
   Bell,
+  BellPlus,
   CalendarCheck2,
   Mail,
 } from "lucide-react"
@@ -48,6 +49,17 @@ function notificationLink(n: { type: string; relatedId?: string }) {
   return null
 }
 
+function urlBase64ToUint8Array(base64String: string) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/")
+  const rawData = atob(base64)
+  const outputArray = new Uint8Array(rawData.length)
+  for (let i = 0; i < rawData.length; i++) {
+    outputArray[i] = rawData.charCodeAt(i)
+  }
+  return outputArray
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -58,14 +70,53 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const unreadCount = useQuery(api.notifications.countUnread, canSeeNotifications ? {} : "skip")
   const markAllAsRead = useMutation(api.notifications.markAllAsRead)
   const markAsRead = useMutation(api.notifications.markAsRead)
+  const subscribePush = useMutation(api.push.subscribe)
 
   const seenIds = useRef<Set<string>>(new Set())
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission | null>(null)
+  const [pushSubscribed, setPushSubscribed] = useState<boolean | null>(null)
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {})
     }
+    if (typeof window !== "undefined" && "Notification" in window) {
+      // Reading a browser-only global; must happen post-mount to avoid an
+      // SSR/hydration mismatch (server never knows Notification.permission).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNotifPermission(Notification.permission)
+    }
   }, [])
+
+  useEffect(() => {
+    if (!canSeeNotifications) return
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
+    navigator.serviceWorker.ready.then(async (reg) => {
+      const sub = await reg.pushManager.getSubscription()
+      setPushSubscribed(!!sub)
+    })
+  }, [canSeeNotifications])
+
+  const handleEnablePush = async () => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) return
+    const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+    if (!vapidKey) return
+    const permission = await Notification.requestPermission()
+    setNotifPermission(permission)
+    if (permission !== "granted") return
+    const reg = await navigator.serviceWorker.ready
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey),
+    })
+    const json = sub.toJSON()
+    await subscribePush({
+      endpoint: sub.endpoint,
+      p256dh: json.keys?.p256dh ?? "",
+      auth: json.keys?.auth ?? "",
+    })
+    setPushSubscribed(true)
+  }
 
   useEffect(() => {
     if (!unread) return
@@ -201,6 +252,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center justify-between gap-2 border-b px-4 py-3">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
+            {canSeeNotifications && pushSubscribed === false && notifPermission && notifPermission !== "denied" && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={handleEnablePush}
+                aria-label="Push-Benachrichtigungen aktivieren"
+                title="Push-Benachrichtigungen aktivieren"
+              >
+                <BellPlus className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            )}
             {canSeeNotifications && (
               <Button
                 variant="ghost"

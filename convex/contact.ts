@@ -70,5 +70,13 @@ export const submit = mutation({
       nachricht: args.nachricht,
       lang: args.lang,
     })
+
+    await ctx.scheduler.runAfter(0, internal.pushSend.sendPushToRecipients, {
+      title: args.lang === "de" ? "Neue Kontaktanfrage" : "New contact inquiry",
+      body: args.lang === "de"
+        ? `Von ${args.name} (${args.email})`
+        : `From ${args.name} (${args.email})`,
+      url: `/dashboard/contacts/${contactId}`,
+    })
   },
 })

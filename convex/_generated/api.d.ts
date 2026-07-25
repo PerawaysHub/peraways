@@ -21,6 +21,8 @@ import type * as emails from "../emails.js";
 import type * as finanzen from "../finanzen.js";
 import type * as notifications from "../notifications.js";
 import type * as permissions from "../permissions.js";
+import type * as push from "../push.js";
+import type * as pushSend from "../pushSend.js";
 import type * as sendEmails from "../sendEmails.js";
 import type * as termine from "../termine.js";
 import type * as users from "../users.js";
@@ -45,6 +47,8 @@ declare const fullApi: ApiFromModules<{
   finanzen: typeof finanzen;
   notifications: typeof notifications;
   permissions: typeof permissions;
+  push: typeof push;
+  pushSend: typeof pushSend;
   sendEmails: typeof sendEmails;
   termine: typeof termine;
   users: typeof users;
