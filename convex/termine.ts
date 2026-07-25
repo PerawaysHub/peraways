@@ -62,6 +62,24 @@ export const listToday = query({
   },
 })
 
+export const listOpenBefore = query({
+  args: { before: v.number() },
+  handler: async (ctx, args) => {
+    const rows = await ctx.db
+      .query("termine")
+      .withIndex("by_datum", (q) => q.lt("datum", args.before))
+      .filter((q) => q.eq(q.field("status"), "Offen"))
+      .collect()
+    const withNames = await Promise.all(
+      rows.map(async (row) => {
+        const candidate = await ctx.db.get(row.candidateId)
+        return { ...row, candidateName: candidate?.name ?? "Unbekannt" }
+      })
+    )
+    return withNames.sort((a, b) => a.datum - b.datum)
+  },
+})
+
 export const update = mutation({
   args: {
     id: v.id("termine"),

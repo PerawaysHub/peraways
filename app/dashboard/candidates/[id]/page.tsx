@@ -18,7 +18,7 @@ import {
 import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES } from "@/convex/schema"
 import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
-import { daysUntil, probezeitEnde } from "@/lib/utils"
+import { daysUntil, probezeitEnde, terminUrgency } from "@/lib/utils"
 
 const STATUS_COLORS: Record<string, string> = {
   Qualifizierung: "bg-violet-100 text-violet-700 border-violet-200",
@@ -843,8 +843,15 @@ export default function CandidateDetailPage() {
           <div className="divide-y divide-gray-100">
             {[...termine].sort((a, b) => a.datum - b.datum).map((termin) => {
               const ArtIcon = ART_ICONS[termin.art] ?? MoreHorizontal
+              const urgency = terminUrgency(termin.datum, termin.status)
+              const urgencyBorder =
+                urgency === "ueberfaellig"
+                  ? "border-red-400"
+                  : urgency === "bald"
+                    ? "border-amber-400"
+                    : "border-transparent"
               return (
-                <div key={termin._id} className="flex items-center justify-between gap-3 py-2.5">
+                <div key={termin._id} className={`flex items-center justify-between gap-3 py-2.5 border-l-2 pl-2.5 ${urgencyBorder}`}>
                   <div className="flex items-center gap-2.5 min-w-0">
                     <ArtIcon className="size-4 text-gray-400 shrink-0" />
                     <div className="min-w-0">

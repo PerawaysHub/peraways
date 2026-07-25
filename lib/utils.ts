@@ -17,3 +17,15 @@ export function probezeitEnde(ersterArbeitstag?: number): number | undefined {
   d.setMonth(d.getMonth() + 4)
   return d.getTime()
 }
+
+export function terminUrgency(
+  datum: number,
+  status: "Offen" | "Erledigt"
+): "ueberfaellig" | "bald" | "neutral" {
+  if (status !== "Offen") return "neutral"
+  const days = daysUntil(datum)
+  if (days === null) return "neutral"
+  if (days < 0) return "ueberfaellig"
+  if (days <= 3) return "bald"
+  return "neutral"
+}

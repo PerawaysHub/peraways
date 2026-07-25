@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { CANDIDATE_STATUSES } from "@/convex/schema"
@@ -22,6 +23,11 @@ export default function DashboardPage() {
   const stats = useQuery(api.dashboard.getStats)
   const currentUser = useQuery(api.users.getCurrentUser)
   const finanzStats = useQuery(api.finanzen.getFinanzStats)
+  const [expandedStatus, setExpandedStatus] = useState<string | null>(null)
+  const expandedCandidates = useQuery(
+    api.candidates.getByStatus,
+    expandedStatus ? { status: expandedStatus } : "skip"
+  )
 
   if (stats === undefined) {
     return (
@@ -177,18 +183,43 @@ export default function DashboardPage() {
             {stats.statusCounts.map(({ status, count }) => {
               const pct = maxStatusCount > 0 ? (count / maxStatusCount) * 100 : 0
               const theme = STATUS_THEME[status] ?? { bar: "bg-gray-300", text: "text-gray-600" }
+              const isExpanded = expandedStatus === status
               return (
-                <div key={status} className="flex items-center gap-3">
-                  <span className="w-28 text-xs font-medium text-gray-600 truncate shrink-0">{status}</span>
-                  <div className="flex-1 h-5 bg-gray-100/80 relative">
-                    <div
-                      className={`h-full ${theme.bar} transition-all duration-500`}
-                      style={{ width: `${pct}%` }}
-                    />
+                <div key={status}>
+                  <div
+                    className="flex items-center gap-3 cursor-pointer select-none"
+                    onDoubleClick={() => setExpandedStatus(isExpanded ? null : status)}
+                  >
+                    <span className="w-28 text-xs font-medium text-gray-600 truncate shrink-0">{status}</span>
+                    <div className="flex-1 h-5 bg-gray-100/80 relative">
+                      <div
+                        className={`h-full ${theme.bar} transition-all duration-500`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className={`w-6 text-right text-xs font-bold tabular-nums shrink-0 ${theme.text}`}>
+                      {count}
+                    </span>
                   </div>
-                  <span className={`w-6 text-right text-xs font-bold tabular-nums shrink-0 ${theme.text}`}>
-                    {count}
-                  </span>
+                  {isExpanded && (
+                    <div className="mt-2 mb-1 ml-1 space-y-1 border-l-2 border-gray-100 pl-3">
+                      {expandedCandidates === undefined ? (
+                        <p className="text-[11px] text-gray-400 py-1">Lädt...</p>
+                      ) : expandedCandidates.length > 0 ? (
+                        expandedCandidates.map((c) => (
+                          <Link
+                            key={c._id}
+                            href={`/dashboard/candidates/${c._id}`}
+                            className="block text-xs font-medium text-gray-700 hover:text-primary transition-colors py-0.5"
+                          >
+                            {c.name}
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-[11px] text-gray-400 py-1">Keine Talente in dieser Phase.</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )
             })}

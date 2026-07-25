@@ -18,6 +18,7 @@ import {
   Home,
   Bell,
   CalendarCheck2,
+  Mail,
 } from "lucide-react"
 import {
   Sidebar,
@@ -170,7 +171,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </SidebarMenu>
         </SidebarContent>
 
-        <SidebarFooter className="border-t border-sidebar-border p-4">
+        <SidebarFooter className="border-t border-sidebar-border p-4 space-y-2">
+          <a
+            href="https://mail.google.com/mail/u/0/#inbox"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary group-data-[collapsible=icon]:hidden"
+          >
+            <Mail className="h-3 w-3" aria-hidden="true" />
+            Gmail-Postfach
+          </a>
           <Link
             href="/"
             className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary group-data-[collapsible=icon]:hidden"
