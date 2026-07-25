@@ -62,6 +62,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const seenIds = useRef<Set<string>>(new Set())
 
   useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {})
+    }
+  }, [])
+
+  useEffect(() => {
     if (!unread) return
     for (const n of unread) {
       if (seenIds.current.has(n._id)) continue
