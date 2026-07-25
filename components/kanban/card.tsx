@@ -1,13 +1,14 @@
 "use client"
 
 import { memo } from "react"
+import { useRouter } from "next/navigation"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { motion } from "framer-motion"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { X, ShieldCheck } from "lucide-react"
+import { X, ShieldCheck, Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
@@ -41,8 +42,10 @@ function areCandidatesEqual(a: { candidate: Candidate }, b: { candidate: Candida
 }
 
 export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
+  const router = useRouter()
   const deleteCandidate = useMutation(api.candidates.remove)
   const complianceSummary = useQuery(api.complianceDocuments.getComplianceSummary, { candidateId: candidate._id })
+  const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: candidate._id })
 
   const {
     attributes,
@@ -80,6 +83,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.15 }}
+      onDoubleClick={() => router.push(`/dashboard/candidates/${candidate._id}`)}
       className={cn(
         "group bg-white border border-gray-200/80 border-l-[3px] px-3 md:px-3.5 py-2.5 md:py-3 cursor-grab active:cursor-grabbing select-none",
         "shadow-[0_1px_2px_0_rgba(0,0,0,0.03)]",
@@ -88,15 +92,25 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
         isDragging && "opacity-30 ring-2 ring-primary/20 ring-inset"
       )}
     >
-      {/* Top row: name + delete */}
+      {/* Top row: name + edit + delete */}
       <div className="flex items-start justify-between gap-2">
-        <Link
-          href={`/dashboard/candidates/${candidate._id}`}
-          onClick={(e) => e.stopPropagation()}
-          className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
-        >
-          {candidate.name}
-        </Link>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <Link
+            href={`/dashboard/candidates/${candidate._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
+          >
+            {candidate.name}
+          </Link>
+          <Link
+            href={`/dashboard/candidates/${candidate._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-primary transition-colors"
+            aria-label={`${candidate.name} bearbeiten`}
+          >
+            <Pencil className="size-3" aria-hidden="true" />
+          </Link>
+        </div>
 
         <button
           type="button"
@@ -118,14 +132,23 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
       {/* Bottom row */}
       <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-100/70">
         <div className="flex items-center gap-2 min-w-0">
-          <span
-            className={cn(
-              "flex size-[18px] shrink-0 items-center justify-center text-[8px] font-bold leading-none",
-              theme.initials
-            )}
-          >
-            {getInitials(candidate.name)}
-          </span>
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={candidate.name}
+              className="size-[18px] shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <span
+              className={cn(
+                "flex size-[18px] shrink-0 items-center justify-center text-[8px] font-bold leading-none",
+                theme.initials
+              )}
+            >
+              {getInitials(candidate.name)}
+            </span>
+          )}
           <span className="text-[10px] font-medium text-gray-400/70 truncate">
             {date}
           </span>
@@ -153,4 +176,4 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
       </div>
     </motion.div>
   )
-})
+}, areCandidatesEqual)

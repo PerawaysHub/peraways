@@ -1,13 +1,14 @@
 "use client"
 
 import { memo } from "react"
+import { useRouter } from "next/navigation"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { motion } from "framer-motion"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { X } from "lucide-react"
+import { X, Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
@@ -45,6 +46,7 @@ function areContactsEqual(
 }
 
 export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact: Contact; isNew?: boolean }) {
+  const router = useRouter()
   const deleteContact = useMutation(api.contacts.remove)
 
   const {
@@ -84,6 +86,7 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.15 }}
+      onDoubleClick={() => router.push(`/dashboard/contacts/${contact._id}`)}
       className={cn(
         "group bg-white border border-gray-200/80 border-l-[3px] px-3 md:px-3.5 py-2.5 md:py-3 cursor-grab active:cursor-grabbing select-none",
         "shadow-[0_1px_2px_0_rgba(0,0,0,0.03)]",
@@ -92,7 +95,7 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
         isDragging && "opacity-30 ring-2 ring-primary/20 ring-inset"
       )}
     >
-      {/* Top row: name + delete */}
+      {/* Top row: name + edit + delete */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
           {isNew && (
@@ -108,6 +111,14 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
             className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
           >
             {contact.name}
+          </Link>
+          <Link
+            href={`/dashboard/contacts/${contact._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-primary transition-colors"
+            aria-label={`${contact.name} bearbeiten`}
+          >
+            <Pencil className="size-3" aria-hidden="true" />
           </Link>
         </div>
 

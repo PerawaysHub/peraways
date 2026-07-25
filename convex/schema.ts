@@ -94,6 +94,7 @@ export default defineSchema({
     landungsdatumBerlin: v.optional(v.number()),
     ablaufdatumVisum: v.optional(v.number()),
     ersterArbeitstag: v.optional(v.number()),
+    avatarStorageId: v.optional(v.id("_storage")),
   }).index("by_status", ["status", "position"]),
   complianceDocuments: defineTable({
     candidateId: v.id("candidates"),

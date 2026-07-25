@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -16,7 +16,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { CANDIDATE_STATUSES, TERMIN_ARTEN } from "@/convex/schema"
-import { useRef, useState, useCallback } from "react"
+import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 
 const STATUS_COLORS: Record<string, string> = {
@@ -70,6 +70,15 @@ function probezeitEnde(ersterArbeitstag?: number) {
   return d
 }
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+}
+
 function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
   return (
     <div className="flex items-start gap-3">
@@ -106,6 +115,9 @@ export default function CandidateDetailPage() {
   const createTermin = useMutation(api.termine.create)
   const updateTerminStatus = useMutation(api.termine.updateStatus)
   const removeTermin = useMutation(api.termine.remove)
+  const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: id })
+  const setAvatar = useMutation(api.candidates.setAvatar)
+  const removeAvatarMutation = useMutation(api.candidates.removeAvatar)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
@@ -145,6 +157,15 @@ export default function CandidateDetailPage() {
     notizen: "",
   })
   const [addingTermin, setAddingTermin] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const hasScrolledToTermine = useRef(false)
+
+  useEffect(() => {
+    if (candidate && !hasScrolledToTermine.current && window.location.hash === "#termine-section") {
+      hasScrolledToTermine.current = true
+      document.getElementById("termine-section")?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }, [candidate])
 
   const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -179,6 +200,21 @@ export default function CandidateDetailPage() {
       e.target.value = ""
     }
   }, [id, generateUploadUrl, attachComplianceDocument])
+
+  const handleAvatarUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingAvatar(true)
+    try {
+      const uploadUrl = await generateUploadUrl()
+      const resp = await fetch(uploadUrl, { method: "POST", body: file })
+      const { storageId } = await resp.json()
+      await setAvatar({ id, storageId })
+    } finally {
+      setUploadingAvatar(false)
+      e.target.value = ""
+    }
+  }, [id, generateUploadUrl, setAvatar])
 
   const handleAddTermin = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
@@ -319,11 +355,54 @@ export default function CandidateDetailPage() {
       </div>
 
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl font-bold text-primary">{candidate.name}</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Hinzugefügt am {new Date(candidate._creationTime).toLocaleDateString("de-DE")}
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="relative group shrink-0">
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt={candidate.name}
+                className="size-16 rounded-full object-cover ring-1 ring-primary/10"
+              />
+            ) : (
+              <div className="flex size-16 items-center justify-center rounded-full bg-primary/5 text-lg font-bold text-primary ring-1 ring-primary/10">
+                {getInitials(candidate.name)}
+              </div>
+            )}
+            <input
+              id="avatar-upload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleAvatarUpload}
+            />
+            <label
+              htmlFor="avatar-upload"
+              className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 group-hover:bg-black/40 transition-colors cursor-pointer"
+            >
+              {uploadingAvatar ? (
+                <Loader2 className="size-4 text-white animate-spin" />
+              ) : (
+                <Camera className="size-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+              )}
+            </label>
+            {avatarUrl && (
+              <button
+                type="button"
+                onClick={() => removeAvatarMutation({ id })}
+                className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-white text-gray-400 ring-1 ring-gray-200 hover:text-red-500 transition-colors"
+                aria-label="Profilbild entfernen"
+              >
+                <Trash2 className="size-2.5" />
+              </button>
+            )}
+          </div>
+          <div>
+            <h1 className="font-heading text-2xl font-bold text-primary">{candidate.name}</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Hinzugefügt am {new Date(candidate._creationTime).toLocaleDateString("de-DE")}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -587,7 +666,7 @@ export default function CandidateDetailPage() {
         )}
       </div>
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div id="termine-section" className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <CalendarPlus className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Termine</h2>

@@ -27,6 +27,40 @@ export const getById = query({
   },
 });
 
+export const getAvatarUrl = query({
+  args: { candidateId: v.id("candidates") },
+  handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.candidateId);
+    if (!candidate?.avatarStorageId) return null;
+    return await ctx.storage.getUrl(candidate.avatarStorageId);
+  },
+});
+
+export const setAvatar = mutation({
+  args: {
+    id: v.id("candidates"),
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (!candidate) return;
+    if (candidate.avatarStorageId) {
+      await ctx.storage.delete(candidate.avatarStorageId);
+    }
+    await ctx.db.patch(args.id, { avatarStorageId: args.storageId });
+  },
+});
+
+export const removeAvatar = mutation({
+  args: { id: v.id("candidates") },
+  handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (!candidate?.avatarStorageId) return;
+    await ctx.storage.delete(candidate.avatarStorageId);
+    await ctx.db.patch(args.id, { avatarStorageId: undefined });
+  },
+});
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -212,6 +246,10 @@ export const updateNotes = mutation({
 export const remove = mutation({
   args: { id: v.id("candidates") },
   handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (candidate?.avatarStorageId) {
+      await ctx.storage.delete(candidate.avatarStorageId);
+    }
     const docs = await ctx.db
       .query("documents")
       .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))

@@ -125,7 +125,7 @@ export default function HeutePage() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <Link
-                          href={`/dashboard/candidates/${termin.candidateId}`}
+                          href={`/dashboard/candidates/${termin.candidateId}#termine-section`}
                           className="text-sm font-semibold text-gray-900 hover:text-primary transition-colors truncate"
                         >
                           {termin.candidateName}
