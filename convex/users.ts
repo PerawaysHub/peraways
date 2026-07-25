@@ -37,7 +37,8 @@ export const upsertUser = mutation({
       v.literal("admin"),
       v.literal("viewer"),
       v.literal("editor"),
-      v.literal("integrationshelfer")
+      v.literal("integrationshelfer"),
+      v.literal("gstc")
     ),
   },
   handler: async (ctx, args) => {
@@ -71,7 +72,8 @@ export const updateUserRole = mutation({
       v.literal("admin"),
       v.literal("viewer"),
       v.literal("editor"),
-      v.literal("integrationshelfer")
+      v.literal("integrationshelfer"),
+      v.literal("gstc")
     ),
   },
   handler: async (ctx, args) => {

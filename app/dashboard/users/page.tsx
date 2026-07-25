@@ -22,6 +22,7 @@ const roleLabels: Record<string, string> = {
   editor: "Bearbeiter",
   viewer: "Betrachter",
   integrationshelfer: "Integrationshelfer",
+  gstc: "GSTC",
 };
 
 const roleColors: Record<string, string> = {
@@ -29,6 +30,7 @@ const roleColors: Record<string, string> = {
   editor: "bg-blue-100 text-blue-800",
   viewer: "bg-gray-100 text-gray-800",
   integrationshelfer: "bg-purple-100 text-purple-800",
+  gstc: "bg-teal-100 text-teal-800",
 };
 
 export default function UsersPage() {
@@ -88,7 +90,7 @@ export default function UsersPage() {
                 <td className="px-4 py-3">
                   <select
                     defaultValue={user.role}
-                    onChange={(e) => updateRole({ userId: user._id, role: e.target.value as "admin" | "editor" | "viewer" | "integrationshelfer" })}
+                    onChange={(e) => updateRole({ userId: user._id, role: e.target.value as "admin" | "editor" | "viewer" | "integrationshelfer" | "gstc" })}
                     className={`rounded-md border px-2 py-1 text-xs font-medium ${roleColors[user.role]}`}
                   >
                     {Object.entries(roleLabels).map(([value, label]) => (

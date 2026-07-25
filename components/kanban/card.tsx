@@ -55,6 +55,8 @@ function getFristenBadge(candidate: Candidate) {
 
 export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
   const router = useRouter()
+  const currentUser = useQuery(api.users.getCurrentUser)
+  const isGstc = currentUser?.role === "gstc"
   const deleteCandidate = useMutation(api.candidates.remove)
   const complianceSummary = useQuery(api.complianceDocuments.getComplianceSummary, { candidateId: candidate._id })
   const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: candidate._id })
@@ -66,7 +68,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: candidate._id })
+  } = useSortable({ id: candidate._id, disabled: isGstc })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -125,14 +127,16 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
           </Link>
         </div>
 
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
-          aria-label={`${candidate.name} löschen`}
-        >
-          <X className="size-3" aria-hidden="true" />
-        </button>
+        {!isGstc && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
+            aria-label={`${candidate.name} löschen`}
+          >
+            <X className="size-3" aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {/* Email */}

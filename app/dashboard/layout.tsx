@@ -81,9 +81,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [unread, markAsRead, router])
 
-  const links = currentUser?.role === "admin"
-    ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
-    : sidebarLinks
+  useEffect(() => {
+    if (currentUser?.role === "gstc" && !pathname.startsWith("/dashboard/candidates")) {
+      router.replace("/dashboard/candidates")
+    }
+  }, [currentUser, pathname, router])
+
+  const links = currentUser?.role === "gstc"
+    ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates")
+    : currentUser?.role === "admin"
+      ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
+      : sidebarLinks
 
   return (
     <SidebarProvider className="flex h-screen w-full">

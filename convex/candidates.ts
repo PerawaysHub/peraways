@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { CANDIDATE_STATUSES, COMPLIANCE_DOC_TYPES } from "./schema";
 import { recomputeFaelligkeitsdatum } from "./finanzen";
+import { getCurrentUserRole } from "./permissions";
 
 export const list = query({
   args: {},
@@ -195,6 +196,8 @@ export const updateStatus = mutation({
     position: v.number(),
   },
   handler: async (ctx, args) => {
+    const role = await getCurrentUserRole(ctx);
+    if (role === "gstc") throw new Error("Not authorized");
     const candidate = await ctx.db.get(args.id);
     if (!candidate) return;
     const oldStatus = candidate.status;
@@ -256,6 +259,8 @@ export const updateNotes = mutation({
 export const remove = mutation({
   args: { id: v.id("candidates") },
   handler: async (ctx, args) => {
+    const role = await getCurrentUserRole(ctx);
+    if (role === "gstc") throw new Error("Not authorized");
     const candidate = await ctx.db.get(args.id);
     if (candidate?.avatarStorageId) {
       await ctx.storage.delete(candidate.avatarStorageId);

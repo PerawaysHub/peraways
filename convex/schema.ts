@@ -153,7 +153,8 @@ export default defineSchema({
       v.literal("admin"),
       v.literal("viewer"),
       v.literal("editor"),
-      v.literal("integrationshelfer")
+      v.literal("integrationshelfer"),
+      v.literal("gstc")
     ),
   }).index("by_clerkId", ["clerkId"]),
   notifications: defineTable({

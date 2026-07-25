@@ -392,6 +392,8 @@ export default function CandidateDetailPage() {
     }
   }
 
+  const isGstc = currentUser?.role === "gstc"
+
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center justify-between">
@@ -402,10 +404,12 @@ export default function CandidateDetailPage() {
           <ArrowLeft className="size-4" />
           Zurück zu Talenten
         </Link>
-        <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
-          <Trash2 className="size-3.5" />
-          Löschen
-        </Button>
+        {!isGstc && (
+          <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
+            <Trash2 className="size-3.5" />
+            Löschen
+          </Button>
+        )}
       </div>
 
       <div className="flex items-start justify-between gap-4">
@@ -466,11 +470,17 @@ export default function CandidateDetailPage() {
         <DetailRow icon={Phone} label="Telefon" value={candidate.telefon || "—"} />
         <DetailRow icon={Tag} label="Quelle" value={candidate.source || "—"} />
         <DetailRow icon={Globe} label="Sprache" value={candidate.lang.toUpperCase()} />
-        <DetailRow icon={Cake} label="Geburtsdatum" value={formatDate(candidate.geburtsdatum)} />
-        <DetailRow icon={CreditCard} label="Passnummer" value={candidate.passnummer || "—"} />
-        <DetailRow icon={MapPin} label="Herkunftsland" value={candidate.herkunftsland || "—"} />
+        {!isGstc && (
+          <>
+            <DetailRow icon={Cake} label="Geburtsdatum" value={formatDate(candidate.geburtsdatum)} />
+            <DetailRow icon={CreditCard} label="Passnummer" value={candidate.passnummer || "—"} />
+            <DetailRow icon={MapPin} label="Herkunftsland" value={candidate.herkunftsland || "—"} />
+          </>
+        )}
       </div>
 
+      {!isGstc && (
+      <>
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <User className="size-4 text-primary" />
@@ -629,6 +639,8 @@ export default function CandidateDetailPage() {
           Speichern
         </Button>
       </div>
+      </>
+      )}
 
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center justify-between mb-4">
@@ -660,24 +672,24 @@ export default function CandidateDetailPage() {
                 <p className="text-sm text-gray-700 min-w-0 truncate">{item.label}</p>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {item.url && (
-                    <>
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
-                      >
-                        <Download className="size-3.5" />
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => removeComplianceDocument({ candidateId: id, docType: item.docType })}
-                        className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
-                        aria-label={`Datei zu ${item.label} entfernen`}
-                      >
-                        <Trash2 className="size-3.5" />
-                      </button>
-                    </>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                    >
+                      <Download className="size-3.5" />
+                    </a>
+                  )}
+                  {item.url && !isGstc && (
+                    <button
+                      type="button"
+                      onClick={() => removeComplianceDocument({ candidateId: id, docType: item.docType })}
+                      className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
+                      aria-label={`Datei zu ${item.label} entfernen`}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
                   )}
                   <input
                     id={`compliance-upload-${item.docType}`}
@@ -695,28 +707,45 @@ export default function CandidateDetailPage() {
                       <Paperclip className="size-3.5" />
                     )}
                   </label>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setComplianceStatus({
-                        candidateId: id,
-                        docType: item.docType,
-                        status: item.status === "Erhalten" ? "Fehlt" : "Erhalten",
-                      })
-                    }
-                    className={`flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold transition-all ${
-                      item.status === "Erhalten"
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : "bg-gray-50 text-gray-500 border-gray-200"
-                    }`}
-                  >
-                    {item.status === "Erhalten" ? (
-                      <CheckCircle2 className="size-3.5" />
-                    ) : (
-                      <Circle className="size-3.5" />
-                    )}
-                    {item.status}
-                  </button>
+                  {isGstc ? (
+                    <span
+                      className={`flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold ${
+                        item.status === "Erhalten"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-gray-50 text-gray-500 border-gray-200"
+                      }`}
+                    >
+                      {item.status === "Erhalten" ? (
+                        <CheckCircle2 className="size-3.5" />
+                      ) : (
+                        <Circle className="size-3.5" />
+                      )}
+                      {item.status}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setComplianceStatus({
+                          candidateId: id,
+                          docType: item.docType,
+                          status: item.status === "Erhalten" ? "Fehlt" : "Erhalten",
+                        })
+                      }
+                      className={`flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold transition-all ${
+                        item.status === "Erhalten"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-gray-50 text-gray-500 border-gray-200"
+                      }`}
+                    >
+                      {item.status === "Erhalten" ? (
+                        <CheckCircle2 className="size-3.5" />
+                      ) : (
+                        <Circle className="size-3.5" />
+                      )}
+                      {item.status}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -724,6 +753,7 @@ export default function CandidateDetailPage() {
         )}
       </div>
 
+      {!isGstc && (
       <div id="termine-section" className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <CalendarPlus className="size-4 text-primary" />
@@ -831,6 +861,7 @@ export default function CandidateDetailPage() {
           <p className="text-xs text-gray-400 py-2">Noch keine Termine.</p>
         )}
       </div>
+      )}
 
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
@@ -838,40 +869,50 @@ export default function CandidateDetailPage() {
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Status</h2>
         </div>
 
-        <div className="relative" ref={statusRef}>
-          <button
-            type="button"
-            onClick={() => setStatusOpen(!statusOpen)}
-            className={`flex items-center gap-2 border px-3 py-2 text-sm font-medium transition-all hover:opacity-80 ${
+        {isGstc ? (
+          <span
+            className={`flex w-fit items-center gap-2 border px-3 py-2 text-sm font-medium ${
               STATUS_COLORS[candidate.status] ?? "bg-muted text-muted-foreground border-border"
             }`}
           >
             {candidate.status}
-            <ChevronDown className={`size-3.5 transition-transform duration-200 ${statusOpen ? "rotate-180" : ""}`} />
-          </button>
+          </span>
+        ) : (
+          <div className="relative" ref={statusRef}>
+            <button
+              type="button"
+              onClick={() => setStatusOpen(!statusOpen)}
+              className={`flex items-center gap-2 border px-3 py-2 text-sm font-medium transition-all hover:opacity-80 ${
+                STATUS_COLORS[candidate.status] ?? "bg-muted text-muted-foreground border-border"
+              }`}
+            >
+              {candidate.status}
+              <ChevronDown className={`size-3.5 transition-transform duration-200 ${statusOpen ? "rotate-180" : ""}`} />
+            </button>
 
-          {statusOpen && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setStatusOpen(false)} />
-              <div className="absolute top-full left-0 mt-1 z-20 w-48 border border-gray-200 bg-white py-1 shadow-sm">
-                {CANDIDATE_STATUSES.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => handleStatusChange(s)}
-                    className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors ${
-                      candidate.status === s
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-foreground hover:bg-gray-50"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+            {statusOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setStatusOpen(false)} />
+                <div className="absolute top-full left-0 mt-1 z-20 w-48 border border-gray-200 bg-white py-1 shadow-sm">
+                  {CANDIDATE_STATUSES.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => handleStatusChange(s)}
+                      className={`flex w-full items-center px-3 py-2 text-left text-sm transition-colors ${
+                        candidate.status === s
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-foreground hover:bg-gray-50"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {currentUser?.role === "admin" && (
@@ -944,6 +985,8 @@ export default function CandidateDetailPage() {
         </div>
       )}
 
+      {!isGstc && (
+      <>
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Upload className="size-4 text-primary" />
@@ -1074,7 +1117,10 @@ export default function CandidateDetailPage() {
           <p className="text-xs text-gray-400 py-2">Noch keine Aktivität.</p>
         )}
       </div>
+      </>
+      )}
 
+      {!isGstc && (
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
@@ -1094,6 +1140,7 @@ export default function CandidateDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      )}
     </div>
   )
 }
