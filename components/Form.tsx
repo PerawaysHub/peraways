@@ -41,15 +41,16 @@ export function Form() {
     const name = (formData.get("Name") as string) || "";
     const einrichtung = (formData.get("Einrichtung") as string) || "";
     const email = (formData.get("Email") as string) || "";
+    const telefon = (formData.get("Telefon") as string) || "";
     const nachricht = (formData.get("Nachricht") as string) || "";
 
     try {
-      await submitContact({ name, email, einrichtung, nachricht, lang: "de" });
+      await submitContact({ name, email, telefon, einrichtung, nachricht, lang: "de" });
 
       fetch("/api/send-contact-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, einrichtung, nachricht, lang: "de" }),
+        body: JSON.stringify({ name, email, telefon, einrichtung, nachricht, lang: "de" }),
       }).catch(() => {});
 
       window.location.href = `${origin}/danke`;
@@ -90,7 +91,7 @@ export function Form() {
 
           <FadeUp delay={0.25}>
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
+              <a href="mailto:team@peraways.de" className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
                   <Mail className="h-[18px] w-[18px]" strokeWidth={1.8} />
                 </div>
@@ -100,8 +101,8 @@ export function Form() {
                   </div>
                   <div className="text-[15px] font-semibold text-primary">{content.email}</div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
+              </a>
+              <a href="tel:+4915563362232" className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
                   <Phone className="h-[18px] w-[18px]" strokeWidth={1.8} />
                 </div>
@@ -111,7 +112,7 @@ export function Form() {
                   </div>
                   <div className="text-[15px] font-semibold text-primary">{content.phone}</div>
                 </div>
-              </div>
+              </a>
             </div>
           </FadeUp>
         </div>
@@ -131,7 +132,10 @@ export function Form() {
               <Input type="text" name="Einrichtung" placeholder="Einrichtung" className="h-12 rounded-xl" required />
             </div>
 
-            <Input type="email" name="Email" placeholder="E-Mail" className="h-12 rounded-xl" required />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input type="email" name="Email" placeholder="E-Mail" className="h-12 rounded-xl" required />
+              <Input type="tel" name="Telefon" placeholder="Telefon (optional)" className="h-12 rounded-xl" />
+            </div>
 
             <Textarea name="Nachricht" placeholder="Nachricht (optional)" rows={3} className="rounded-xl" />
 

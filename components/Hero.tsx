@@ -17,7 +17,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative pt-24 pb-16 lg:pt-32 lg:pb-20"
+      className="relative overflow-x-hidden pt-24 pb-16 lg:pt-32 lg:pb-20"
       style={{
         background:
           "radial-gradient(ellipse 80% 60% at 20% 100%, rgba(78,113,69,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 80% at 80% 20%, rgba(185,116,99,0.08) 0%, transparent 60%), #F4F1EC",
@@ -83,7 +83,7 @@ export function Hero() {
           </FadeUp>
 
           <FadeUp immediate delay={0.2}>
-            <div className="floating-badge absolute -bottom-2 left-[-32px] min-w-[180px] rounded-2xl border border-white/12 bg-[rgba(25,70,60,0.72)] px-7 py-5 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:-bottom-2 lg:left-[-32px]">
+            <div className="floating-badge absolute -bottom-2 left-0 min-w-[180px] rounded-2xl border border-white/12 bg-[rgba(25,70,60,0.72)] px-7 py-5 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:left-[-32px]">
               <div className="font-heading text-[28px] font-semibold leading-none text-white">
                 {content.badge}
               </div>
@@ -91,9 +91,9 @@ export function Hero() {
             </div>
           </FadeUp>
 
-          <FadeUp immediate delay={0.4}>
+          <FadeUp immediate delay={0.2}>
             <div
-              className="floating-badge absolute -right-5 top-2 rounded-2xl border border-white/70 bg-white/55 px-5 py-4 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl"
+              className="floating-badge absolute right-0 top-2 rounded-2xl border border-white/70 bg-white/55 px-5 py-4 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:-right-5"
               style={{ animationDelay: "2s" }}
             >
               <GraduationCap className="mb-1 h-[22px] w-[22px] text-primary" strokeWidth={1.8} />
@@ -102,9 +102,9 @@ export function Hero() {
             </div>
           </FadeUp>
 
-          <FadeUp immediate delay={0.5}>
+          <FadeUp immediate delay={0.2}>
             <div
-              className="floating-badge absolute -right-9 top-[44%] rounded-[14px] border border-white/70 bg-white/55 px-4.5 py-3 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl"
+              className="floating-badge absolute right-0 top-[44%] rounded-[14px] border border-white/70 bg-white/55 px-4.5 py-3 shadow-[0_8px_32px_rgba(25,70,60,0.28),0_2px_8px_rgba(25,70,60,0.16)] backdrop-blur-xl lg:-right-9"
               style={{ animationDelay: "3.5s" }}
             >
               <div className="text-[11px] font-bold uppercase tracking-wider text-secondary">Employer Pays Principle</div>

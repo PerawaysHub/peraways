@@ -37,7 +37,14 @@ export function Navbar() {
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center">
+        <Link
+          href="/"
+          className="flex items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
           <Image
             src="/logo-full.png"
             alt="Peraways"
