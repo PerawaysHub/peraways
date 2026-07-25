@@ -29,6 +29,37 @@ export const getById = query({
   },
 });
 
+export const listByEinrichtung = query({
+  args: { einrichtungId: v.id("contacts") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("candidates")
+      .withIndex("by_einrichtung", (q) => q.eq("einrichtungId", args.einrichtungId))
+      .collect();
+  },
+});
+
+export const setEinrichtung = mutation({
+  args: {
+    id: v.id("candidates"),
+    einrichtungId: v.optional(v.id("contacts")),
+  },
+  handler: async (ctx, args) => {
+    const candidate = await ctx.db.get(args.id);
+    if (!candidate) return;
+    const einrichtung = args.einrichtungId ? await ctx.db.get(args.einrichtungId) : null;
+    await ctx.db.patch(args.id, { einrichtungId: args.einrichtungId });
+    await ctx.db.insert("activityLog", {
+      candidateId: args.id,
+      type: "einrichtung_change",
+      description: einrichtung
+        ? `Einrichtung zugeordnet: ${einrichtung.name}`
+        : "Einrichtungs-Zuordnung entfernt",
+      timestamp: Date.now(),
+    });
+  },
+});
+
 export const getAvatarUrl = query({
   args: { candidateId: v.id("candidates") },
   handler: async (ctx, args) => {

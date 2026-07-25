@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2 } from "lucide-react";
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,14 @@ import {
 } from "@/components/ui/dialog";
 import { CONTACT_STATUSES } from "@/convex/schema";
 import type { Id } from "@/convex/_generated/dataModel";
+
+const TALENT_STATUS_COLORS: Record<string, string> = {
+  Qualifizierung: "bg-violet-50 text-violet-700 border-violet-200",
+  "LEA-Fast-Lane": "bg-blue-50 text-blue-700 border-blue-200",
+  Visum: "bg-amber-50 text-amber-700 border-amber-200",
+  "Onboarding / Berlin-Phase": "bg-orange-50 text-orange-700 border-orange-200",
+  Abgeschlossen: "bg-primary/10 text-primary border-primary/20",
+};
 
 function formatDate(ts: number) {
   return new Date(ts).toLocaleDateString("de-DE", {
@@ -49,6 +57,7 @@ export default function ContactDetailPage() {
   const router = useRouter();
   const id = params.id as Id<"contacts">;
   const contact = useQuery(api.contacts.getById, { id });
+  const linkedCandidates = useQuery(api.candidates.listByEinrichtung, { einrichtungId: id });
   const unread = useQuery(api.notifications.listUnread);
   const updateContact = useMutation(api.contacts.update);
   const updateStatus = useMutation(api.contacts.updateStatus);
@@ -340,6 +349,37 @@ export default function ContactDetailPage() {
             <p className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
               {contact.nachricht || "—"}
             </p>
+          </div>
+
+          <div className="rounded-xl border bg-white p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold text-foreground">Verknüpfte Talente</h2>
+            </div>
+            {linkedCandidates === undefined ? (
+              <div className="h-8 flex items-center">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
+              </div>
+            ) : linkedCandidates.length > 0 ? (
+              <div className="divide-y divide-gray-100">
+                {linkedCandidates.map((c) => (
+                  <Link
+                    key={c._id}
+                    href={`/dashboard/candidates/${c._id}`}
+                    className="flex items-center justify-between py-2.5 group"
+                  >
+                    <span className="text-sm font-medium text-gray-900 group-hover:text-primary transition-colors">
+                      {c.name}
+                    </span>
+                    <span className={`inline-flex items-center border px-2 py-1 text-[11px] font-semibold ${TALENT_STATUS_COLORS[c.status] ?? "bg-gray-50 text-gray-500 border-gray-200"}`}>
+                      {c.status}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Noch keine Talente zugeordnet.</p>
+            )}
           </div>
         </>
       )}

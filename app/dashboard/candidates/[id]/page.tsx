@@ -101,7 +101,7 @@ function getInitials(name: string) {
     .slice(0, 2)
 }
 
-function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
+function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3">
       <div className="mt-0.5 flex size-8 items-center justify-center bg-primary/5 text-primary ring-1 ring-primary/10">
@@ -144,6 +144,8 @@ export default function CandidateDetailPage() {
   const finanzen = useQuery(api.finanzen.getByCandidateId, { candidateId: id })
   const updateHonorar = useMutation(api.finanzen.updateHonorar)
   const setFinanzenStatus = useMutation(api.finanzen.setStatus)
+  const contacts = useQuery(api.contacts.list)
+  const setEinrichtung = useMutation(api.candidates.setEinrichtung)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
@@ -475,6 +477,19 @@ export default function CandidateDetailPage() {
             <DetailRow icon={Cake} label="Geburtsdatum" value={formatDate(candidate.geburtsdatum)} />
             <DetailRow icon={CreditCard} label="Passnummer" value={candidate.passnummer || "—"} />
             <DetailRow icon={MapPin} label="Herkunftsland" value={candidate.herkunftsland || "—"} />
+            <DetailRow
+              icon={Building2}
+              label="Einrichtung"
+              value={
+                candidate.einrichtungId ? (
+                  <Link href={`/dashboard/contacts/${candidate.einrichtungId}`} className="hover:text-primary hover:underline">
+                    {contacts?.find((c) => c._id === candidate.einrichtungId)?.name ?? "…"}
+                  </Link>
+                ) : (
+                  "—"
+                )
+              }
+            />
           </>
         )}
       </div>
@@ -513,6 +528,24 @@ export default function CandidateDetailPage() {
               onChange={(e) => setStammdatenDraft((d) => ({ ...d, herkunftsland: e.target.value }))}
               className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
+          </label>
+          <label className="text-xs font-medium text-muted-foreground/70">
+            Einrichtung
+            <select
+              value={candidate.einrichtungId ?? ""}
+              onChange={(e) =>
+                setEinrichtung({
+                  id: candidate._id,
+                  einrichtungId: e.target.value ? (e.target.value as Id<"contacts">) : undefined,
+                })
+              }
+              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            >
+              <option value="">— keine —</option>
+              {contacts?.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
           </label>
         </div>
         <Button

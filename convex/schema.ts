@@ -115,7 +115,10 @@ export default defineSchema({
     ablaufdatumVisum: v.optional(v.number()),
     ersterArbeitstag: v.optional(v.number()),
     avatarStorageId: v.optional(v.id("_storage")),
-  }).index("by_status", ["status", "position"]),
+    einrichtungId: v.optional(v.id("contacts")),
+  })
+    .index("by_status", ["status", "position"])
+    .index("by_einrichtung", ["einrichtungId"]),
   complianceDocuments: defineTable({
     candidateId: v.id("candidates"),
     docType: v.string(),
