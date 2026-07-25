@@ -1,9 +1,6 @@
 import { mutation } from "./_generated/server"
 import { v } from "convex/values"
-import { Resend } from "resend"
-import { autoResponse, teamNotification } from "./emails"
-
-const resend = new Resend(process.env.RESEND_API_KEY!)
+import { internal } from "./_generated/api"
 
 export const submit = mutation({
   args: {
@@ -65,20 +62,13 @@ export const submit = mutation({
       relatedId: contactId,
     })
 
-    const { subject: notifSubject, html: notifHtml } = teamNotification(args)
-    await resend.emails.send({
-      from: "PeraWays <team@peraways.de>",
-      to: ["team@peraways.de"],
-      subject: notifSubject,
-      html: notifHtml,
-    })
-
-    const { subject: replySubject, html: replyHtml } = autoResponse(args.name, args.lang)
-    await resend.emails.send({
-      from: "PeraWays <team@peraways.de>",
-      to: [args.email],
-      subject: replySubject,
-      html: replyHtml,
+    await ctx.scheduler.runAfter(0, internal.sendEmails.sendContactEmails, {
+      name: args.name,
+      email: args.email,
+      telefon: args.telefon,
+      einrichtung: args.einrichtung,
+      nachricht: args.nachricht,
+      lang: args.lang,
     })
   },
 })
