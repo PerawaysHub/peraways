@@ -15,34 +15,37 @@ import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { KanbanColumn } from "./column"
 import { KanbanCard } from "./card"
-import { Search, Plus, LayoutPanelTop } from "lucide-react"
+import { Search, Plus, MessageSquare } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { CANDIDATE_STATUSES } from "@/convex/schema"
+import { CONTACT_STATUSES } from "@/convex/schema"
 import type { Doc, Id } from "@/convex/_generated/dataModel"
 
-type Candidate = Doc<"candidates">
+type Contact = Doc<"contacts">
 
 interface KanbanBoardProps {
-  candidates: Candidate[] | undefined
-  onAddCandidate: (status: string) => void
+  contacts: Contact[] | undefined
+  onAddContact: (status: string) => void
 }
 
-function groupByStatus(candidates: Candidate[]) {
-  const map: Record<string, Candidate[]> = {}
-  for (const s of CANDIDATE_STATUSES) map[s] = []
-  for (const c of candidates) if (map[c.status]) map[c.status].push(c)
-  for (const s of CANDIDATE_STATUSES) map[s].sort((a, b) => a.position - b.position)
+function groupByStatus(contacts: Contact[]) {
+  const map: Record<string, Contact[]> = {}
+  for (const s of CONTACT_STATUSES) map[s] = []
+  for (const c of contacts) {
+    const status = c.status ?? "Neue Anfrage"
+    if (map[status]) map[status].push(c)
+  }
+  for (const s of CONTACT_STATUSES) map[s].sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
   return map
 }
 
-export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
+export function KanbanBoard({ contacts, onAddContact }: KanbanBoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [cardWidth, setCardWidth] = useState(0)
   const [announcement, setAnnouncement] = useState("")
   const columnsRef = useRef<HTMLDivElement>(null)
-  const updateStatus = useMutation(api.candidates.updateStatus)
+  const updateStatus = useMutation(api.contacts.updateStatus)
 
   useEffect(() => {
     const el = columnsRef.current
@@ -57,27 +60,27 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [candidates])
+  }, [contacts])
 
   const filtered = useMemo(() => {
-    if (!candidates || !search.trim()) return candidates
+    if (!contacts || !search.trim()) return contacts
     const q = search.toLowerCase()
-    return candidates.filter(
+    return contacts.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
         c.email.toLowerCase().includes(q) ||
-        c.source?.toLowerCase().includes(q)
+        c.einrichtung?.toLowerCase().includes(q)
     )
-  }, [candidates, search])
+  }, [contacts, search])
 
   const columns = useMemo(() => (filtered ? groupByStatus(filtered) : {}), [filtered])
 
-  const activeCandidate = useMemo(
-    () => (activeId && candidates ? candidates.find((c) => c._id === activeId) : null),
-    [activeId, candidates]
+  const activeContact = useMemo(
+    () => (activeId && contacts ? contacts.find((c) => c._id === activeId) : null),
+    [activeId, contacts]
   )
 
-  const totalCount = candidates?.length ?? 0
+  const totalCount = contacts?.length ?? 0
   const filteredCount = filtered?.length ?? 0
 
   const sensors = useSensors(
@@ -92,42 +95,42 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
     async (e: DragEndEvent) => {
       setActiveId(null)
       const { active, over } = e
-      if (!over || !candidates) return
+      if (!over || !contacts) return
 
       const activeId = active.id as string
       const overId = over.id as string
       if (activeId === overId) return
 
-      const dragged = candidates.find((c) => c._id === activeId)
+      const dragged = contacts.find((c) => c._id === activeId)
       if (!dragged) return
 
-      const statuses = CANDIDATE_STATUSES as readonly string[]
+      const statuses = CONTACT_STATUSES as readonly string[]
       const isOverColumn = statuses.includes(overId)
-      const overCard = isOverColumn ? null : candidates.find((c) => c._id === overId)
-      const targetStatus = isOverColumn ? overId : (overCard?.status ?? dragged.status)
+      const overCard = isOverColumn ? null : contacts.find((c) => c._id === overId)
+      const targetStatus = isOverColumn ? overId : (overCard?.status ?? dragged.status ?? "Neue Anfrage")
       if (!targetStatus || !statuses.includes(targetStatus)) return
 
-      const colCandidates = candidates
-        .filter((c) => c.status === targetStatus && c._id !== activeId)
-        .sort((a, b) => a.position - b.position)
+      const colContacts = contacts
+        .filter((c) => (c.status ?? "Neue Anfrage") === targetStatus && c._id !== activeId)
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
 
       let newPosition: number
       if (isOverColumn) {
-        newPosition = colCandidates.length > 0 ? colCandidates[colCandidates.length - 1].position + 1 : 0
+        newPosition = colContacts.length > 0 ? (colContacts[colContacts.length - 1].position ?? 0) + 1 : 0
       } else {
-        const overIdx = colCandidates.findIndex((c) => c._id === overId)
+        const overIdx = colContacts.findIndex((c) => c._id === overId)
         if (overIdx === 0) {
-          newPosition = colCandidates[0].position / 2
+          newPosition = (colContacts[0].position ?? 0) / 2
         } else if (overIdx > 0) {
-          newPosition = (colCandidates[overIdx - 1].position + colCandidates[overIdx].position) / 2
+          newPosition = ((colContacts[overIdx - 1].position ?? 0) + (colContacts[overIdx].position ?? 0)) / 2
         } else {
-          newPosition = colCandidates.length > 0 ? colCandidates[colCandidates.length - 1].position + 1 : 0
+          newPosition = colContacts.length > 0 ? (colContacts[colContacts.length - 1].position ?? 0) + 1 : 0
         }
       }
 
-      await updateStatus({ id: activeId as Id<"candidates">, status: targetStatus, position: newPosition })
+      await updateStatus({ id: activeId as Id<"contacts">, status: targetStatus, position: newPosition })
     },
-    [candidates, updateStatus]
+    [contacts, updateStatus]
   )
 
   return (
@@ -139,24 +142,24 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <span className="flex size-8 items-center justify-center bg-primary/5 ring-1 ring-primary/10">
-            <LayoutPanelTop className="size-4 text-primary" />
+            <MessageSquare className="size-4 text-primary" />
           </span>
           <div>
             <h2 className="font-heading text-base font-bold text-gray-900 leading-tight tracking-tight">
-              Bewerbungs-Pipeline
+              Einrichtungs-Pipeline
             </h2>
             <p className="text-[11px] font-medium text-gray-400/80">
-              {totalCount} Kandidat{totalCount !== 1 ? "en" : ""}
+              {totalCount} Einrichtung{totalCount !== 1 ? "en" : ""}
             </p>
           </div>
         </div>
         <Button
           size="sm"
-          onClick={() => onAddCandidate("Neue Bewerbung")}
+          onClick={() => onAddContact("Neue Anfrage")}
           className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
         >
           <Plus className="size-3.5" />
-          Kandidat hinzufügen
+          Einrichtung hinzufügen
         </Button>
       </div>
 
@@ -164,8 +167,8 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
       <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100/60">
         <div className="relative w-60">
           <Input
-            placeholder="Kandidaten durchsuchen..."
-            aria-label="Kandidaten durchsuchen"
+            placeholder="Einrichtungen durchsuchen..."
+            aria-label="Einrichtungen durchsuchen"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 h-9 bg-gray-50/80 border-gray-200/80 text-sm placeholder:text-gray-400 focus-visible:border-primary/30 focus-visible:ring-[1.5px] focus-visible:ring-primary/15"
@@ -188,20 +191,20 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
           onDragEnd={handleDragEnd}
         >
           <div ref={columnsRef} className="flex gap-3 md:gap-4 pb-2 items-start">
-            {CANDIDATE_STATUSES.map((status) => (
+            {CONTACT_STATUSES.map((status) => (
               <KanbanColumn
                 key={status}
                 status={status}
-                candidates={columns[status] ?? []}
-                onAddClick={() => onAddCandidate(status)}
+                contacts={columns[status] ?? []}
+                onAddClick={() => onAddContact(status)}
               />
             ))}
           </div>
 
           <DragOverlay>
-            {activeCandidate && (
+            {activeContact && (
               <div style={{ width: cardWidth > 0 ? cardWidth : undefined }}>
-                <KanbanCard candidate={activeCandidate} />
+                <KanbanCard contact={activeContact} />
               </div>
             )}
           </DragOverlay>

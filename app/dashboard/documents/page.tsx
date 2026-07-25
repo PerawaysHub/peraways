@@ -23,8 +23,8 @@ export default function DocumentsPage() {
             <FileText className="size-4 text-primary" />
           </span>
           <div>
-            <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Documents</h1>
-            <p className="text-[11px] font-medium text-muted-foreground/70">Loading documents...</p>
+            <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Dokumente</h1>
+            <p className="text-[11px] font-medium text-muted-foreground/70">Dokumente werden geladen...</p>
           </div>
         </div>
         <div className="border border-gray-200 bg-white p-5">
@@ -43,9 +43,9 @@ export default function DocumentsPage() {
           <FileText className="size-4 text-primary" />
         </span>
         <div>
-          <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Documents</h1>
+          <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Dokumente</h1>
           <p className="text-[11px] font-medium text-muted-foreground/70">
-            {allDocs.length} document{allDocs.length !== 1 ? "s" : ""}
+            {allDocs.length} Dokument{allDocs.length !== 1 ? "e" : ""}
           </p>
         </div>
       </div>
@@ -102,8 +102,8 @@ export default function DocumentsPage() {
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <FolderOpen className="size-10 text-gray-200 mb-3" />
-            <p className="text-sm font-medium text-gray-400">No documents yet</p>
-            <p className="text-xs text-gray-300 mt-1">Upload documents from a candidate&apos;s profile</p>
+            <p className="text-sm font-medium text-gray-400">Noch keine Dokumente</p>
+            <p className="text-xs text-gray-300 mt-1">Dokumente können im Profil eines Kandidaten hochgeladen werden</p>
           </div>
         </div>
       )}

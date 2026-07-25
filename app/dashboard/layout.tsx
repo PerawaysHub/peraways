@@ -32,10 +32,10 @@ import { Button } from "@/components/ui/button"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 
 const sidebarLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/contacts", label: "Contacts", icon: MessageSquare },
-  { href: "/dashboard/candidates", label: "Candidates", icon: LayoutPanelTop },
-  { href: "/dashboard/documents", label: "Documents", icon: FileText },
+  { href: "/dashboard", label: "Übersicht", icon: LayoutDashboard },
+  { href: "/dashboard/contacts", label: "Einrichtungen", icon: MessageSquare },
+  { href: "/dashboard/candidates", label: "Kandidaten", icon: LayoutPanelTop },
+  { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [unread])
 
   const links = currentUser?.role === "admin"
-    ? [...sidebarLinks, { href: "/dashboard/users", label: "Users", icon: Users }]
+    ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
     : sidebarLinks
 
   return (
@@ -133,7 +133,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary group-data-[collapsible=icon]:hidden"
           >
             <Home className="h-3 w-3" aria-hidden="true" />
-            Site
+            Zur Website
           </Link>
         </SidebarFooter>
       </Sidebar>

@@ -96,10 +96,10 @@ export default function CandidatesPage() {
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5">
               <LayoutPanelTop className="size-4 text-primary" />
             </span>
-            Candidates
+            Kandidaten
           </h1>
           <p className="text-sm text-muted-foreground/70 mt-1.5 ml-[42px]">
-            Pipeline overview — drag and drop to update status
+            Pipeline-Übersicht — per Drag & Drop den Status ändern
           </p>
         </div>
         <a
@@ -108,7 +108,7 @@ export default function CandidatesPage() {
           className="inline-flex items-center gap-1.5 border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 hover:text-primary hover:border-gray-300 transition-all shadow-sm"
         >
           <Download className="size-3.5" />
-          Export CSV
+          CSV exportieren
         </a>
       </div>
 
@@ -119,9 +119,9 @@ export default function CandidatesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Candidate</DialogTitle>
+            <DialogTitle>Kandidat hinzufügen</DialogTitle>
             <DialogDescription>
-              New candidate will be added to &quot;{selectedStatus}&quot;
+              Neuer Kandidat wird hinzugefügt zu &quot;{selectedStatus}&quot;
             </DialogDescription>
           </DialogHeader>
 
@@ -134,19 +134,19 @@ export default function CandidatesPage() {
             />
             <Input
               type="email"
-              placeholder="Email *"
+              placeholder="E-Mail *"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
               type="tel"
-              placeholder="Phone"
+              placeholder="Telefon"
               value={telefon}
               onChange={(e) => setTelefon(e.target.value)}
             />
             <Input
-              placeholder="Source (e.g. LinkedIn, Website)"
+              placeholder="Quelle (z.B. LinkedIn, Website)"
               value={source}
               onChange={(e) => setSource(e.target.value)}
             />
@@ -154,7 +154,7 @@ export default function CandidatesPage() {
             <DialogFooter>
               <Button type="submit" disabled={submitting}>
                 {submitting && <Loader2 className="size-4 animate-spin" />}
-                Add Candidate
+                Kandidat hinzufügen
               </Button>
             </DialogFooter>
           </form>

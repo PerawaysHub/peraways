@@ -2,11 +2,19 @@
 
 import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
 import { CANDIDATE_STATUSES } from "@/convex/schema"
 import { useRef, useState, useCallback } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
@@ -43,6 +51,7 @@ function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; labe
 
 export default function CandidateDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const id = params.id as Id<"candidates">
   const candidate = useQuery(api.candidates.getById, { id })
   const documents = useQuery(api.documents.listByCandidate, { candidateId: id })
@@ -52,6 +61,7 @@ export default function CandidateDetailPage() {
   const generateUploadUrl = useMutation(api.documents.generateUploadUrl)
   const saveDocument = useMutation(api.documents.saveDocument)
   const deleteDocument = useMutation(api.documents.remove)
+  const deleteCandidate = useMutation(api.candidates.remove)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
@@ -59,6 +69,8 @@ export default function CandidateDetailPage() {
   const [statusOpen, setStatusOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [docType, setDocType] = useState("cv")
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const statusRef = useRef<HTMLDivElement>(null)
 
   const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,9 +104,9 @@ export default function CandidateDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <User className="size-10 text-muted-foreground/40" />
-        <p className="mt-4 text-sm font-medium text-muted-foreground">Candidate not found</p>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">Kandidat nicht gefunden</p>
         <Link href="/dashboard/candidates" className="mt-2 text-sm text-primary hover:underline">
-          Back to candidates
+          Zurück zu Kandidaten
         </Link>
       </div>
     )
@@ -115,31 +127,47 @@ export default function CandidateDetailPage() {
     await updateStatus({ id: candidate._id, status: newStatus, position: 0 })
   }
 
+  const handleDelete = async () => {
+    setDeleting(true)
+    try {
+      await deleteCandidate({ id: candidate._id })
+      router.push("/dashboard/candidates")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   return (
     <div className="space-y-6 max-w-2xl">
-      <Link
-        href="/dashboard/candidates"
-        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors w-fit"
-      >
-        <ArrowLeft className="size-4" />
-        Back to candidates
-      </Link>
+      <div className="flex items-center justify-between">
+        <Link
+          href="/dashboard/candidates"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors w-fit"
+        >
+          <ArrowLeft className="size-4" />
+          Zurück zu Kandidaten
+        </Link>
+        <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
+          <Trash2 className="size-3.5" />
+          Löschen
+        </Button>
+      </div>
 
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">{candidate.name}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Added {new Date(candidate._creationTime).toLocaleDateString("de-DE")}
+            Hinzugefügt am {new Date(candidate._creationTime).toLocaleDateString("de-DE")}
           </p>
         </div>
       </div>
 
       <div className="grid gap-4 border border-gray-200 bg-white p-5 sm:grid-cols-2">
         <DetailRow icon={User} label="Name" value={candidate.name} />
-        <DetailRow icon={Mail} label="Email" value={candidate.email} />
-        <DetailRow icon={Phone} label="Phone" value={candidate.telefon || "—"} />
-        <DetailRow icon={Tag} label="Source" value={candidate.source || "—"} />
-        <DetailRow icon={Globe} label="Language" value={candidate.lang.toUpperCase()} />
+        <DetailRow icon={Mail} label="E-Mail" value={candidate.email} />
+        <DetailRow icon={Phone} label="Telefon" value={candidate.telefon || "—"} />
+        <DetailRow icon={Tag} label="Quelle" value={candidate.source || "—"} />
+        <DetailRow icon={Globe} label="Sprache" value={candidate.lang.toUpperCase()} />
       </div>
 
       <div className="border border-gray-200 bg-white p-5">
@@ -187,7 +215,7 @@ export default function CandidateDetailPage() {
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Upload className="size-4 text-primary" />
-          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Documents</h2>
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Dokumente</h2>
         </div>
 
         <div className="flex items-center gap-2 mb-4">
@@ -196,7 +224,7 @@ export default function CandidateDetailPage() {
             onChange={(e) => setDocType(e.target.value)}
             className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           >
-            <option value="cv">CV</option>
+            <option value="cv">Lebenslauf</option>
             <option value="zeugnis">Zeugnis</option>
             <option value="sonstiges">Sonstiges</option>
           </select>
@@ -214,7 +242,7 @@ export default function CandidateDetailPage() {
             className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
           >
             {uploading ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
-            {uploading ? "Uploading..." : "Upload"}
+            {uploading ? "Wird hochgeladen..." : "Hochladen"}
           </Button>
         </div>
 
@@ -256,17 +284,17 @@ export default function CandidateDetailPage() {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-gray-400 py-2">No documents uploaded yet.</p>
+          <p className="text-xs text-gray-400 py-2">Noch keine Dokumente hochgeladen.</p>
         )}
       </div>
 
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare className="size-4 text-primary" />
-          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Notes</h2>
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Notizen</h2>
         </div>
         <Textarea
-          placeholder="Add notes about this candidate..."
+          placeholder="Notizen zu diesem Kandidaten hinzufügen..."
           value={notesDraft || candidate.notes || ""}
           onChange={(e) => setNotesDraft(e.target.value)}
           rows={5}
@@ -279,14 +307,14 @@ export default function CandidateDetailPage() {
           className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm text-xs h-8"
         >
           {saving && <Loader2 className="size-4 animate-spin" />}
-          Save Notes
+          Notizen speichern
         </Button>
       </div>
 
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
           <Activity className="size-4 text-primary" />
-          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Activity</h2>
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Verlauf</h2>
         </div>
 
         {activityLog === undefined ? (
@@ -311,9 +339,29 @@ export default function CandidateDetailPage() {
             })}
           </div>
         ) : (
-          <p className="text-xs text-gray-400 py-2">No activity yet.</p>
+          <p className="text-xs text-gray-400 py-2">Noch keine Aktivität.</p>
         )}
       </div>
+
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Kandidat löschen</DialogTitle>
+            <DialogDescription>
+              Bist du sicher, dass du diesen Kandidaten löschen möchtest? Alle Dokumente und der Verlauf werden mitgelöscht. Das kann nicht rückgängig gemacht werden.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+              Abbrechen
+            </Button>
+            <Button variant="destructive" disabled={deleting} onClick={handleDelete}>
+              {deleting && <Loader2 className="size-4 animate-spin" />}
+              Löschen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

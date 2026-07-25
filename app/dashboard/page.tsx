@@ -27,7 +27,7 @@ export default function DashboardPage() {
           </span>
           <div>
             <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Dashboard</h1>
-            <p className="text-[11px] font-medium text-muted-foreground/70">Loading overview...</p>
+            <p className="text-[11px] font-medium text-muted-foreground/70">Übersicht wird geladen...</p>
           </div>
         </div>
 
@@ -57,7 +57,7 @@ export default function DashboardPage() {
         </span>
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary tracking-tight">Dashboard</h1>
-          <p className="text-[11px] font-medium text-muted-foreground/70">Overview of your recruitment pipeline</p>
+          <p className="text-[11px] font-medium text-muted-foreground/70">Überblick über deine Recruiting-Pipeline</p>
         </div>
       </div>
 
@@ -66,33 +66,33 @@ export default function DashboardPage() {
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-3">
             <Users className="size-4 text-primary" />
-            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Total Candidates</span>
+            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Kandidaten gesamt</span>
           </div>
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.totalCandidates}
           </p>
           <div className="mt-2 flex items-center gap-1.5">
-            <span className="text-[11px] font-medium text-emerald-600">{stats.placed} placed</span>
+            <span className="text-[11px] font-medium text-emerald-600">{stats.placed} vermittelt</span>
           </div>
         </div>
 
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="size-4 text-amber-500" />
-            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Active Pipeline</span>
+            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Aktive Pipeline</span>
           </div>
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.activePipeline}
           </p>
           <div className="mt-2 flex items-center gap-1.5">
-            <span className="text-[11px] font-medium text-amber-600">{pipelinePercent}% of total</span>
+            <span className="text-[11px] font-medium text-amber-600">{pipelinePercent}% der Gesamtzahl</span>
           </div>
         </div>
 
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-3">
             <UserCheck className="size-4 text-emerald-500" />
-            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Placed</span>
+            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Vermittelt</span>
           </div>
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.placed}
@@ -105,14 +105,14 @@ export default function DashboardPage() {
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-3">
             <MessageSquare className="size-4 text-primary" />
-            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Total Contacts</span>
+            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Einrichtungs-Anfragen gesamt</span>
           </div>
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.totalContacts}
           </p>
           <div className="mt-2 flex items-center gap-1.5">
             <Link href="/dashboard/contacts" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
-              View all <ArrowRight className="size-3" />
+              Alle ansehen <ArrowRight className="size-3" />
             </Link>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Pipeline breakdown */}
         <div className="border border-gray-200 bg-white p-5">
-          <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight mb-4">Pipeline Breakdown</h2>
+          <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight mb-4">Pipeline-Übersicht</h2>
           <div className="space-y-3">
             {stats.statusCounts.map(({ status, count }) => {
               const pct = maxStatusCount > 0 ? (count / maxStatusCount) * 100 : 0
@@ -148,9 +148,9 @@ export default function DashboardPage() {
         {/* Recent candidates */}
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Recent Candidates</h2>
+            <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Kandidaten</h2>
             <Link href="/dashboard/candidates" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
-              View board <ArrowRight className="size-3" />
+              Zum Board <ArrowRight className="size-3" />
             </Link>
           </div>
           {stats.recentCandidates.length > 0 ? (
@@ -183,7 +183,7 @@ export default function DashboardPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Users className="size-8 text-gray-200 mb-2" />
-              <p className="text-xs font-medium text-gray-300">No candidates yet</p>
+              <p className="text-xs font-medium text-gray-300">Noch keine Kandidaten</p>
             </div>
           )}
         </div>
@@ -192,9 +192,9 @@ export default function DashboardPage() {
       {/* Recent contacts */}
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Recent Contacts</h2>
+          <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Einrichtungs-Anfragen</h2>
           <Link href="/dashboard/contacts" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
-            View all <ArrowRight className="size-3" />
+            Alle ansehen <ArrowRight className="size-3" />
           </Link>
         </div>
         {stats.recentContacts.length > 0 ? (
@@ -224,7 +224,7 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <MessageSquare className="size-8 text-gray-200 mb-2" />
-            <p className="text-xs font-medium text-gray-300">No contacts yet</p>
+            <p className="text-xs font-medium text-gray-300">Noch keine Anfragen</p>
           </div>
         )}
       </div>

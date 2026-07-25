@@ -9,7 +9,7 @@ import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
-type Candidate = Doc<"candidates">
+type Contact = Doc<"contacts">
 
 const THEMES: Record<string, {
   col: string
@@ -18,7 +18,7 @@ const THEMES: Record<string, {
   addBorder: string
   addText: string
 }> = {
-  "Neue Bewerbung": {
+  "Neue Anfrage": {
     col: "bg-violet-50/60 border-violet-200/50",
     dot: "bg-violet-400",
     count: "bg-violet-100 text-violet-700",
@@ -46,14 +46,14 @@ const THEMES: Record<string, {
     addBorder: "border-orange-300/50",
     addText: "text-orange-500 hover:bg-orange-100/50",
   },
-  Visum: {
+  Vertrag: {
     col: "bg-emerald-50/60 border-emerald-200/50",
     dot: "bg-emerald-400",
     count: "bg-emerald-100 text-emerald-600",
     addBorder: "border-emerald-300/50",
     addText: "text-emerald-500 hover:bg-emerald-100/50",
   },
-  Gestartet: {
+  Abgeschlossen: {
     col: "bg-primary/[0.03] border-primary/10",
     dot: "bg-primary",
     count: "bg-primary/10 text-primary",
@@ -64,14 +64,14 @@ const THEMES: Record<string, {
 
 interface KanbanColumnProps {
   status: string
-  candidates: Candidate[]
+  contacts: Contact[]
   onAddClick: () => void
 }
 
-export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnProps) {
+export function KanbanColumn({ status, contacts, onAddClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
-  const theme = THEMES[status] ?? THEMES["Neue Bewerbung"]
-  const ids = useMemo(() => candidates.map((c) => c._id), [candidates])
+  const theme = THEMES[status] ?? THEMES["Neue Anfrage"]
+  const ids = useMemo(() => contacts.map((c) => c._id), [contacts])
 
   return (
       <div
@@ -93,15 +93,15 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             <span className={cn(
               "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
               theme.count
-            )} aria-label={`${candidates.length} Kandidaten`}>
-              {candidates.length}
+            )} aria-label={`${contacts.length} Einrichtungen`}>
+              {contacts.length}
             </span>
           </div>
           <button
             type="button"
             onClick={onAddClick}
             className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
-            aria-label={`Kandidat zu ${status} hinzufügen`}
+            aria-label={`Einrichtung zu ${status} hinzufügen`}
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>
@@ -110,9 +110,9 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
       {/* Cards */}
       <SortableContext items={ids} strategy={verticalListSortingStrategy}>
         <div className="flex flex-col gap-1 md:gap-1.5 px-2 md:px-3 py-2 md:py-3 overflow-y-auto min-h-0 max-h-[calc(100vh-340px)]">
-          {candidates.length > 0 ? (
+          {contacts.length > 0 ? (
             <AnimatePresence>
-              {candidates.map((c) => <KanbanCard key={c._id} candidate={c} />)}
+              {contacts.map((c) => <KanbanCard key={c._id} contact={c} />)}
             </AnimatePresence>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 px-4 text-center select-none">

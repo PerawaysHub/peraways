@@ -11,15 +11,15 @@ import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
-type Candidate = Doc<"candidates">
+type Contact = Doc<"contacts">
 
 const THEMES: Record<string, { initials: string; border: string }> = {
-  "Neue Bewerbung": { initials: "bg-violet-100 text-violet-700", border: "border-l-violet-400" },
+  "Neue Anfrage": { initials: "bg-violet-100 text-violet-700", border: "border-l-violet-400" },
   Kontaktiert: { initials: "bg-blue-100 text-blue-700", border: "border-l-blue-400" },
   Gespräch: { initials: "bg-amber-100 text-amber-700", border: "border-l-amber-400" },
   Angebot: { initials: "bg-orange-100 text-orange-700", border: "border-l-orange-400" },
-  Visum: { initials: "bg-emerald-100 text-emerald-700", border: "border-l-emerald-400" },
-  Gestartet: { initials: "bg-primary/10 text-primary", border: "border-l-primary" },
+  Vertrag: { initials: "bg-emerald-100 text-emerald-700", border: "border-l-emerald-400" },
+  Abgeschlossen: { initials: "bg-primary/10 text-primary", border: "border-l-primary" },
 }
 
 function getInitials(name: string) {
@@ -31,18 +31,17 @@ function getInitials(name: string) {
     .slice(0, 2)
 }
 
-function areCandidatesEqual(a: { candidate: Candidate }, b: { candidate: Candidate }) {
-  return a.candidate._id === b.candidate._id
-    && a.candidate.status === b.candidate.status
-    && a.candidate.position === b.candidate.position
-    && a.candidate.name === b.candidate.name
-    && a.candidate.email === b.candidate.email
-    && a.candidate.source === b.candidate.source
-    && a.candidate.notes === b.candidate.notes
+function areContactsEqual(a: { contact: Contact }, b: { contact: Contact }) {
+  return a.contact._id === b.contact._id
+    && a.contact.status === b.contact.status
+    && a.contact.position === b.contact.position
+    && a.contact.name === b.contact.name
+    && a.contact.email === b.contact.email
+    && a.contact.einrichtung === b.contact.einrichtung
 }
 
-export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
-  const deleteCandidate = useMutation(api.candidates.remove)
+export const KanbanCard = memo(function KanbanCard({ contact }: { contact: Contact }) {
+  const deleteContact = useMutation(api.contacts.remove)
 
   const {
     attributes,
@@ -51,7 +50,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: candidate._id })
+  } = useSortable({ id: contact._id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -61,11 +60,12 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    await deleteCandidate({ id: candidate._id })
+    await deleteContact({ id: contact._id })
   }
 
-  const theme = THEMES[candidate.status] ?? THEMES["Neue Bewerbung"]
-  const date = new Date(candidate._creationTime).toLocaleDateString("de-DE", {
+  const status = contact.status ?? "Neue Anfrage"
+  const theme = THEMES[status] ?? THEMES["Neue Anfrage"]
+  const date = new Date(contact._creationTime).toLocaleDateString("de-DE", {
     day: "2-digit",
     month: "2-digit",
   })
@@ -91,27 +91,34 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
       {/* Top row: name + delete */}
       <div className="flex items-start justify-between gap-2">
         <Link
-          href={`/dashboard/candidates/${candidate._id}`}
+          href={`/dashboard/contacts/${contact._id}`}
           onClick={(e) => e.stopPropagation()}
           className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
         >
-          {candidate.name}
+          {contact.name}
         </Link>
 
         <button
           type="button"
           onClick={handleDelete}
           className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
-          aria-label={`${candidate.name} löschen`}
+          aria-label={`${contact.name} löschen`}
         >
           <X className="size-3" aria-hidden="true" />
         </button>
       </div>
 
+      {/* Einrichtung */}
+      {contact.einrichtung && (
+        <p className="text-[11px] font-semibold text-gray-500 mt-1 leading-relaxed truncate">
+          {contact.einrichtung}
+        </p>
+      )}
+
       {/* Email */}
-      {candidate.email && (
-        <p className="text-[11px] text-gray-400/80 mt-1.5 leading-relaxed truncate">
-          {candidate.email}
+      {contact.email && (
+        <p className="text-[11px] text-gray-400/80 mt-0.5 leading-relaxed truncate">
+          {contact.email}
         </p>
       )}
 
@@ -124,19 +131,19 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
               theme.initials
             )}
           >
-            {getInitials(candidate.name)}
+            {getInitials(contact.name)}
           </span>
           <span className="text-[10px] font-medium text-gray-400/70 truncate">
             {date}
           </span>
         </div>
 
-        {candidate.source && (
+        {contact.telefon && (
           <span className="shrink-0 inline-flex items-center border border-gray-200/70 bg-gray-50/80 px-1.5 py-[3px] text-[9px] font-semibold text-gray-500/80 leading-none">
-            {candidate.source}
+            {contact.telefon}
           </span>
         )}
       </div>
     </motion.div>
   )
-})
+}, areContactsEqual)

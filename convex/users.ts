@@ -69,6 +69,27 @@ export const updateUserRole = mutation({
   },
 });
 
+export const remove = mutation({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!currentUser || currentUser.role !== "admin") {
+      throw new Error("Not authorized");
+    }
+
+    await ctx.db.delete(args.userId);
+  },
+});
+
 export const list = query({
   args: {},
   handler: async (ctx) => {

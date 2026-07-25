@@ -37,6 +37,13 @@ export const submit = mutation({
       throw new Error("Too many submissions. Try again later.");
     }
 
+    const existing = await ctx.db
+      .query("contacts")
+      .withIndex("by_status", (q) => q.eq("status", "Neue Anfrage"))
+      .order("desc")
+      .first();
+    const maxPosition = existing ? (existing.position ?? 0) : 0;
+
     const contactId = await ctx.db.insert("contacts", {
       name: args.name,
       email: args.email,
@@ -44,6 +51,8 @@ export const submit = mutation({
       einrichtung: args.einrichtung ?? "",
       nachricht: args.nachricht,
       lang: args.lang,
+      status: "Neue Anfrage",
+      position: maxPosition + 1,
     })
 
     await ctx.db.insert("notifications", {

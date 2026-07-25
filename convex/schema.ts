@@ -10,6 +10,15 @@ export const CANDIDATE_STATUSES = [
   "Gestartet",
 ] as const;
 
+export const CONTACT_STATUSES = [
+  "Neue Anfrage",
+  "Kontaktiert",
+  "Gespräch",
+  "Angebot",
+  "Vertrag",
+  "Abgeschlossen",
+] as const;
+
 export default defineSchema({
   contacts: defineTable({
     name: v.string(),
@@ -18,7 +27,9 @@ export default defineSchema({
     einrichtung: v.optional(v.string()),
     nachricht: v.string(),
     lang: v.string(),
-  }),
+    status: v.optional(v.string()),
+    position: v.optional(v.number()),
+  }).index("by_status", ["status", "position"]),
   candidates: defineTable({
     name: v.string(),
     email: v.string(),
