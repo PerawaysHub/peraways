@@ -36,6 +36,10 @@ export const COMPLIANCE_DOC_TYPES = [
 
 export const TERMIN_ARTEN = ["LEA", "Bankeröffnung", "Bürgeramt", "Sonstiges"] as const;
 
+export const FINANZEN_STATUSES = ["Offen", "Fällig", "Bezahlt"] as const;
+
+export const HONORARBETRAG_OPTIONS = ["8500", "8000"] as const;
+
 export const COMPLIANCE_DOC_LABELS: Record<string, string> = {
   ausbildungsvertrag: "Ausbildungsvertrag",
   vorfinanzierungsvereinbarung: "Vorfinanzierungsvereinbarung (Nakuru County)",
@@ -127,6 +131,14 @@ export default defineSchema({
   })
     .index("by_candidate", ["candidateId"])
     .index("by_datum", ["datum"]),
+  finanzen: defineTable({
+    candidateId: v.id("candidates"),
+    honorarbetrag: v.union(v.literal("8500"), v.literal("8000")),
+    rabattAngewendet: v.boolean(),
+    status: v.union(v.literal("Offen"), v.literal("Fällig"), v.literal("Bezahlt")),
+    faelligkeitsdatum: v.optional(v.number()),
+    bezahldatum: v.optional(v.number()),
+  }).index("by_candidate", ["candidateId"]),
   activityLog: defineTable({
     candidateId: v.id("candidates"),
     type: v.string(),

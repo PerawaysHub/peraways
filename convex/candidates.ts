@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { CANDIDATE_STATUSES, COMPLIANCE_DOC_TYPES } from "./schema";
+import { recomputeFaelligkeitsdatum } from "./finanzen";
 
 export const list = query({
   args: {},
@@ -100,6 +101,12 @@ export const create = mutation({
         status: "Fehlt",
       });
     }
+    await ctx.db.insert("finanzen", {
+      candidateId,
+      honorarbetrag: "8500",
+      rabattAngewendet: false,
+      status: "Offen",
+    });
     return candidateId;
   },
 });
@@ -135,6 +142,9 @@ export const updateDetails = mutation({
       description: "Talent-Profildaten aktualisiert",
       timestamp: Date.now(),
     });
+    if (args.ersterArbeitstag !== undefined) {
+      await recomputeFaelligkeitsdatum(ctx, id, args.ersterArbeitstag);
+    }
   },
 });
 
@@ -264,6 +274,30 @@ export const remove = mutation({
       .collect();
     for (const log of logs) {
       await ctx.db.delete(log._id);
+    }
+    const complianceDocs = await ctx.db
+      .query("complianceDocuments")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))
+      .collect();
+    for (const doc of complianceDocs) {
+      if (doc.storageId) {
+        await ctx.storage.delete(doc.storageId);
+      }
+      await ctx.db.delete(doc._id);
+    }
+    const terminRows = await ctx.db
+      .query("termine")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))
+      .collect();
+    for (const t of terminRows) {
+      await ctx.db.delete(t._id);
+    }
+    const finanzenRow = await ctx.db
+      .query("finanzen")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.id))
+      .first();
+    if (finanzenRow) {
+      await ctx.db.delete(finanzenRow._id);
     }
     await ctx.db.delete(args.id);
   },

@@ -3,7 +3,7 @@
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { CANDIDATE_STATUSES } from "@/convex/schema"
-import { LayoutDashboard, UserCheck, Users, MessageSquare, TrendingUp, ArrowRight, Clock } from "lucide-react"
+import { LayoutDashboard, UserCheck, Users, MessageSquare, TrendingUp, ArrowRight, Clock, Euro, AlertCircle } from "lucide-react"
 import Link from "next/link"
 
 const STATUS_THEME: Record<string, { bar: string; text: string }> = {
@@ -14,8 +14,14 @@ const STATUS_THEME: Record<string, { bar: string; text: string }> = {
   Abgeschlossen: { bar: "bg-primary", text: "text-primary" },
 }
 
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(amount)
+}
+
 export default function DashboardPage() {
   const stats = useQuery(api.dashboard.getStats)
+  const currentUser = useQuery(api.users.getCurrentUser)
+  const finanzStats = useQuery(api.finanzen.getFinanzStats)
 
   if (stats === undefined) {
     return (
@@ -116,6 +122,36 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {currentUser?.role === "admin" && finanzStats && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="border border-gray-200 bg-white p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Euro className="size-4 text-emerald-500" />
+              <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Bezahlter Umsatz</span>
+            </div>
+            <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
+              {formatCurrency(finanzStats.bezahlterUmsatz)}
+            </p>
+          </div>
+
+          <div className="border border-gray-200 bg-white p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp className="size-4 text-amber-500" />
+              <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Offene Honorarforderungen</span>
+            </div>
+            <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
+              {formatCurrency(finanzStats.offeneHonorarforderungen)}
+            </p>
+            {finanzStats.faelligCount > 0 && (
+              <div className="mt-2 flex items-center gap-1.5">
+                <AlertCircle className="size-3 text-amber-500" />
+                <span className="text-[11px] font-medium text-amber-600">{finanzStats.faelligCount} fällig</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Pipeline breakdown + Recent activity */}
       <div className="grid gap-6 lg:grid-cols-2">

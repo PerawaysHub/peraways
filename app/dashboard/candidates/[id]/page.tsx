@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { CANDIDATE_STATUSES, TERMIN_ARTEN } from "@/convex/schema"
+import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES } from "@/convex/schema"
 import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 
@@ -37,6 +37,14 @@ const ACTIVITY_ICONS: Record<string, React.ElementType> = {
   compliance_document_uploaded: Paperclip,
   termin_created: CalendarPlus,
   termin_status_change: CheckCircle2,
+  finanzen_honorar_change: Euro,
+  finanzen_status_change: Euro,
+}
+
+const FINANZEN_STATUS_COLORS: Record<string, string> = {
+  Offen: "bg-gray-50 text-gray-500 border-gray-200",
+  "Fällig": "bg-amber-50 text-amber-700 border-amber-200",
+  Bezahlt: "bg-emerald-50 text-emerald-700 border-emerald-200",
 }
 
 const ART_ICONS: Record<string, React.ElementType> = {
@@ -70,6 +78,10 @@ function probezeitEnde(ersterArbeitstag?: number) {
   return d
 }
 
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(amount)
+}
+
 function getInitials(name: string) {
   return name
     .split(" ")
@@ -97,6 +109,7 @@ export default function CandidateDetailPage() {
   const params = useParams()
   const router = useRouter()
   const id = params.id as Id<"candidates">
+  const currentUser = useQuery(api.users.getCurrentUser)
   const candidate = useQuery(api.candidates.getById, { id })
   const documents = useQuery(api.documents.listByCandidate, { candidateId: id })
   const activityLog = useQuery(api.activityLog.listByCandidate, { candidateId: id })
@@ -118,6 +131,9 @@ export default function CandidateDetailPage() {
   const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: id })
   const setAvatar = useMutation(api.candidates.setAvatar)
   const removeAvatarMutation = useMutation(api.candidates.removeAvatar)
+  const finanzen = useQuery(api.finanzen.getByCandidateId, { candidateId: id })
+  const updateHonorar = useMutation(api.finanzen.updateHonorar)
+  const setFinanzenStatus = useMutation(api.finanzen.setStatus)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
@@ -158,6 +174,7 @@ export default function CandidateDetailPage() {
   })
   const [addingTermin, setAddingTermin] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const [bezahldatumDraft, setBezahldatumDraft] = useState("")
   const hasScrolledToTermine = useRef(false)
 
   useEffect(() => {
@@ -215,6 +232,33 @@ export default function CandidateDetailPage() {
       e.target.value = ""
     }
   }, [id, generateUploadUrl, setAvatar])
+
+  const handleHonorarChange = useCallback(async (honorarbetrag: (typeof HONORARBETRAG_OPTIONS)[number]) => {
+    await updateHonorar({
+      candidateId: id,
+      honorarbetrag,
+      rabattAngewendet: honorarbetrag === "8000",
+    })
+  }, [id, updateHonorar])
+
+  const handleFinanzenStatusChange = useCallback(async (status: (typeof FINANZEN_STATUSES)[number]) => {
+    await setFinanzenStatus({
+      candidateId: id,
+      status,
+      bezahldatum: status === "Bezahlt" ? (fromDateInputValue(bezahldatumDraft) ?? Date.now()) : undefined,
+    })
+  }, [id, setFinanzenStatus, bezahldatumDraft])
+
+  const handleBezahldatumChange = useCallback(async (value: string) => {
+    setBezahldatumDraft(value)
+    if (finanzen?.status === "Bezahlt") {
+      await setFinanzenStatus({
+        candidateId: id,
+        status: "Bezahlt",
+        bezahldatum: fromDateInputValue(value),
+      })
+    }
+  }, [id, finanzen?.status, setFinanzenStatus])
 
   const handleAddTermin = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
@@ -815,6 +859,76 @@ export default function CandidateDetailPage() {
           )}
         </div>
       </div>
+
+      {currentUser?.role === "admin" && (
+        <div className="border border-gray-200 bg-white p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Euro className="size-4 text-primary" />
+            <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Finanzen</h2>
+          </div>
+
+          {!finanzen ? (
+            <div className="h-8 flex items-center">
+              <Loader2 className="size-3.5 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="text-xs font-medium text-muted-foreground/70">
+                  Honorarbetrag
+                  <select
+                    value={finanzen.honorarbetrag}
+                    onChange={(e) => handleHonorarChange(e.target.value as (typeof HONORARBETRAG_OPTIONS)[number])}
+                    className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                  >
+                    <option value="8500">8.500 € (Standard)</option>
+                    <option value="8000">8.000 € (Neukundenrabatt)</option>
+                  </select>
+                  <span className="mt-1 block text-[11px] text-muted-foreground/60">
+                    Neukundenrabatt befristet bis 31.12.2026
+                  </span>
+                </label>
+                <label className="text-xs font-medium text-muted-foreground/70">
+                  Bezahldatum
+                  <input
+                    type="date"
+                    value={bezahldatumDraft || toDateInputValue(finanzen.bezahldatum)}
+                    onChange={(e) => handleBezahldatumChange(e.target.value)}
+                    className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                  />
+                </label>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-muted-foreground/70 mb-1.5">Status</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {FINANZEN_STATUSES.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => handleFinanzenStatusChange(s)}
+                      className={`border px-2.5 py-1 text-[11px] font-semibold transition-all ${
+                        finanzen.status === s
+                          ? FINANZEN_STATUS_COLORS[s]
+                          : "bg-white text-gray-400 border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-muted-foreground/70 pt-1 border-t border-gray-100">
+                <CalendarClock className="size-3.5" />
+                Fälligkeitsdatum: <span className="font-medium text-foreground">{formatDate(finanzen.faelligkeitsdatum)}</span>
+                <span className="text-muted-foreground/50">·</span>
+                <span className="font-medium text-foreground">{formatCurrency(Number(finanzen.honorarbetrag))}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="border border-gray-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
