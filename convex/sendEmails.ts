@@ -3,7 +3,7 @@
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
-import { autoResponse, teamNotification, abendBotReminder } from "./emails";
+import { autoResponse, teamNotification, abendBotReminder, newUserNotification } from "./emails";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -65,6 +65,22 @@ export const sendAbendBotEmail = internalAction({
     });
     if (result.error) {
       console.error("Resend Abend-Bot email failed:", JSON.stringify(result.error));
+    }
+  },
+});
+
+export const sendNewUserEmail = internalAction({
+  args: { name: v.string(), email: v.string() },
+  handler: async (_ctx, args) => {
+    const { subject, html } = newUserNotification(args.name, args.email);
+    const result = await resend.emails.send({
+      from: "PeraWays <team@peraways.de>",
+      to: ["team@peraways.de"],
+      subject,
+      html,
+    });
+    if (result.error) {
+      console.error("Resend new-user notification failed:", JSON.stringify(result.error));
     }
   },
 });

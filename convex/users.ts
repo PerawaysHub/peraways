@@ -1,5 +1,6 @@
 import { query, mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 
 export const listRecipientEmails = internalQuery({
   args: {},
@@ -59,12 +60,27 @@ export const upsertUser = mutation({
       return existing._id;
     }
 
-    return await ctx.db.insert("users", {
+    const userId = await ctx.db.insert("users", {
       clerkId: args.clerkId,
       name: args.name,
       email: args.email,
       role: args.role,
     });
+
+    await ctx.db.insert("notifications", {
+      type: "new_user_registered",
+      title: "Neue Registrierung",
+      description: `${args.name || args.email} hat sich registriert und wartet auf Freischaltung.`,
+      read: false,
+      relatedId: userId,
+    });
+
+    await ctx.scheduler.runAfter(0, internal.sendEmails.sendNewUserEmail, {
+      name: args.name,
+      email: args.email,
+    });
+
+    return userId;
   },
 });
 
@@ -114,6 +130,20 @@ export const remove = mutation({
     }
 
     await ctx.db.delete(args.userId);
+  },
+});
+
+// Called by the Clerk webhook on "user.deleted" (e.g. someone deletes their
+// own account via Manage Account) — no admin check, since this is only ever
+// invoked from the trusted server-to-server webhook route, not from a client.
+export const deleteByClerkId = mutation({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+      .unique();
+    if (user) await ctx.db.delete(user._id);
   },
 });
 

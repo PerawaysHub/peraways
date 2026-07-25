@@ -39,6 +39,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (type === "user.deleted") {
+      const deletedId = (data as { id: string }).id;
+      await convex.mutation(api.users.deleteByClerkId, { clerkId: deletedId });
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Webhook error:", err);

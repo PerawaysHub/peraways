@@ -112,3 +112,18 @@ export function abendBotReminder(
 
   return { subject, html: templateWrapper(body, "de") }
 }
+
+export function newUserNotification(name: string, email: string): { subject: string; html: string } {
+  const subject = `Neue Registrierung: ${name || email}`
+  const body = `
+    <h2>Neue Registrierung</h2>
+    <p>Eine neue Person hat sich für das PeraWays CRM registriert und wartet auf Freischaltung.</p>
+    <div class="label">Name</div>
+    <div class="value">${name || "—"}</div>
+    <div class="label">E-Mail</div>
+    <div class="value">${email}</div>
+    <hr>
+    <p style="font-size:13px;color:#999;">Rolle im Nutzer-Bereich des Dashboards zuweisen.</p>
+  `
+  return { subject, html: templateWrapper(body, "de") }
+}

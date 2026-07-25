@@ -43,6 +43,7 @@ const sidebarLinks = [
 
 function notificationLink(n: { type: string; relatedId?: string }) {
   if (n.type === "new_contact" && n.relatedId) return `/dashboard/contacts/${n.relatedId}`
+  if (n.type === "new_user_registered") return "/dashboard/users"
   return null
 }
 
@@ -50,8 +51,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
   const router = useRouter()
   const currentUser = useQuery(api.users.getCurrentUser)
-  const unread = useQuery(api.notifications.listUnread)
-  const unreadCount = useQuery(api.notifications.countUnread)
+  const role = currentUser?.role
+  const canSeeNotifications = !!role && role !== "gstc" && role !== "viewer"
+  const unread = useQuery(api.notifications.listUnread, canSeeNotifications ? {} : "skip")
+  const unreadCount = useQuery(api.notifications.countUnread, canSeeNotifications ? {} : "skip")
   const markAllAsRead = useMutation(api.notifications.markAllAsRead)
   const markAsRead = useMutation(api.notifications.markAsRead)
 
@@ -81,8 +84,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       })
     }
   }, [unread, markAsRead, router])
-
-  const role = currentUser?.role
 
   useEffect(() => {
     if (!role) return
@@ -184,20 +185,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center justify-between gap-2 border-b px-4 py-3">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              className="relative"
-              onClick={() => markAllAsRead()}
-              aria-label={`${unreadCount ?? 0} unread notifications`}
-            >
-              <Bell className="h-4 w-4" aria-hidden="true" />
-              {(unreadCount ?? 0) > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-medium text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </Button>
+            {canSeeNotifications && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="relative"
+                onClick={() => markAllAsRead()}
+                aria-label={`${unreadCount ?? 0} unread notifications`}
+              >
+                <Bell className="h-4 w-4" aria-hidden="true" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-medium text-white">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
             {role && (
               <span className={`hidden sm:inline-flex items-center rounded-md px-2 py-1 text-[11px] font-medium ${ROLE_COLORS[role] ?? "bg-gray-100 text-gray-800"}`}>
                 {ROLE_LABELS[role] ?? role}
