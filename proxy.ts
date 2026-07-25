@@ -9,6 +9,8 @@ const isPublicRoute = createRouteMatcher([
     "/cookie-policy",
     "/sitemap.xml",
     "/robots.txt",
+    "/sign-in(.*)",
+    "/sign-up(.*)",
 ]);
 
 const isApiRoute = createRouteMatcher(["/api(.*)"]);
