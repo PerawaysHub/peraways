@@ -16,6 +16,7 @@ import {
   Users,
   Home,
   Bell,
+  CalendarCheck2,
 } from "lucide-react"
 import {
   Sidebar,
@@ -35,6 +36,7 @@ const sidebarLinks = [
   { href: "/dashboard", label: "Übersicht", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Einrichtungen", icon: MessageSquare },
   { href: "/dashboard/candidates", label: "Talente", icon: LayoutPanelTop },
+  { href: "/dashboard/heute", label: "Heute", icon: CalendarCheck2 },
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
 ]
 

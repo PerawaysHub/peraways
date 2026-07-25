@@ -34,6 +34,8 @@ export const COMPLIANCE_DOC_TYPES = [
   "berufsausuebungserlaubnis",
 ] as const;
 
+export const TERMIN_ARTEN = ["LEA", "Bankeröffnung", "Bürgeramt", "Sonstiges"] as const;
+
 export const COMPLIANCE_DOC_LABELS: Record<string, string> = {
   ausbildungsvertrag: "Ausbildungsvertrag",
   vorfinanzierungsvereinbarung: "Vorfinanzierungsvereinbarung (Nakuru County)",
@@ -109,6 +111,21 @@ export default defineSchema({
     storageId: v.id("_storage"),
     uploadedAt: v.number(),
   }).index("by_candidate", ["candidateId"]),
+  termine: defineTable({
+    candidateId: v.id("candidates"),
+    datum: v.number(),
+    uhrzeit: v.string(),
+    art: v.union(
+      v.literal("LEA"),
+      v.literal("Bankeröffnung"),
+      v.literal("Bürgeramt"),
+      v.literal("Sonstiges")
+    ),
+    status: v.union(v.literal("Offen"), v.literal("Erledigt")),
+    notizen: v.optional(v.string()),
+  })
+    .index("by_candidate", ["candidateId"])
+    .index("by_datum", ["datum"]),
   activityLog: defineTable({
     candidateId: v.id("candidates"),
     type: v.string(),

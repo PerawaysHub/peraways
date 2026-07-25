@@ -18,6 +18,7 @@ import type * as documents from "../documents.js";
 import type * as emails from "../emails.js";
 import type * as notifications from "../notifications.js";
 import type * as sendEmails from "../sendEmails.js";
+import type * as termine from "../termine.js";
 import type * as users from "../users.js";
 
 import type {
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   emails: typeof emails;
   notifications: typeof notifications;
   sendEmails: typeof sendEmails;
+  termine: typeof termine;
   users: typeof users;
 }>;
 

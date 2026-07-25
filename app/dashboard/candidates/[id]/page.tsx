@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { CANDIDATE_STATUSES } from "@/convex/schema"
+import { CANDIDATE_STATUSES, TERMIN_ARTEN } from "@/convex/schema"
 import { useRef, useState, useCallback } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 
@@ -35,6 +35,15 @@ const ACTIVITY_ICONS: Record<string, React.ElementType> = {
   details_updated: User,
   compliance_status_change: CheckCircle2,
   compliance_document_uploaded: Paperclip,
+  termin_created: CalendarPlus,
+  termin_status_change: CheckCircle2,
+}
+
+const ART_ICONS: Record<string, React.ElementType> = {
+  LEA: Stamp,
+  "Bankeröffnung": Landmark,
+  "Bürgeramt": Building2,
+  Sonstiges: MoreHorizontal,
 }
 
 const B1_STATUS_OPTIONS = ["In Ausbildung", "Bestanden", "Nicht gestartet"] as const
@@ -93,6 +102,10 @@ export default function CandidateDetailPage() {
   const setComplianceStatus = useMutation(api.complianceDocuments.setComplianceStatus)
   const attachComplianceDocument = useMutation(api.complianceDocuments.attachDocument)
   const removeComplianceDocument = useMutation(api.complianceDocuments.removeDocument)
+  const termine = useQuery(api.termine.listByCandidate, { candidateId: id })
+  const createTermin = useMutation(api.termine.create)
+  const updateTerminStatus = useMutation(api.termine.updateStatus)
+  const removeTermin = useMutation(api.termine.remove)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notesDraft, setNotesDraft] = useState("")
@@ -124,6 +137,14 @@ export default function CandidateDetailPage() {
   })
   const [savingLogistik, setSavingLogistik] = useState(false)
   const [uploadingDocType, setUploadingDocType] = useState<string | null>(null)
+
+  const [terminDraft, setTerminDraft] = useState({
+    datum: "",
+    uhrzeit: "",
+    art: "LEA" as (typeof TERMIN_ARTEN)[number],
+    notizen: "",
+  })
+  const [addingTermin, setAddingTermin] = useState(false)
 
   const handleUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -158,6 +179,24 @@ export default function CandidateDetailPage() {
       e.target.value = ""
     }
   }, [id, generateUploadUrl, attachComplianceDocument])
+
+  const handleAddTermin = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!terminDraft.datum || !terminDraft.uhrzeit) return
+    setAddingTermin(true)
+    try {
+      await createTermin({
+        candidateId: id,
+        datum: new Date(terminDraft.datum).getTime(),
+        uhrzeit: terminDraft.uhrzeit,
+        art: terminDraft.art,
+        notizen: terminDraft.notizen || undefined,
+      })
+      setTerminDraft({ datum: "", uhrzeit: "", art: "LEA", notizen: "" })
+    } finally {
+      setAddingTermin(false)
+    }
+  }, [id, terminDraft, createTermin])
 
   if (candidate === undefined) {
     return (
@@ -545,6 +584,114 @@ export default function CandidateDetailPage() {
               </div>
             ))}
           </div>
+        )}
+      </div>
+
+      <div className="border border-gray-200 bg-white p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarPlus className="size-4 text-primary" />
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Termine</h2>
+        </div>
+
+        <form onSubmit={handleAddTermin} className="flex flex-wrap items-end gap-2 mb-4">
+          <input
+            type="date"
+            value={terminDraft.datum}
+            onChange={(e) => setTerminDraft((d) => ({ ...d, datum: e.target.value }))}
+            required
+            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+          />
+          <input
+            type="time"
+            value={terminDraft.uhrzeit}
+            onChange={(e) => setTerminDraft((d) => ({ ...d, uhrzeit: e.target.value }))}
+            required
+            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+          />
+          <select
+            value={terminDraft.art}
+            onChange={(e) => setTerminDraft((d) => ({ ...d, art: e.target.value as (typeof TERMIN_ARTEN)[number] }))}
+            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+          >
+            {TERMIN_ARTEN.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Notizen (optional)"
+            value={terminDraft.notizen}
+            onChange={(e) => setTerminDraft((d) => ({ ...d, notizen: e.target.value }))}
+            className="h-8 min-w-[140px] flex-1 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+          />
+          <Button
+            type="submit"
+            size="sm"
+            disabled={addingTermin}
+            className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+          >
+            {addingTermin ? <Loader2 className="size-3.5 animate-spin" /> : <Plus className="size-3.5" />}
+            Hinzufügen
+          </Button>
+        </form>
+
+        {termine === undefined ? (
+          <div className="h-8 flex items-center">
+            <Loader2 className="size-3.5 animate-spin text-gray-400" />
+          </div>
+        ) : termine.length > 0 ? (
+          <div className="divide-y divide-gray-100">
+            {[...termine].sort((a, b) => a.datum - b.datum).map((termin) => {
+              const ArtIcon = ART_ICONS[termin.art] ?? MoreHorizontal
+              return (
+                <div key={termin._id} className="flex items-center justify-between gap-3 py-2.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <ArtIcon className="size-4 text-gray-400 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {formatDate(termin.datum)} · {termin.uhrzeit} · {termin.art}
+                      </p>
+                      {termin.notizen && (
+                        <p className="text-[11px] text-gray-400 truncate">{termin.notizen}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        updateTerminStatus({
+                          id: termin._id,
+                          status: termin.status === "Offen" ? "Erledigt" : "Offen",
+                        })
+                      }
+                      className={`flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold transition-all ${
+                        termin.status === "Erledigt"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-gray-50 text-gray-500 border-gray-200"
+                      }`}
+                    >
+                      {termin.status === "Erledigt" ? (
+                        <CheckCircle2 className="size-3.5" />
+                      ) : (
+                        <Circle className="size-3.5" />
+                      )}
+                      {termin.status}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeTermin({ id: termin._id })}
+                      className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 py-2">Noch keine Termine.</p>
         )}
       </div>
 

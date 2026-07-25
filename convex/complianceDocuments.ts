@@ -37,6 +37,22 @@ export const getComplianceStatus = query({
   },
 })
 
+export const getComplianceSummary = query({
+  args: { candidateId: v.id("candidates") },
+  handler: async (ctx, args) => {
+    const rows = await ctx.db
+      .query("complianceDocuments")
+      .withIndex("by_candidate", (q) => q.eq("candidateId", args.candidateId))
+      .collect()
+    const receivedCount = rows.filter((r) => r.status === "Erhalten").length
+    return {
+      receivedCount,
+      totalCount: COMPLIANCE_DOC_TYPES.length,
+      allReceived: receivedCount === COMPLIANCE_DOC_TYPES.length,
+    }
+  },
+})
+
 async function getOrCreateRow(
   ctx: MutationCtx,
   candidateId: Id<"candidates">,

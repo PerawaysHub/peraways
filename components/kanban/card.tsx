@@ -4,10 +4,10 @@ import { memo } from "react"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { motion } from "framer-motion"
-import { useMutation } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { X } from "lucide-react"
+import { X, ShieldCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
@@ -42,6 +42,7 @@ function areCandidatesEqual(a: { candidate: Candidate }, b: { candidate: Candida
 
 export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
   const deleteCandidate = useMutation(api.candidates.remove)
+  const complianceSummary = useQuery(api.complianceDocuments.getComplianceSummary, { candidateId: candidate._id })
 
   const {
     attributes,
@@ -130,11 +131,25 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
           </span>
         </div>
 
-        {candidate.source && (
-          <span className="shrink-0 inline-flex items-center border border-gray-200/70 bg-gray-50/80 px-1.5 py-[3px] text-[9px] font-semibold text-gray-500/80 leading-none">
-            {candidate.source}
-          </span>
-        )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {complianceSummary && (
+            complianceSummary.allReceived ? (
+              <span className="inline-flex items-center gap-1 border border-emerald-200 bg-emerald-50 px-1.5 py-[3px] text-[9px] font-semibold text-emerald-700 leading-none">
+                <ShieldCheck className="size-2.5" />
+                Ready for LEA
+              </span>
+            ) : (
+              <span className="inline-flex items-center border border-gray-200/70 bg-gray-50/80 px-1.5 py-[3px] text-[9px] font-semibold text-gray-500/80 leading-none">
+                {complianceSummary.receivedCount}/{complianceSummary.totalCount}
+              </span>
+            )
+          )}
+          {candidate.source && (
+            <span className="inline-flex items-center border border-gray-200/70 bg-gray-50/80 px-1.5 py-[3px] text-[9px] font-semibold text-gray-500/80 leading-none">
+              {candidate.source}
+            </span>
+          )}
+        </div>
       </div>
     </motion.div>
   )
