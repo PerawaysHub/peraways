@@ -3,7 +3,7 @@
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
-import { autoResponse, teamNotification } from "./emails";
+import { autoResponse, teamNotification, abendBotReminder } from "./emails";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -40,6 +40,31 @@ export const sendContactEmails = internalAction({
     });
     if (replyResult.error) {
       console.error("Resend auto-response failed:", JSON.stringify(replyResult.error));
+    }
+  },
+});
+
+export const sendAbendBotEmail = internalAction({
+  args: {
+    termine: v.array(
+      v.object({
+        candidateName: v.string(),
+        uhrzeit: v.string(),
+        art: v.string(),
+      })
+    ),
+    recipients: v.array(v.string()),
+  },
+  handler: async (_ctx, args) => {
+    const { subject, html } = abendBotReminder(args.termine);
+    const result = await resend.emails.send({
+      from: "PeraWays <team@peraways.de>",
+      to: args.recipients,
+      subject,
+      html,
+    });
+    if (result.error) {
+      console.error("Resend Abend-Bot email failed:", JSON.stringify(result.error));
     }
   },
 });

@@ -1,4 +1,4 @@
-import { query, mutation, MutationCtx } from "./_generated/server"
+import { query, mutation, internalMutation, MutationCtx } from "./_generated/server"
 import { v } from "convex/values"
 import type { Id } from "./_generated/dataModel"
 import { getCurrentUserRole, requireAdmin } from "./permissions"
@@ -123,3 +123,25 @@ export async function recomputeFaelligkeitsdatum(
   const row = await getOrCreateRow(ctx, candidateId)
   await ctx.db.patch(row._id, { faelligkeitsdatum })
 }
+
+// Cron-triggered — no logged-in user, so this bypasses setStatus/requireAdmin
+// and patches directly. See convex/crons.ts.
+export const checkFaelligkeit = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = Date.now()
+    const rows = await ctx.db.query("finanzen").collect()
+    const due = rows.filter(
+      (r) => r.status === "Offen" && r.faelligkeitsdatum !== undefined && r.faelligkeitsdatum <= now
+    )
+    for (const row of due) {
+      await ctx.db.patch(row._id, { status: "Fällig" })
+      await ctx.db.insert("activityLog", {
+        candidateId: row.candidateId,
+        type: "finanzen_status_change",
+        description: "Honorar-Status → Fällig",
+        timestamp: now,
+      })
+    }
+  },
+})

@@ -28,6 +28,20 @@ export const getStats = query({
     const activePipeline = candidates.filter((c) => activeStatuses.includes(c.status)).length
     const placed = candidates.filter((c) => c.status === "Abgeschlossen").length
 
+    const now = Date.now()
+    const msPerDay = 24 * 60 * 60 * 1000
+    const isWithin30Days = (ts?: number) => ts !== undefined && (ts - now) / msPerDay <= 30
+    const fristenWarnungCount = candidates.filter((c) => {
+      const probezeitEndeTs = c.ersterArbeitstag
+        ? (() => {
+            const d = new Date(c.ersterArbeitstag!)
+            d.setMonth(d.getMonth() + 4)
+            return d.getTime()
+          })()
+        : undefined
+      return isWithin30Days(c.ablaufdatumVisum) || isWithin30Days(probezeitEndeTs)
+    }).length
+
     return {
       totalCandidates: candidates.length,
       totalContacts: contacts.length,
@@ -36,6 +50,7 @@ export const getStats = query({
       placed,
       recentCandidates,
       recentContacts,
+      fristenWarnungCount,
     }
   },
 })

@@ -1,4 +1,4 @@
-function templateWrapper(body: string, lang: string): string {
+export function templateWrapper(body: string, lang: string): string {
   const isDE = lang === "de"
   return `<!DOCTYPE html>
 <html lang="${lang}">
@@ -88,4 +88,27 @@ export function teamNotification(data: {
   `
 
   return { subject, html: templateWrapper(body, data.lang) }
+}
+
+export function abendBotReminder(
+  termine: { candidateName: string; uhrzeit: string; art: string }[]
+): { subject: string; html: string } {
+  const subject = `Offene Termine heute — ${termine.length} Termin${termine.length === 1 ? "" : "e"}`
+
+  const rows = termine
+    .map(
+      (t) => `
+    <div class="label">${t.uhrzeit} — ${t.art}</div>
+    <div class="value">${t.candidateName}</div>
+  `
+    )
+    .join("")
+
+  const body = `
+    <h2>Offene Termine heute</h2>
+    <p>Die folgenden Termine sind für heute geplant und noch als "Offen" markiert:</p>
+    ${rows}
+  `
+
+  return { subject, html: templateWrapper(body, "de") }
 }

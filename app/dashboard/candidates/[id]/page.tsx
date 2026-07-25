@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -18,6 +18,7 @@ import {
 import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES } from "@/convex/schema"
 import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
+import { daysUntil, probezeitEnde } from "@/lib/utils"
 
 const STATUS_COLORS: Record<string, string> = {
   Qualifizierung: "bg-violet-100 text-violet-700 border-violet-200",
@@ -71,11 +72,20 @@ function formatDate(ts?: number) {
   return new Date(ts).toLocaleDateString("de-DE")
 }
 
-function probezeitEnde(ersterArbeitstag?: number) {
-  if (!ersterArbeitstag) return null
-  const d = new Date(ersterArbeitstag)
-  d.setMonth(d.getMonth() + 4)
-  return d
+function FristenBadge({ days }: { days: number | null }) {
+  if (days === null || days > 30) return null
+  return (
+    <span
+      className={`inline-flex items-center gap-1 border px-1.5 py-[3px] text-[10px] font-semibold leading-none ${
+        days <= 0
+          ? "border-red-200 bg-red-50 text-red-700"
+          : "border-amber-200 bg-amber-50 text-amber-700"
+      }`}
+    >
+      <AlertTriangle className="size-2.5" />
+      {days <= 0 ? "abgelaufen" : `${days}d`}
+    </span>
+  )
 }
 
 function formatCurrency(amount: number) {
@@ -580,7 +590,10 @@ export default function CandidateDetailPage() {
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
-            Ablaufdatum Visum
+            <span className="flex items-center justify-between gap-2">
+              Ablaufdatum Visum
+              <FristenBadge days={daysUntil(candidate.ablaufdatumVisum)} />
+            </span>
             <input
               type="date"
               value={logistikDraft.ablaufdatumVisum || toDateInputValue(candidate.ablaufdatumVisum)}
@@ -602,8 +615,9 @@ export default function CandidateDetailPage() {
           <CalendarClock className="size-3.5" />
           Probezeit-Ende (berechnet):{" "}
           <span className="font-medium text-foreground">
-            {probezeitEnde(candidate.ersterArbeitstag)?.toLocaleDateString("de-DE") ?? "—"}
+            {formatDate(probezeitEnde(candidate.ersterArbeitstag))}
           </span>
+          <FristenBadge days={daysUntil(probezeitEnde(candidate.ersterArbeitstag))} />
         </div>
         <Button
           onClick={handleSaveLogistik}

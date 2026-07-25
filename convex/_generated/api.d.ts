@@ -9,10 +9,12 @@
  */
 
 import type * as activityLog from "../activityLog.js";
+import type * as automations from "../automations.js";
 import type * as candidates from "../candidates.js";
 import type * as complianceDocuments from "../complianceDocuments.js";
 import type * as contact from "../contact.js";
 import type * as contacts from "../contacts.js";
+import type * as crons from "../crons.js";
 import type * as dashboard from "../dashboard.js";
 import type * as documents from "../documents.js";
 import type * as emails from "../emails.js";
@@ -31,10 +33,12 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   activityLog: typeof activityLog;
+  automations: typeof automations;
   candidates: typeof candidates;
   complianceDocuments: typeof complianceDocuments;
   contact: typeof contact;
   contacts: typeof contacts;
+  crons: typeof crons;
   dashboard: typeof dashboard;
   documents: typeof documents;
   emails: typeof emails;

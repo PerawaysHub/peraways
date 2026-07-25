@@ -123,6 +123,21 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {stats.fristenWarnungCount > 0 && (
+        <div className="border border-amber-200 bg-amber-50/50 p-5">
+          <div className="flex items-center gap-2 mb-1">
+            <AlertCircle className="size-4 text-amber-600" />
+            <span className="text-[11px] font-semibold text-amber-700 tracking-wide uppercase">Fristen-Warnungen</span>
+          </div>
+          <p className="font-heading text-2xl font-bold text-amber-700 tabular-nums tracking-tight">
+            {stats.fristenWarnungCount}
+          </p>
+          <p className="text-[11px] font-medium text-amber-600/80 mt-1">
+            Talente mit Visum- oder Probezeit-Frist in ≤30 Tagen oder bereits abgelaufen
+          </p>
+        </div>
+      )}
+
       {currentUser?.role === "admin" && finanzStats && (
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="border border-gray-200 bg-white p-5">

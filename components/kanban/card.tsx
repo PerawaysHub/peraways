@@ -8,8 +8,8 @@ import { motion } from "framer-motion"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { X, ShieldCheck, Pencil } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { X, ShieldCheck, Pencil, AlertTriangle } from "lucide-react"
+import { cn, daysUntil, probezeitEnde } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
 
 type Candidate = Doc<"candidates">
@@ -39,6 +39,18 @@ function areCandidatesEqual(a: { candidate: Candidate }, b: { candidate: Candida
     && a.candidate.email === b.candidate.email
     && a.candidate.source === b.candidate.source
     && a.candidate.notes === b.candidate.notes
+    && a.candidate.ablaufdatumVisum === b.candidate.ablaufdatumVisum
+    && a.candidate.ersterArbeitstag === b.candidate.ersterArbeitstag
+}
+
+function getFristenBadge(candidate: Candidate) {
+  const options = [
+    { days: daysUntil(candidate.ablaufdatumVisum), label: "Visum" },
+    { days: daysUntil(probezeitEnde(candidate.ersterArbeitstag)), label: "Probezeit" },
+  ].filter((o): o is { days: number; label: string } => o.days !== null)
+  if (options.length === 0) return null
+  const soonest = options.reduce((a, b) => (b.days < a.days ? b : a))
+  return soonest.days <= 30 ? soonest : null
 }
 
 export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
@@ -72,6 +84,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
     day: "2-digit",
     month: "2-digit",
   })
+  const fristenBadge = getFristenBadge(candidate)
 
   return (
     <motion.div
@@ -155,6 +168,19 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
+          {fristenBadge && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 border px-1.5 py-[3px] text-[9px] font-semibold leading-none",
+                fristenBadge.days <= 0
+                  ? "border-red-200 bg-red-50 text-red-700"
+                  : "border-amber-200 bg-amber-50 text-amber-700"
+              )}
+            >
+              <AlertTriangle className="size-2.5" />
+              {fristenBadge.label} {fristenBadge.days <= 0 ? "abgelaufen" : `${fristenBadge.days}d`}
+            </span>
+          )}
           {complianceSummary && (
             complianceSummary.allReceived ? (
               <span className="inline-flex items-center gap-1 border border-emerald-200 bg-emerald-50 px-1.5 py-[3px] text-[9px] font-semibold text-emerald-700 leading-none">

@@ -1,5 +1,17 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+
+export const listRecipientEmails = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    const helpers = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("role"), "integrationshelfer"))
+      .collect();
+    const emails = helpers.map((u) => u.email).filter((e) => e && e.length > 0);
+    return emails.length > 0 ? emails : ["team@peraways.de"];
+  },
+});
 
 export const getCurrentUser = query({
   args: {},
