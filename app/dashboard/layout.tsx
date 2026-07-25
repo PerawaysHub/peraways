@@ -34,7 +34,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary"
 const sidebarLinks = [
   { href: "/dashboard", label: "Übersicht", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Einrichtungen", icon: MessageSquare },
-  { href: "/dashboard/candidates", label: "Kandidaten", icon: LayoutPanelTop },
+  { href: "/dashboard/candidates", label: "Talente", icon: LayoutPanelTop },
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
 ]
 

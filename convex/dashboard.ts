@@ -24,9 +24,9 @@ export const getStats = query({
 
     const recentContacts = contacts.slice(0, 5)
 
-    const activeStatuses = ["Neue Bewerbung", "Kontaktiert", "Gespräch", "Angebot", "Visum"]
+    const activeStatuses = ["Qualifizierung", "LEA-Fast-Lane", "Visum", "Onboarding / Berlin-Phase"]
     const activePipeline = candidates.filter((c) => activeStatuses.includes(c.status)).length
-    const placed = candidates.filter((c) => c.status === "Gestartet").length
+    const placed = candidates.filter((c) => c.status === "Abgeschlossen").length
 
     return {
       totalCandidates: candidates.length,

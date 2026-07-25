@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { CANDIDATE_STATUSES, COMPLIANCE_DOC_TYPES } from "./schema";
 
 export const list = query({
   args: {},
@@ -35,9 +36,10 @@ export const create = mutation({
     lang: v.string(),
   },
   handler: async (ctx, args) => {
+    const initialStatus = CANDIDATE_STATUSES[0];
     const existing = await ctx.db
       .query("candidates")
-      .withIndex("by_status", (q) => q.eq("status", "Neue Bewerbung"))
+      .withIndex("by_status", (q) => q.eq("status", initialStatus))
       .order("desc")
       .first();
     const maxPosition = existing ? (existing.position ?? 0) : 0;
@@ -45,7 +47,7 @@ export const create = mutation({
       name: args.name,
       email: args.email,
       telefon: args.telefon ?? "",
-      status: "Neue Bewerbung",
+      status: initialStatus,
       position: maxPosition + 1,
       notes: "",
       source: args.source,
@@ -57,7 +59,88 @@ export const create = mutation({
       description: "Candidate created",
       timestamp: Date.now(),
     });
+    for (const docType of COMPLIANCE_DOC_TYPES) {
+      await ctx.db.insert("complianceDocuments", {
+        candidateId,
+        docType,
+        status: "Fehlt",
+      });
+    }
     return candidateId;
+  },
+});
+
+export const updateDetails = mutation({
+  args: {
+    id: v.id("candidates"),
+    geburtsdatum: v.optional(v.number()),
+    passnummer: v.optional(v.string()),
+    herkunftsland: v.optional(v.string()),
+    b1Status: v.optional(
+      v.union(
+        v.literal("In Ausbildung"),
+        v.literal("Bestanden"),
+        v.literal("Nicht gestartet")
+      )
+    ),
+    datumB1Pruefung: v.optional(v.number()),
+    aktuellerSprachkurs: v.optional(v.string()),
+    flugdatum: v.optional(v.number()),
+    landungsdatumBerlin: v.optional(v.number()),
+    ablaufdatumVisum: v.optional(v.number()),
+    ersterArbeitstag: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...fields } = args;
+    const candidate = await ctx.db.get(id);
+    if (!candidate) return;
+    await ctx.db.patch(id, fields);
+    await ctx.db.insert("activityLog", {
+      candidateId: id,
+      type: "details_updated",
+      description: "Talent-Profildaten aktualisiert",
+      timestamp: Date.now(),
+    });
+  },
+});
+
+// One-time migration: remaps candidates from the old 6-stage pipeline
+// (Neue Bewerbung/Kontaktiert/Gespräch/Angebot/Visum/Gestartet) to the new
+// 5-stage Talente pipeline, and renumbers positions within each merged
+// column to avoid collisions. Run manually via the Convex dashboard
+// function-runner — not wired into deploy. Safe to re-run (idempotent).
+export const migrateStatuses = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const mapping: Record<string, string> = {
+      "Neue Bewerbung": "Qualifizierung",
+      Kontaktiert: "Qualifizierung",
+      Gespräch: "Qualifizierung",
+      Angebot: "Qualifizierung",
+      Visum: "Visum",
+      Gestartet: "Onboarding / Berlin-Phase",
+    };
+    const all = await ctx.db.query("candidates").order("asc").collect();
+    const byNewStatus = new Map<string, typeof all>();
+    for (const c of all) {
+      const newStatus = mapping[c.status] ?? c.status;
+      if (!byNewStatus.has(newStatus)) byNewStatus.set(newStatus, []);
+      byNewStatus.get(newStatus)!.push(c);
+    }
+    let migrated = 0;
+    for (const group of byNewStatus.values()) {
+      group.sort((a, b) => a.position - b.position);
+      let pos = 1;
+      for (const c of group) {
+        const newStatus = mapping[c.status] ?? c.status;
+        if (c.status !== newStatus || c.position !== pos) {
+          await ctx.db.patch(c._id, { status: newStatus, position: pos });
+          migrated++;
+        }
+        pos++;
+      }
+    }
+    return { migrated };
   },
 });
 

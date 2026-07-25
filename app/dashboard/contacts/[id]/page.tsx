@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check } from "lucide-react";
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -59,7 +59,18 @@ export default function ContactDetailPage() {
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", telefon: "", einrichtung: "", nachricht: "", lang: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    telefon: "",
+    einrichtung: "",
+    nachricht: "",
+    lang: "",
+    ansprechpartnerName: "",
+    ansprechpartnerEmail: "",
+    ansprechpartnerTelefon: "",
+    rahmenvertragUnterschrieben: false,
+  });
 
   useEffect(() => {
     if (!unread) return;
@@ -98,6 +109,10 @@ export default function ContactDetailPage() {
       einrichtung: contact.einrichtung ?? "",
       nachricht: contact.nachricht,
       lang: contact.lang,
+      ansprechpartnerName: contact.ansprechpartnerName ?? "",
+      ansprechpartnerEmail: contact.ansprechpartnerEmail ?? "",
+      ansprechpartnerTelefon: contact.ansprechpartnerTelefon ?? "",
+      rahmenvertragUnterschrieben: contact.rahmenvertragUnterschrieben ?? false,
     });
     setEditing(true);
   };
@@ -105,7 +120,15 @@ export default function ContactDetailPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateContact({ id, ...form, telefon: form.telefon || undefined, einrichtung: form.einrichtung || undefined });
+      await updateContact({
+        id,
+        ...form,
+        telefon: form.telefon || undefined,
+        einrichtung: form.einrichtung || undefined,
+        ansprechpartnerName: form.ansprechpartnerName || undefined,
+        ansprechpartnerEmail: form.ansprechpartnerEmail || undefined,
+        ansprechpartnerTelefon: form.ansprechpartnerTelefon || undefined,
+      });
       setEditing(false);
     } finally {
       setSaving(false);
@@ -236,6 +259,44 @@ export default function ContactDetailPage() {
               rows={5}
             />
           </div>
+          <div className="border-t pt-4 space-y-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Ansprechpartner / Heimleitung</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground">Name</label>
+                <Input value={form.ansprechpartnerName} onChange={(e) => setForm({ ...form, ansprechpartnerName: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground">E-Mail</label>
+                <Input value={form.ansprechpartnerEmail} onChange={(e) => setForm({ ...form, ansprechpartnerEmail: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground">Telefon</label>
+                <Input value={form.ansprechpartnerTelefon} onChange={(e) => setForm({ ...form, ansprechpartnerTelefon: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground">Rahmenvertrag unterschrieben</label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={form.rahmenvertragUnterschrieben ? "default" : "outline"}
+                    onClick={() => setForm({ ...form, rahmenvertragUnterschrieben: true })}
+                  >
+                    Ja
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={!form.rahmenvertragUnterschrieben ? "default" : "outline"}
+                    onClick={() => setForm({ ...form, rahmenvertragUnterschrieben: false })}
+                  >
+                    Nein
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <>
@@ -245,6 +306,30 @@ export default function ContactDetailPage() {
             <DetailRow icon={Mail} label="E-Mail" value={contact.email} />
             <DetailRow icon={Phone} label="Telefon" value={contact.telefon || "—"} />
             <DetailRow icon={Globe} label="Sprache" value={contact.lang.toUpperCase()} />
+          </div>
+
+          <div className="rounded-xl border bg-white p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Contact className="h-4 w-4 text-primary" />
+                <h2 className="text-sm font-semibold text-foreground">Ansprechpartner / Heimleitung</h2>
+              </div>
+              <span
+                className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold ${
+                  contact.rahmenvertragUnterschrieben
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : "bg-gray-50 text-gray-500 border-gray-200"
+                }`}
+              >
+                <FileCheck2 className="h-3.5 w-3.5" />
+                Rahmenvertrag: {contact.rahmenvertragUnterschrieben ? "Ja" : "Nein"}
+              </span>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <DetailRow icon={User} label="Name" value={contact.ansprechpartnerName || "—"} />
+              <DetailRow icon={Mail} label="E-Mail" value={contact.ansprechpartnerEmail || "—"} />
+              <DetailRow icon={Phone} label="Telefon" value={contact.ansprechpartnerTelefon || "—"} />
+            </div>
           </div>
 
           <div className="rounded-xl border bg-white p-6">

@@ -60,7 +60,7 @@ export default function CandidatesPage() {
   const createCandidate = useMutation(api.candidates.create)
 
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [selectedStatus, setSelectedStatus] = useState("Neue Bewerbung")
+  const [selectedStatus, setSelectedStatus] = useState("Qualifizierung")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [telefon, setTelefon] = useState("")
@@ -96,7 +96,7 @@ export default function CandidatesPage() {
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5">
               <LayoutPanelTop className="size-4 text-primary" />
             </span>
-            Kandidaten
+            Talente
           </h1>
           <p className="text-sm text-muted-foreground/70 mt-1.5 ml-[42px]">
             Pipeline-Übersicht — per Drag & Drop den Status ändern
@@ -119,9 +119,9 @@ export default function CandidatesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Kandidat hinzufügen</DialogTitle>
+            <DialogTitle>Talent hinzufügen</DialogTitle>
             <DialogDescription>
-              Neuer Kandidat wird hinzugefügt zu &quot;{selectedStatus}&quot;
+              Neues Talent wird hinzugefügt zu &quot;{selectedStatus}&quot;
             </DialogDescription>
           </DialogHeader>
 
@@ -154,7 +154,7 @@ export default function CandidatesPage() {
             <DialogFooter>
               <Button type="submit" disabled={submitting}>
                 {submitting && <Loader2 className="size-4 animate-spin" />}
-                Kandidat hinzufügen
+                Talent hinzufügen
               </Button>
             </DialogFooter>
           </form>

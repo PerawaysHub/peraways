@@ -4,7 +4,16 @@ import { v } from "convex/values";
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("contacts").order("desc").collect();
+    const all = await ctx.db.query("contacts").order("desc").collect();
+    return all.filter((c) => !c.deletedAt);
+  },
+});
+
+export const listDeleted = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("contacts").order("desc").collect();
+    return all.filter((c) => !!c.deletedAt);
   },
 });
 
@@ -21,6 +30,10 @@ export const create = mutation({
     email: v.string(),
     telefon: v.optional(v.string()),
     einrichtung: v.optional(v.string()),
+    ansprechpartnerName: v.optional(v.string()),
+    ansprechpartnerEmail: v.optional(v.string()),
+    ansprechpartnerTelefon: v.optional(v.string()),
+    rahmenvertragUnterschrieben: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -38,6 +51,10 @@ export const create = mutation({
       lang: "de",
       status: "Neue Anfrage",
       position: maxPosition + 1,
+      ansprechpartnerName: args.ansprechpartnerName ?? "",
+      ansprechpartnerEmail: args.ansprechpartnerEmail ?? "",
+      ansprechpartnerTelefon: args.ansprechpartnerTelefon ?? "",
+      rahmenvertragUnterschrieben: args.rahmenvertragUnterschrieben ?? false,
     });
   },
 });
@@ -51,6 +68,10 @@ export const update = mutation({
     einrichtung: v.optional(v.string()),
     nachricht: v.string(),
     lang: v.string(),
+    ansprechpartnerName: v.optional(v.string()),
+    ansprechpartnerEmail: v.optional(v.string()),
+    ansprechpartnerTelefon: v.optional(v.string()),
+    rahmenvertragUnterschrieben: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;
@@ -93,6 +114,20 @@ export const updatePositions = mutation({
 });
 
 export const remove = mutation({
+  args: { id: v.id("contacts") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { deletedAt: Date.now() });
+  },
+});
+
+export const restore = mutation({
+  args: { id: v.id("contacts") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { deletedAt: undefined });
+  },
+});
+
+export const permanentlyDelete = mutation({
   args: { id: v.id("contacts") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);

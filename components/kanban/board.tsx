@@ -143,20 +143,20 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
           </span>
           <div>
             <h2 className="font-heading text-base font-bold text-gray-900 leading-tight tracking-tight">
-              Bewerbungs-Pipeline
+              Talente-Pipeline
             </h2>
             <p className="text-[11px] font-medium text-gray-400/80">
-              {totalCount} Kandidat{totalCount !== 1 ? "en" : ""}
+              {totalCount} Talent{totalCount !== 1 ? "e" : ""}
             </p>
           </div>
         </div>
         <Button
           size="sm"
-          onClick={() => onAddCandidate("Neue Bewerbung")}
+          onClick={() => onAddCandidate("Qualifizierung")}
           className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
         >
           <Plus className="size-3.5" />
-          Kandidat hinzufügen
+          Talent hinzufügen
         </Button>
       </div>
 
@@ -164,8 +164,8 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
       <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100/60">
         <div className="relative w-60">
           <Input
-            placeholder="Kandidaten durchsuchen..."
-            aria-label="Kandidaten durchsuchen"
+            placeholder="Talente durchsuchen..."
+            aria-label="Talente durchsuchen"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 h-9 bg-gray-50/80 border-gray-200/80 text-sm placeholder:text-gray-400 focus-visible:border-primary/30 focus-visible:ring-[1.5px] focus-visible:ring-primary/15"

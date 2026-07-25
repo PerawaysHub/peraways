@@ -21,7 +21,12 @@ export const upsertUser = mutation({
     clerkId: v.string(),
     name: v.string(),
     email: v.string(),
-    role: v.union(v.literal("admin"), v.literal("viewer"), v.literal("editor")),
+    role: v.union(
+      v.literal("admin"),
+      v.literal("viewer"),
+      v.literal("editor"),
+      v.literal("integrationshelfer")
+    ),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -50,7 +55,12 @@ export const upsertUser = mutation({
 export const updateUserRole = mutation({
   args: {
     userId: v.id("users"),
-    role: v.union(v.literal("admin"), v.literal("viewer"), v.literal("editor")),
+    role: v.union(
+      v.literal("admin"),
+      v.literal("viewer"),
+      v.literal("editor"),
+      v.literal("integrationshelfer")
+    ),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

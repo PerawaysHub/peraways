@@ -7,12 +7,11 @@ import { LayoutDashboard, UserCheck, Users, MessageSquare, TrendingUp, ArrowRigh
 import Link from "next/link"
 
 const STATUS_THEME: Record<string, { bar: string; text: string }> = {
-  "Neue Bewerbung": { bar: "bg-violet-400", text: "text-violet-700" },
-  Kontaktiert: { bar: "bg-blue-400", text: "text-blue-600" },
-  Gespräch: { bar: "bg-amber-400", text: "text-amber-600" },
-  Angebot: { bar: "bg-orange-400", text: "text-orange-600" },
-  Visum: { bar: "bg-emerald-400", text: "text-emerald-600" },
-  Gestartet: { bar: "bg-primary", text: "text-primary" },
+  Qualifizierung: { bar: "bg-violet-400", text: "text-violet-700" },
+  "LEA-Fast-Lane": { bar: "bg-blue-400", text: "text-blue-600" },
+  Visum: { bar: "bg-amber-400", text: "text-amber-600" },
+  "Onboarding / Berlin-Phase": { bar: "bg-orange-400", text: "text-orange-600" },
+  Abgeschlossen: { bar: "bg-primary", text: "text-primary" },
 }
 
 export default function DashboardPage() {
@@ -66,7 +65,7 @@ export default function DashboardPage() {
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-3">
             <Users className="size-4 text-primary" />
-            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Kandidaten gesamt</span>
+            <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Talente gesamt</span>
           </div>
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.totalCandidates}
@@ -98,7 +97,7 @@ export default function DashboardPage() {
             {stats.placed}
           </p>
           <div className="mt-2 flex items-center gap-1.5">
-            <span className="text-[11px] font-medium text-emerald-600">Gestartet</span>
+            <span className="text-[11px] font-medium text-emerald-600">Abgeschlossen</span>
           </div>
         </div>
 
@@ -148,7 +147,7 @@ export default function DashboardPage() {
         {/* Recent candidates */}
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Kandidaten</h2>
+            <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Talente</h2>
             <Link href="/dashboard/candidates" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
               Zum Board <ArrowRight className="size-3" />
             </Link>
@@ -183,7 +182,7 @@ export default function DashboardPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Users className="size-8 text-gray-200 mb-2" />
-              <p className="text-xs font-medium text-gray-300">Noch keine Kandidaten</p>
+              <p className="text-xs font-medium text-gray-300">Noch keine Talente</p>
             </div>
           )}
         </div>

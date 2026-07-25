@@ -18,42 +18,35 @@ const THEMES: Record<string, {
   addBorder: string
   addText: string
 }> = {
-  "Neue Bewerbung": {
+  Qualifizierung: {
     col: "bg-violet-50/60 border-violet-200/50",
     dot: "bg-violet-400",
     count: "bg-violet-100 text-violet-700",
     addBorder: "border-violet-300/50",
     addText: "text-violet-600 hover:bg-violet-100/50",
   },
-  Kontaktiert: {
+  "LEA-Fast-Lane": {
     col: "bg-blue-50/60 border-blue-200/50",
     dot: "bg-blue-400",
     count: "bg-blue-100 text-blue-600",
     addBorder: "border-blue-300/50",
     addText: "text-blue-500 hover:bg-blue-100/50",
   },
-  Gespräch: {
+  Visum: {
     col: "bg-amber-50/60 border-amber-200/50",
     dot: "bg-amber-400",
     count: "bg-amber-100 text-amber-600",
     addBorder: "border-amber-300/50",
     addText: "text-amber-500 hover:bg-amber-100/50",
   },
-  Angebot: {
+  "Onboarding / Berlin-Phase": {
     col: "bg-orange-50/60 border-orange-200/50",
     dot: "bg-orange-400",
     count: "bg-orange-100 text-orange-600",
     addBorder: "border-orange-300/50",
     addText: "text-orange-500 hover:bg-orange-100/50",
   },
-  Visum: {
-    col: "bg-emerald-50/60 border-emerald-200/50",
-    dot: "bg-emerald-400",
-    count: "bg-emerald-100 text-emerald-600",
-    addBorder: "border-emerald-300/50",
-    addText: "text-emerald-500 hover:bg-emerald-100/50",
-  },
-  Gestartet: {
+  Abgeschlossen: {
     col: "bg-primary/[0.03] border-primary/10",
     dot: "bg-primary",
     count: "bg-primary/10 text-primary",
@@ -70,7 +63,7 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
-  const theme = THEMES[status] ?? THEMES["Neue Bewerbung"]
+  const theme = THEMES[status] ?? THEMES["Qualifizierung"]
   const ids = useMemo(() => candidates.map((c) => c._id), [candidates])
 
   return (
@@ -93,7 +86,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             <span className={cn(
               "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
               theme.count
-            )} aria-label={`${candidates.length} Kandidaten`}>
+            )} aria-label={`${candidates.length} Talente`}>
               {candidates.length}
             </span>
           </div>
@@ -101,7 +94,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             type="button"
             onClick={onAddClick}
             className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
-            aria-label={`Kandidat zu ${status} hinzufügen`}
+            aria-label={`Talent zu ${status} hinzufügen`}
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>

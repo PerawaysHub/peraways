@@ -14,12 +14,11 @@ import type { Doc } from "@/convex/_generated/dataModel"
 type Candidate = Doc<"candidates">
 
 const THEMES: Record<string, { initials: string; border: string }> = {
-  "Neue Bewerbung": { initials: "bg-violet-100 text-violet-700", border: "border-l-violet-400" },
-  Kontaktiert: { initials: "bg-blue-100 text-blue-700", border: "border-l-blue-400" },
-  Gespräch: { initials: "bg-amber-100 text-amber-700", border: "border-l-amber-400" },
-  Angebot: { initials: "bg-orange-100 text-orange-700", border: "border-l-orange-400" },
-  Visum: { initials: "bg-emerald-100 text-emerald-700", border: "border-l-emerald-400" },
-  Gestartet: { initials: "bg-primary/10 text-primary", border: "border-l-primary" },
+  Qualifizierung: { initials: "bg-violet-100 text-violet-700", border: "border-l-violet-400" },
+  "LEA-Fast-Lane": { initials: "bg-blue-100 text-blue-700", border: "border-l-blue-400" },
+  Visum: { initials: "bg-amber-100 text-amber-700", border: "border-l-amber-400" },
+  "Onboarding / Berlin-Phase": { initials: "bg-orange-100 text-orange-700", border: "border-l-orange-400" },
+  Abgeschlossen: { initials: "bg-primary/10 text-primary", border: "border-l-primary" },
 }
 
 function getInitials(name: string) {
@@ -64,7 +63,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
     await deleteCandidate({ id: candidate._id })
   }
 
-  const theme = THEMES[candidate.status] ?? THEMES["Neue Bewerbung"]
+  const theme = THEMES[candidate.status] ?? THEMES["Qualifizierung"]
   const date = new Date(candidate._creationTime).toLocaleDateString("de-DE", {
     day: "2-digit",
     month: "2-digit",
