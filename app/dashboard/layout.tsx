@@ -21,6 +21,7 @@ import {
   CalendarCheck2,
   Mail,
   Trash2,
+  BookOpen,
 } from "lucide-react"
 import {
   Sidebar,
@@ -44,8 +45,20 @@ const sidebarLinks = [
   { href: "/dashboard/candidates", label: "Talente", icon: LayoutPanelTop },
   { href: "/dashboard/heute", label: "Heute", icon: CalendarCheck2 },
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
+  { href: "/dashboard/handbuch", label: "Handbuch", icon: BookOpen },
   { href: "/dashboard/trash", label: "Papierkorb", icon: Trash2 },
 ]
+
+const SIDEBAR_LABELS_EN: Record<string, string> = {
+  "Übersicht": "Overview",
+  Einrichtungen: "Facilities",
+  Talente: "Talents",
+  Heute: "Today",
+  Dokumente: "Documents",
+  Handbuch: "Handbook",
+  Papierkorb: "Trash",
+  Nutzer: "Users",
+}
 
 function SidebarNavLink({
   link,
@@ -55,16 +68,18 @@ function SidebarNavLink({
   isActive: boolean
 }) {
   const { setOpenMobile } = useSidebar()
+  const { lang } = useLanguage()
+  const label = lang === "en" ? (SIDEBAR_LABELS_EN[link.label] ?? link.label) : link.label
   const Icon = link.icon
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
         render={<Link href={link.href} onClick={() => setOpenMobile(false)} />}
         isActive={isActive}
-        tooltip={link.label}
+        tooltip={label}
       >
         <Icon aria-hidden="true" />
-        <span>{link.label}</span>
+        <span>{label}</span>
       </SidebarMenuButton>
     </SidebarMenuItem>
   )
@@ -174,7 +189,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     if (!role) return
     if (role === "gstc") {
-      if (!pathname.startsWith("/dashboard/candidates")) router.replace("/dashboard/candidates")
+      if (!pathname.startsWith("/dashboard/candidates") && !pathname.startsWith("/dashboard/handbuch")) {
+        router.replace("/dashboard/candidates")
+      }
       return
     }
     if (role === "viewer") {
@@ -190,7 +207,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const links = role === "viewer"
     ? []
     : role === "gstc"
-      ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates")
+      ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates" || l.href === "/dashboard/handbuch")
       : VIEW_USERS_ROLES.includes(role ?? "")
         ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
         : sidebarLinks

@@ -19,6 +19,7 @@ import type * as dashboard from "../dashboard.js";
 import type * as documents from "../documents.js";
 import type * as emails from "../emails.js";
 import type * as finanzen from "../finanzen.js";
+import type * as handbuch from "../handbuch.js";
 import type * as notifications from "../notifications.js";
 import type * as permissions from "../permissions.js";
 import type * as push from "../push.js";
@@ -45,6 +46,7 @@ declare const fullApi: ApiFromModules<{
   documents: typeof documents;
   emails: typeof emails;
   finanzen: typeof finanzen;
+  handbuch: typeof handbuch;
   notifications: typeof notifications;
   permissions: typeof permissions;
   push: typeof push;

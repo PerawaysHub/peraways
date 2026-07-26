@@ -218,4 +218,11 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_endpoint", ["endpoint"]),
+  handbuchDocuments: defineTable({
+    title: v.string(),
+    description: v.optional(v.string()),
+    storageId: v.id("_storage"),
+    uploadedAt: v.number(),
+    visibleToRoles: v.array(v.string()),
+  }),
 });
