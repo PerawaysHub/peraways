@@ -4,10 +4,12 @@ import { CANDIDATE_STATUSES } from "./schema"
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    const [candidates, contacts] = await Promise.all([
+    const [allCandidates, allContacts] = await Promise.all([
       ctx.db.query("candidates").collect(),
-      ctx.db.query("contacts").order("desc").take(100),
+      ctx.db.query("contacts").order("desc").take(200),
     ])
+    const candidates = allCandidates.filter((c) => !c.deletedAt)
+    const contacts = allContacts.filter((c) => !c.deletedAt).slice(0, 100)
 
     const statusCounts: { status: string; count: number }[] = CANDIDATE_STATUSES.map((s) => ({
       status: s,

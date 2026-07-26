@@ -1163,9 +1163,9 @@ export default function CandidateDetailPage() {
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Talent löschen</DialogTitle>
+            <DialogTitle>Talent in den Papierkorb verschieben?</DialogTitle>
             <DialogDescription>
-              Bist du sicher, dass du dieses Talent löschen möchtest? Alle Dokumente und der Verlauf werden mitgelöscht. Das kann nicht rückgängig gemacht werden.
+              Das Talent wird in den Papierkorb verschoben und aus der Pipeline entfernt. Du kannst es dort jederzeit wiederherstellen oder endgültig löschen.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1174,7 +1174,7 @@ export default function CandidateDetailPage() {
             </Button>
             <Button variant="destructive" disabled={deleting} onClick={handleDelete}>
               {deleting && <Loader2 className="size-4 animate-spin" />}
-              Löschen
+              In den Papierkorb
             </Button>
           </DialogFooter>
         </DialogContent>

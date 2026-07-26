@@ -387,9 +387,9 @@ export default function ContactDetailPage() {
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Einrichtung löschen</DialogTitle>
+            <DialogTitle>Einrichtung in den Papierkorb verschieben?</DialogTitle>
             <DialogDescription>
-              Bist du sicher, dass du diesen Eintrag löschen möchtest? Das kann nicht rückgängig gemacht werden.
+              Der Eintrag wird in den Papierkorb verschoben. Du kannst ihn dort jederzeit wiederherstellen oder endgültig löschen.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -402,7 +402,7 @@ export default function ContactDetailPage() {
               onClick={handleDelete}
             >
               {deleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-              Löschen
+              In den Papierkorb
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -7,18 +7,28 @@ import { getCurrentUserRole } from "./permissions";
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("candidates").order("desc").collect();
+    const all = await ctx.db.query("candidates").order("desc").collect();
+    return all.filter((c) => !c.deletedAt);
+  },
+});
+
+export const listDeleted = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("candidates").order("desc").collect();
+    return all.filter((c) => !!c.deletedAt);
   },
 });
 
 export const getByStatus = query({
   args: { status: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const all = await ctx.db
       .query("candidates")
       .withIndex("by_status", (q) => q.eq("status", args.status))
       .order("asc")
       .collect();
+    return all.filter((c) => !c.deletedAt);
   },
 });
 
@@ -32,10 +42,11 @@ export const getById = query({
 export const listByEinrichtung = query({
   args: { einrichtungId: v.id("contacts") },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const all = await ctx.db
       .query("candidates")
       .withIndex("by_einrichtung", (q) => q.eq("einrichtungId", args.einrichtungId))
       .collect();
+    return all.filter((c) => !c.deletedAt);
   },
 });
 
@@ -286,6 +297,24 @@ export const updateNotes = mutation({
 });
 
 export const remove = mutation({
+  args: { id: v.id("candidates") },
+  handler: async (ctx, args) => {
+    const role = await getCurrentUserRole(ctx);
+    if (role === "gstc") throw new Error("Not authorized");
+    await ctx.db.patch(args.id, { deletedAt: Date.now() });
+  },
+});
+
+export const restore = mutation({
+  args: { id: v.id("candidates") },
+  handler: async (ctx, args) => {
+    const role = await getCurrentUserRole(ctx);
+    if (role === "gstc") throw new Error("Not authorized");
+    await ctx.db.patch(args.id, { deletedAt: undefined });
+  },
+});
+
+export const permanentlyDelete = mutation({
   args: { id: v.id("candidates") },
   handler: async (ctx, args) => {
     const role = await getCurrentUserRole(ctx);

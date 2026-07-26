@@ -1,6 +1,6 @@
 "use client"
 
-import { memo } from "react"
+import { memo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
@@ -11,6 +11,15 @@ import Link from "next/link"
 import { X, ShieldCheck, Pencil, AlertTriangle } from "lucide-react"
 import { cn, daysUntil, probezeitEnde } from "@/lib/utils"
 import type { Doc } from "@/convex/_generated/dataModel"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 type Candidate = Doc<"candidates">
 
@@ -59,6 +68,8 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
   const deleteCandidate = useMutation(api.candidates.remove)
   const complianceSummary = useQuery(api.complianceDocuments.getComplianceSummary, { candidateId: candidate._id })
   const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: candidate._id })
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const {
     attributes,
@@ -74,10 +85,20 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
     transition,
   }
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    await deleteCandidate({ id: candidate._id })
+    setConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    setDeleting(true)
+    try {
+      await deleteCandidate({ id: candidate._id })
+      setConfirmOpen(false)
+    } finally {
+      setDeleting(false)
+    }
   }
 
   const theme = THEMES[candidate.status] ?? THEMES["Qualifizierung"]
@@ -129,7 +150,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
         {!isGstc && (
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeleteClick}
             className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
             aria-label={`${candidate.name} löschen`}
           >
@@ -198,6 +219,25 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
           )}
         </div>
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent onClick={(e) => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Talent in den Papierkorb verschieben?</DialogTitle>
+            <DialogDescription>
+              &quot;{candidate.name}&quot; wird in den Papierkorb verschoben und aus der Pipeline entfernt. Du kannst es dort jederzeit wiederherstellen oder endgültig löschen.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+              Abbrechen
+            </Button>
+            <Button variant="destructive" disabled={deleting} onClick={handleConfirmDelete}>
+              In den Papierkorb
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   )
 }, areCandidatesEqual)
