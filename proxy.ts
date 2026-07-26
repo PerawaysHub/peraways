@@ -11,6 +11,7 @@ const isPublicRoute = createRouteMatcher([
     "/robots.txt",
     "/sign-in(.*)",
     "/sign-up(.*)",
+    "/install",
 ]);
 
 const isApiRoute = createRouteMatcher(["/api(.*)"]);
