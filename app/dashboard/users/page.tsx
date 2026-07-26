@@ -86,7 +86,7 @@ export default function UsersPage() {
         Zugriffsrechte für das Dashboard verwalten.
       </p>
 
-      <div className="mt-6 overflow-hidden rounded-lg border">
+      <div className="mt-6 overflow-hidden rounded-2xl border">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/50">

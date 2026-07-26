@@ -151,7 +151,7 @@ export default function DocumentsPage() {
             <p className="text-[11px] font-medium text-muted-foreground/70">Dokumente werden geladen...</p>
           </div>
         </div>
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="h-8 flex items-center">
             <Loader2 className="size-4 animate-spin text-gray-400" />
           </div>
@@ -174,7 +174,7 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      <div className="border border-gray-200 bg-white p-4">
+      <div className="border border-gray-200 bg-white p-4 rounded-2xl">
         <div className="flex items-center justify-between mb-2">
           <p className="text-[11px] font-semibold text-muted-foreground/70 uppercase tracking-wide">Nach Dokument filtern</p>
           {activeFilters.size > 0 && (
@@ -195,7 +195,7 @@ export default function DocumentsPage() {
                 key={opt.key}
                 type="button"
                 onClick={() => toggleFilter(opt.key)}
-                className={`border px-2 py-1 text-[11px] font-medium transition-colors ${
+                className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
                   active
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-gray-200 bg-gray-50/80 text-gray-600 hover:border-gray-300"
@@ -209,7 +209,7 @@ export default function DocumentsPage() {
       </div>
 
       {groups.length > 0 ? (
-        <div className="border border-gray-200 bg-white divide-y divide-gray-100">
+        <div className="border border-gray-200 bg-white divide-y divide-gray-100 rounded-2xl overflow-hidden">
           {groups.map(({ candidateId, docs, summary }) => {
             const isExpanded = expanded.has(candidateId)
             return (
@@ -246,7 +246,7 @@ export default function DocumentsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="border border-gray-200 bg-gray-50/80 px-1.5 py-[3px] text-[10px] font-semibold text-gray-500">
+                    <span className="border border-gray-200 bg-gray-50/80 px-1.5 py-[3px] text-[10px] font-semibold text-gray-500 rounded-md">
                       {docs.length} Dokument{docs.length !== 1 ? "e" : ""}
                     </span>
                     <ChevronDown className={`size-4 text-gray-400 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
@@ -294,7 +294,7 @@ export default function DocumentsPage() {
           })}
         </div>
       ) : (
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <FolderOpen className="size-10 text-gray-200 mb-3" />
             <p className="text-sm font-medium text-gray-400">

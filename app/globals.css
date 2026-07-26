@@ -135,14 +135,21 @@ body {
   --chart-4: oklch(0.7 0 0);
   --chart-5: oklch(0.5 0 0);
 
-  --sidebar: #FFFFFF;
+  --sidebar: #F2F0E9;
   --sidebar-foreground: #19463C;
   --sidebar-primary: #19463C;
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: #EAF0E9;
+  --sidebar-accent: #DEE9DC;
   --sidebar-accent-foreground: #19463C;
   --sidebar-border: oklch(0.92 0 0);
   --sidebar-ring: #19463C;
+}
+
+/* Scoped to the CRM dashboard only (not the public marketing site): a
+   larger corner radius for a softer, more modern look across cards,
+   buttons, inputs and dialogs, which all reference --radius already. */
+.dashboard-shell {
+  --radius: 1.25rem;
 }
 
 .dark {

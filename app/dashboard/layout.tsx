@@ -194,7 +194,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         : sidebarLinks
 
   return (
-    <SidebarProvider className="flex h-screen w-full">
+    <SidebarProvider className="dashboard-shell flex h-screen w-full">
       <Toaster
         position="top-right"
         richColors

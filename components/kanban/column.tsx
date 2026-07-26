@@ -72,7 +72,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
         role="region"
         aria-label={`Spalte ${status}`}
         className={cn(
-          "relative flex flex-1 flex-col border min-w-[240px] md:min-w-[260px] max-w-[320px] md:max-w-[340px]",
+          "relative flex flex-1 flex-col border rounded-2xl overflow-hidden min-w-[240px] md:min-w-[260px] max-w-[320px] md:max-w-[340px]",
           "transition-all duration-200",
           theme.col,
           isOver && "ring-2 ring-primary/20"

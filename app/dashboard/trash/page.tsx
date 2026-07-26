@@ -82,7 +82,7 @@ export default function TrashPage() {
         </p>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border">
+      <div className="overflow-x-auto rounded-2xl border">
         <table className="w-full min-w-[640px] text-sm">
           <thead>
             <tr className="border-b bg-muted/50">

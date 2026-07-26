@@ -177,7 +177,7 @@ export default function HeutePage() {
       </div>
 
       {ueberfaellig !== undefined && ueberfaellig.length > 0 && (
-        <div className="border border-red-200 bg-white p-5">
+        <div className="border border-red-200 bg-white p-5 rounded-2xl">
           <h2 className="text-xs font-bold text-red-700 uppercase tracking-wide mb-2">Überfällig</h2>
           <div className="divide-y divide-gray-100">
             {ueberfaellig.map((termin) => (
@@ -197,7 +197,7 @@ export default function HeutePage() {
         </div>
       )}
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">Heute</h2>
         {termine === undefined ? (
           <div className="h-8 flex items-center">
@@ -225,7 +225,7 @@ export default function HeutePage() {
       </div>
 
       {baldFaellig !== undefined && baldFaellig.length > 0 && (
-        <div className="border border-amber-200 bg-white p-5">
+        <div className="border border-amber-200 bg-white p-5 rounded-2xl">
           <h2 className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">Bald fällig — nächste 3 Tage</h2>
           <div className="divide-y divide-gray-100">
             {baldFaellig.map((termin) => (

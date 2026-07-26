@@ -44,7 +44,7 @@ export default function DashboardPage() {
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="border border-gray-200 bg-white p-5 animate-pulse">
+            <div key={i} className="border border-gray-200 bg-white p-5 rounded-2xl animate-pulse">
               <div className="h-3 w-20 bg-gray-100 mb-3" />
               <div className="h-8 w-16 bg-gray-100" />
             </div>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
 
       {/* Stats cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center gap-2 mb-3">
             <Users className="size-4 text-primary" />
             <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Talente gesamt</span>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="size-4 text-amber-500" />
             <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Aktive Pipeline</span>
@@ -100,7 +100,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center gap-2 mb-3">
             <UserCheck className="size-4 text-emerald-500" />
             <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Vermittelt</span>
@@ -113,7 +113,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center gap-2 mb-3">
             <MessageSquare className="size-4 text-primary" />
             <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Einrichtungs-Anfragen gesamt</span>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
       {currentUser?.role === "admin" && finanzStats && (
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="border border-gray-200 bg-white p-5">
+          <div className="border border-gray-200 bg-white p-5 rounded-2xl">
             <div className="flex items-center gap-2 mb-3">
               <Euro className="size-4 text-emerald-500" />
               <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Bezahlter Umsatz</span>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <div className="border border-gray-200 bg-white p-5">
+          <div className="border border-gray-200 bg-white p-5 rounded-2xl">
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp className="size-4 text-amber-500" />
               <span className="text-[11px] font-semibold text-muted-foreground/70 tracking-wide uppercase">Offene Honorarforderungen</span>
@@ -177,7 +177,7 @@ export default function DashboardPage() {
       {/* Pipeline breakdown + Recent activity */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Pipeline breakdown */}
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight mb-4">Pipeline-Übersicht</h2>
           <div className="space-y-3">
             {stats.statusCounts.map(({ status, count }) => {
@@ -191,9 +191,9 @@ export default function DashboardPage() {
                     onDoubleClick={() => setExpandedStatus(isExpanded ? null : status)}
                   >
                     <span className="w-28 text-xs font-medium text-gray-600 truncate shrink-0">{status}</span>
-                    <div className="flex-1 h-5 bg-gray-100/80 relative">
+                    <div className="flex-1 h-6 rounded-full bg-gray-100/80 relative overflow-hidden">
                       <div
-                        className={`h-full ${theme.bar} transition-all duration-500`}
+                        className={`h-full rounded-full ${theme.bar} transition-all duration-500`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -227,7 +227,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent candidates */}
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Talente</h2>
             <Link href="/dashboard/candidates" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
@@ -271,7 +271,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent contacts */}
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-heading text-sm font-bold text-gray-900 tracking-tight">Neueste Einrichtungs-Anfragen</h2>
           <Link href="/dashboard/contacts" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">

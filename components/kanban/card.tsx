@@ -120,7 +120,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
       transition={{ duration: 0.15 }}
       onDoubleClick={() => router.push(`/dashboard/candidates/${candidate._id}`)}
       className={cn(
-        "group bg-white border border-gray-200/80 border-l-[3px] px-3 md:px-3.5 py-2.5 md:py-3 cursor-grab active:cursor-grabbing select-none",
+        "group bg-white border border-gray-200/80 border-l-[3px] rounded-xl px-3 md:px-3.5 py-2.5 md:py-3 cursor-grab active:cursor-grabbing select-none",
         "shadow-[0_1px_2px_0_rgba(0,0,0,0.03)]",
         "hover:border-gray-300 hover:shadow-sm transition-all duration-150",
         theme.border,

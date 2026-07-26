@@ -466,7 +466,7 @@ export default function CandidateDetailPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 border border-gray-200 bg-white p-5 sm:grid-cols-2">
+      <div className="grid gap-4 border border-gray-200 bg-white p-5 rounded-2xl sm:grid-cols-2">
         <DetailRow icon={User} label="Name" value={candidate.name} />
         <DetailRow icon={Mail} label="E-Mail" value={candidate.email} />
         <DetailRow icon={Phone} label="Telefon" value={candidate.telefon || "—"} />
@@ -498,7 +498,7 @@ export default function CandidateDetailPage() {
 
       {!isGstc && (
       <>
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <User className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Stammdaten bearbeiten</h2>
@@ -561,7 +561,7 @@ export default function CandidateDetailPage() {
         </Button>
       </div>
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <GraduationCap className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Qualifikation &amp; Sprache</h2>
@@ -610,7 +610,7 @@ export default function CandidateDetailPage() {
         </Button>
       </div>
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <Plane className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Logistik &amp; Fristen</h2>
@@ -677,7 +677,7 @@ export default function CandidateDetailPage() {
       </>
       )}
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Briefcase className="size-4 text-primary" />
@@ -789,7 +789,7 @@ export default function CandidateDetailPage() {
       </div>
 
       {!isGstc && (
-      <div id="termine-section" className="border border-gray-200 bg-white p-5">
+      <div id="termine-section" className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <CalendarPlus className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Termine</h2>
@@ -905,7 +905,7 @@ export default function CandidateDetailPage() {
       </div>
       )}
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <FileText className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Status</h2>
@@ -958,7 +958,7 @@ export default function CandidateDetailPage() {
       </div>
 
       {currentUser?.role === "admin" && (
-        <div className="border border-gray-200 bg-white p-5">
+        <div className="border border-gray-200 bg-white p-5 rounded-2xl">
           <div className="flex items-center gap-2 mb-4">
             <Euro className="size-4 text-primary" />
             <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Finanzen</h2>
@@ -1029,7 +1029,7 @@ export default function CandidateDetailPage() {
 
       {!isGstc && (
       <>
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <Upload className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Dokumente</h2>
@@ -1105,7 +1105,7 @@ export default function CandidateDetailPage() {
         )}
       </div>
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Notizen</h2>
@@ -1128,7 +1128,7 @@ export default function CandidateDetailPage() {
         </Button>
       </div>
 
-      <div className="border border-gray-200 bg-white p-5">
+      <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <Activity className="size-4 text-primary" />
           <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Verlauf</h2>
