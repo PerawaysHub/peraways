@@ -409,10 +409,21 @@ export default function CandidateDetailPage() {
           {t("Zurück zu Talenten", "Back to Talents")}
         </Link>
         {!isGstc && (
-          <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
-            <Trash2 className="size-3.5" />
-            Löschen
-          </Button>
+          <div className="flex items-center gap-2">
+            <a
+              href={`/api/generate-anschreiben/${id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 hover:text-primary hover:border-gray-300 transition-all shadow-sm"
+            >
+              <Stamp className="size-3.5" />
+              Anschreiben erstellen
+            </a>
+            <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
+              <Trash2 className="size-3.5" />
+              Löschen
+            </Button>
+          </div>
         )}
       </div>
 
