@@ -126,6 +126,9 @@ export const create = mutation({
     email: v.string(),
     telefon: v.optional(v.string()),
     lang: v.string(),
+    geburtsdatum: v.optional(v.number()),
+    passnummer: v.optional(v.string()),
+    herkunftsland: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const initialStatus = CANDIDATE_STATUSES[0];
@@ -143,6 +146,9 @@ export const create = mutation({
       position: maxPosition + 1,
       notes: "",
       lang: args.lang,
+      geburtsdatum: args.geburtsdatum,
+      passnummer: args.passnummer,
+      herkunftsland: args.herkunftsland,
     });
     await ctx.db.insert("activityLog", {
       candidateId,

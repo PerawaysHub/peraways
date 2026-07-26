@@ -473,41 +473,37 @@ export default function CandidateDetailPage() {
         <DetailRow icon={Mail} label={t("E-Mail", "Email")} value={candidate.email} />
         <DetailRow icon={Phone} label={t("Telefon", "Phone")} value={candidate.telefon || "—"} />
         <DetailRow icon={Globe} label={t("Sprache", "Language")} value={candidate.lang.toUpperCase()} />
+        <DetailRow icon={Cake} label={t("Geburtsdatum", "Date of birth")} value={formatDate(candidate.geburtsdatum)} />
+        <DetailRow icon={CreditCard} label={t("Passnummer", "Passport number")} value={candidate.passnummer || "—"} />
+        <DetailRow icon={MapPin} label={t("Herkunftsland", "Country of origin")} value={candidate.herkunftsland || "—"} />
         {!isGstc && (
-          <>
-            <DetailRow icon={Cake} label="Geburtsdatum" value={formatDate(candidate.geburtsdatum)} />
-            <DetailRow icon={CreditCard} label="Passnummer" value={candidate.passnummer || "—"} />
-            <DetailRow icon={MapPin} label="Herkunftsland" value={candidate.herkunftsland || "—"} />
-            <DetailRow
-              icon={Building2}
-              label="Einrichtung"
-              value={
-                candidate.einrichtungId ? (
-                  <Link href={`/dashboard/contacts/${candidate.einrichtungId}`} className="hover:text-primary hover:underline">
-                    {(() => {
-                      const linked = contacts?.find((c) => c._id === candidate.einrichtungId)
-                      return linked ? (linked.einrichtung || linked.name) : "…"
-                    })()}
-                  </Link>
-                ) : (
-                  "—"
-                )
-              }
-            />
-          </>
+          <DetailRow
+            icon={Building2}
+            label={t("Einrichtung", "Facility")}
+            value={
+              candidate.einrichtungId ? (
+                <Link href={`/dashboard/contacts/${candidate.einrichtungId}`} className="hover:text-primary hover:underline">
+                  {(() => {
+                    const linked = contacts?.find((c) => c._id === candidate.einrichtungId)
+                    return linked ? (linked.einrichtung || linked.name) : "…"
+                  })()}
+                </Link>
+              ) : (
+                "—"
+              )
+            }
+          />
         )}
       </div>
 
-      {!isGstc && (
-      <>
       <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <User className="size-4 text-primary" />
-          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Stammdaten bearbeiten</h2>
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">{t("Stammdaten bearbeiten", "Edit basic data")}</h2>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
           <label className="text-xs font-medium text-muted-foreground/70">
-            Geburtsdatum
+            {t("Geburtsdatum", "Date of birth")}
             <input
               type="date"
               value={stammdatenDraft.geburtsdatum || toDateInputValue(candidate.geburtsdatum)}
@@ -516,7 +512,7 @@ export default function CandidateDetailPage() {
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
-            Passnummer
+            {t("Passnummer", "Passport number")}
             <input
               type="text"
               value={stammdatenDraft.passnummer || candidate.passnummer || ""}
@@ -525,7 +521,7 @@ export default function CandidateDetailPage() {
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
-            Herkunftsland
+            {t("Herkunftsland", "Country of origin")}
             <input
               type="text"
               value={stammdatenDraft.herkunftsland || candidate.herkunftsland || ""}
@@ -533,24 +529,26 @@ export default function CandidateDetailPage() {
               className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
-          <label className="text-xs font-medium text-muted-foreground/70">
-            Einrichtung
-            <select
-              value={candidate.einrichtungId ?? ""}
-              onChange={(e) =>
-                setEinrichtung({
-                  id: candidate._id,
-                  einrichtungId: e.target.value ? (e.target.value as Id<"contacts">) : undefined,
-                })
-              }
-              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
-            >
-              <option value="">— keine —</option>
-              {contacts?.map((c) => (
-                <option key={c._id} value={c._id}>{c.einrichtung || c.name}</option>
-              ))}
-            </select>
-          </label>
+          {!isGstc && (
+            <label className="text-xs font-medium text-muted-foreground/70">
+              {t("Einrichtung", "Facility")}
+              <select
+                value={candidate.einrichtungId ?? ""}
+                onChange={(e) =>
+                  setEinrichtung({
+                    id: candidate._id,
+                    einrichtungId: e.target.value ? (e.target.value as Id<"contacts">) : undefined,
+                  })
+                }
+                className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              >
+                <option value="">— keine —</option>
+                {contacts?.map((c) => (
+                  <option key={c._id} value={c._id}>{c.einrichtung || c.name}</option>
+                ))}
+              </select>
+            </label>
+          )}
         </div>
         <Button
           onClick={handleSaveStammdaten}
@@ -559,10 +557,12 @@ export default function CandidateDetailPage() {
           className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm text-xs h-8"
         >
           {savingStammdaten && <Loader2 className="size-4 animate-spin" />}
-          Speichern
+          {t("Speichern", "Save")}
         </Button>
       </div>
 
+      {!isGstc && (
+      <>
       <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <GraduationCap className="size-4 text-primary" />

@@ -67,6 +67,9 @@ export default function CandidatesPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [telefon, setTelefon] = useState("")
+  const [geburtsdatum, setGeburtsdatum] = useState("")
+  const [passnummer, setPassnummer] = useState("")
+  const [herkunftsland, setHerkunftsland] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
   const handleAddCandidate = (status: string) => {
@@ -74,6 +77,9 @@ export default function CandidatesPage() {
     setName("")
     setEmail("")
     setTelefon("")
+    setGeburtsdatum("")
+    setPassnummer("")
+    setHerkunftsland("")
     setDialogOpen(true)
   }
 
@@ -82,7 +88,15 @@ export default function CandidatesPage() {
     if (!name || !email) return
     setSubmitting(true)
     try {
-      await createCandidate({ name, email, telefon, lang: "de" })
+      await createCandidate({
+        name,
+        email,
+        telefon,
+        lang: "de",
+        geburtsdatum: geburtsdatum ? new Date(geburtsdatum).getTime() : undefined,
+        passnummer: passnummer || undefined,
+        herkunftsland: herkunftsland || undefined,
+      })
       setDialogOpen(false)
     } finally {
       setSubmitting(false)
@@ -145,6 +159,25 @@ export default function CandidatesPage() {
               placeholder={t("Telefon", "Phone")}
               value={telefon}
               onChange={(e) => setTelefon(e.target.value)}
+            />
+            <label className="text-xs font-medium text-muted-foreground/70">
+              {t("Geburtsdatum", "Date of birth")}
+              <Input
+                type="date"
+                value={geburtsdatum}
+                onChange={(e) => setGeburtsdatum(e.target.value)}
+                className="mt-1"
+              />
+            </label>
+            <Input
+              placeholder={t("Passnummer", "Passport number")}
+              value={passnummer}
+              onChange={(e) => setPassnummer(e.target.value)}
+            />
+            <Input
+              placeholder={t("Herkunftsland", "Country of origin")}
+              value={herkunftsland}
+              onChange={(e) => setHerkunftsland(e.target.value)}
             />
 
             <DialogFooter>
