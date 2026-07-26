@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Libre_Franklin } from "next/font/google";
+import { Fraunces, Libre_Franklin, Sulphur_Point, Outfit } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { Analytics } from "@vercel/analytics/react";
@@ -19,6 +19,21 @@ const fraunces = Fraunces({
 const libreFranklin = Libre_Franklin({
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+// Used only for the "PeraWays" logo lockup in the CRM sidebar — kept
+// separate from --font-heading/--font-outfit above (those are the
+// site-wide body/heading fonts and must not be swapped by accident).
+const sulphurPoint = Sulphur_Point({
+  weight: ["400", "700"],
+  variable: "--font-logo-pera",
+  subsets: ["latin"],
+});
+
+const outfit = Outfit({
+  weight: ["400", "700"],
+  variable: "--font-logo-ways",
   subsets: ["latin"],
 });
 
@@ -201,7 +216,7 @@ export default function RootLayout({
         />
       </head>
         <body
-          className={`${fraunces.variable} ${libreFranklin.variable} min-h-full antialiased font-sans`}
+          className={`${fraunces.variable} ${libreFranklin.variable} ${sulphurPoint.variable} ${outfit.variable} min-h-full antialiased font-sans`}
           >
           <ClerkProvider>
             <ConvexClientProvider>

@@ -230,8 +230,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar collapsible="icon">
         <SidebarHeader className="border-b border-sidebar-border">
           <Link
-            href="/"
-            aria-label="PeraWays home"
+            href="/dashboard"
+            aria-label="PeraWays Übersicht"
             className="flex items-center gap-2 px-4 py-3"
           >
             <Image
@@ -241,8 +241,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               height={28}
               className="hidden shrink-0 group-data-[collapsible=icon]:block"
             />
-            <span className="font-heading text-xl font-bold text-primary group-data-[collapsible=icon]:hidden">
-              PeraWays
+            <span className="text-xl font-bold group-data-[collapsible=icon]:hidden">
+              <span style={{ fontFamily: "var(--font-logo-pera)" }} className="text-primary">Pera</span>
+              <span style={{ fontFamily: "var(--font-logo-ways)" }} className="text-accent">Ways</span>
             </span>
             <span
               className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden"
