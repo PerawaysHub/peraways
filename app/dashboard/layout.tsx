@@ -241,9 +241,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               height={28}
               className="hidden shrink-0 group-data-[collapsible=icon]:block"
             />
-            <span className="text-xl font-bold group-data-[collapsible=icon]:hidden">
-              <span style={{ fontFamily: "var(--font-logo-pera)" }} className="text-primary">Pera</span>
-              <span style={{ fontFamily: "var(--font-logo-ways)" }} className="text-accent">Ways</span>
+            <span className="text-xl group-data-[collapsible=icon]:hidden">
+              <span style={{ fontFamily: "var(--font-logo-pera)", fontWeight: 700 }} className="text-primary">Pera</span>
+              <span style={{ fontFamily: "var(--font-logo-ways)", fontWeight: 800 }} className="text-accent">Ways</span>
             </span>
             <span
               className="text-xs text-muted-foreground group-data-[collapsible=icon]:hidden"

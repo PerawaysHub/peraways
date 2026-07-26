@@ -32,7 +32,7 @@ const sulphurPoint = Sulphur_Point({
 });
 
 const outfit = Outfit({
-  weight: ["400", "700"],
+  weight: ["400", "700", "800"],
   variable: "--font-logo-ways",
   subsets: ["latin"],
 });
