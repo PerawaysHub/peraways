@@ -1029,12 +1029,10 @@ export default function CandidateDetailPage() {
         </div>
       )}
 
-      {!isGstc && (
-      <>
       <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-4">
           <Upload className="size-4 text-primary" />
-          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Dokumente</h2>
+          <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">{t("Dokumente", "Documents")}</h2>
         </div>
 
         <div className="flex items-center gap-2 mb-4">
@@ -1043,9 +1041,9 @@ export default function CandidateDetailPage() {
             onChange={(e) => setDocType(e.target.value)}
             className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           >
-            <option value="cv">Lebenslauf</option>
-            <option value="zeugnis">Zeugnis</option>
-            <option value="sonstiges">Sonstiges</option>
+            <option value="cv">{t("Lebenslauf", "CV")}</option>
+            <option value="zeugnis">{t("Zeugnis", "Certificate")}</option>
+            <option value="sonstiges">{t("Sonstiges", "Other")}</option>
           </select>
           <input
             ref={fileInputRef}
@@ -1061,7 +1059,7 @@ export default function CandidateDetailPage() {
             className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
           >
             {uploading ? <Loader2 className="size-3.5 animate-spin" /> : <Upload className="size-3.5" />}
-            {uploading ? "Wird hochgeladen..." : "Hochladen"}
+            {uploading ? t("Wird hochgeladen...", "Uploading...") : t("Hochladen", "Upload")}
           </Button>
         </div>
 
@@ -1091,22 +1089,26 @@ export default function CandidateDetailPage() {
                       <Download className="size-3.5" />
                     </a>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteDoc(doc._id)}
-                    className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="size-3.5" />
-                  </button>
+                  {!isGstc && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteDoc(doc._id)}
+                      className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-xs text-gray-400 py-2">Noch keine Dokumente hochgeladen.</p>
+          <p className="text-xs text-gray-400 py-2">{t("Noch keine Dokumente hochgeladen.", "No documents uploaded yet.")}</p>
         )}
       </div>
 
+      {!isGstc && (
+      <>
       <div className="border border-gray-200 bg-white p-5 rounded-2xl">
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare className="size-4 text-primary" />
