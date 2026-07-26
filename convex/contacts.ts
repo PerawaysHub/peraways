@@ -72,6 +72,7 @@ export const update = mutation({
     ansprechpartnerEmail: v.optional(v.string()),
     ansprechpartnerTelefon: v.optional(v.string()),
     rahmenvertragUnterschrieben: v.optional(v.boolean()),
+    adresse: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...data } = args;

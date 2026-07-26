@@ -131,13 +131,13 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
             onClick={(e) => e.stopPropagation()}
             className="font-heading text-sm font-bold text-gray-900 hover:text-primary transition-colors leading-snug line-clamp-1 tracking-tight"
           >
-            {contact.name}
+            {contact.einrichtung || contact.name}
           </Link>
           <Link
             href={`/dashboard/contacts/${contact._id}`}
             onClick={(e) => e.stopPropagation()}
             className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-primary transition-colors"
-            aria-label={`${contact.name} bearbeiten`}
+            aria-label={`${contact.einrichtung || contact.name} bearbeiten`}
           >
             <Pencil className="size-3" aria-hidden="true" />
           </Link>
@@ -147,16 +147,16 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
           type="button"
           onClick={handleDeleteClick}
           className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all -mr-0.5 -mt-0.5 focus-visible:ring-2 focus-visible:ring-red-400/50"
-          aria-label={`${contact.name} löschen`}
+          aria-label={`${contact.einrichtung || contact.name} löschen`}
         >
           <X className="size-3" aria-hidden="true" />
         </button>
       </div>
 
-      {/* Einrichtung */}
+      {/* Ansprechperson */}
       {contact.einrichtung && (
         <p className="text-[11px] font-semibold text-gray-500 mt-1 leading-relaxed truncate">
-          {contact.einrichtung}
+          {contact.name}
         </p>
       )}
 
@@ -176,7 +176,7 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
               theme.initials
             )}
           >
-            {getInitials(contact.name)}
+            {getInitials(contact.einrichtung || contact.name)}
           </span>
           <span className="text-[10px] font-medium text-gray-400/70 truncate">
             {date}
@@ -195,7 +195,7 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
           <DialogHeader>
             <DialogTitle>Einrichtung in den Papierkorb verschieben?</DialogTitle>
             <DialogDescription>
-              &quot;{contact.name}&quot; wird in den Papierkorb verschoben und aus der Pipeline entfernt. Du kannst sie dort jederzeit wiederherstellen oder endgültig löschen.
+              &quot;{contact.einrichtung || contact.name}&quot; wird in den Papierkorb verschoben und aus der Pipeline entfernt. Du kannst sie dort jederzeit wiederherstellen oder endgültig löschen.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

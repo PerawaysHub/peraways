@@ -87,6 +87,7 @@ export default defineSchema({
     ansprechpartnerEmail: v.optional(v.string()),
     ansprechpartnerTelefon: v.optional(v.string()),
     rahmenvertragUnterschrieben: v.optional(v.boolean()),
+    adresse: v.optional(v.string()),
   }).index("by_status", ["status", "position"]),
   candidates: defineTable({
     name: v.string(),

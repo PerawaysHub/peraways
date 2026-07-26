@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users } from "lucide-react";
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,7 +46,7 @@ function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; labe
       </div>
       <div>
         <p className="text-xs font-medium text-muted-foreground">{label}</p>
-        <p className="text-sm font-medium text-foreground">{value}</p>
+        <p className="text-sm font-medium text-foreground whitespace-pre-line">{value}</p>
       </div>
     </div>
   );
@@ -79,6 +79,7 @@ export default function ContactDetailPage() {
     ansprechpartnerEmail: "",
     ansprechpartnerTelefon: "",
     rahmenvertragUnterschrieben: false,
+    adresse: "",
   });
 
   useEffect(() => {
@@ -122,6 +123,7 @@ export default function ContactDetailPage() {
       ansprechpartnerEmail: contact.ansprechpartnerEmail ?? "",
       ansprechpartnerTelefon: contact.ansprechpartnerTelefon ?? "",
       rahmenvertragUnterschrieben: contact.rahmenvertragUnterschrieben ?? false,
+      adresse: contact.adresse ?? "",
     });
     setEditing(true);
   };
@@ -137,6 +139,7 @@ export default function ContactDetailPage() {
         ansprechpartnerName: form.ansprechpartnerName || undefined,
         ansprechpartnerEmail: form.ansprechpartnerEmail || undefined,
         ansprechpartnerTelefon: form.ansprechpartnerTelefon || undefined,
+        adresse: form.adresse || undefined,
       });
       setEditing(false);
     } finally {
@@ -208,8 +211,11 @@ export default function ContactDetailPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="font-heading text-2xl font-bold text-primary">
-            {contact.name}
+            {contact.einrichtung || contact.name}
           </h1>
+          {contact.einrichtung && (
+            <p className="text-sm text-muted-foreground mt-0.5">{contact.name}</p>
+          )}
           <p className="text-sm text-muted-foreground mt-1">
             Eingegangen am {formatDate(contact._creationTime)}
           </p>
@@ -259,6 +265,15 @@ export default function ContactDetailPage() {
                 <option value="en">EN</option>
               </select>
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-muted-foreground">Adresse</label>
+            <Textarea
+              value={form.adresse}
+              onChange={(e) => setForm({ ...form, adresse: e.target.value })}
+              placeholder={"Straße & Hausnummer\nPLZ Ort"}
+              rows={2}
+            />
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-muted-foreground">Nachricht</label>
@@ -315,6 +330,7 @@ export default function ContactDetailPage() {
             <DetailRow icon={Mail} label="E-Mail" value={contact.email} />
             <DetailRow icon={Phone} label="Telefon" value={contact.telefon || "—"} />
             <DetailRow icon={Globe} label="Sprache" value={contact.lang.toUpperCase()} />
+            <DetailRow icon={MapPin} label="Adresse" value={contact.adresse || "—"} />
           </div>
 
           <div className="rounded-xl border bg-white p-6">

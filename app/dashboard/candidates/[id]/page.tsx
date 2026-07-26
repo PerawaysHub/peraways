@@ -482,7 +482,10 @@ export default function CandidateDetailPage() {
               value={
                 candidate.einrichtungId ? (
                   <Link href={`/dashboard/contacts/${candidate.einrichtungId}`} className="hover:text-primary hover:underline">
-                    {contacts?.find((c) => c._id === candidate.einrichtungId)?.name ?? "…"}
+                    {(() => {
+                      const linked = contacts?.find((c) => c._id === candidate.einrichtungId)
+                      return linked ? (linked.einrichtung || linked.name) : "…"
+                    })()}
                   </Link>
                 ) : (
                   "—"
@@ -542,7 +545,7 @@ export default function CandidateDetailPage() {
             >
               <option value="">— keine —</option>
               {contacts?.map((c) => (
-                <option key={c._id} value={c._id}>{c.name}</option>
+                <option key={c._id} value={c._id}>{c.einrichtung || c.name}</option>
               ))}
             </select>
           </label>

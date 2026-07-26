@@ -64,7 +64,7 @@ export const setEinrichtung = mutation({
       candidateId: args.id,
       type: "einrichtung_change",
       description: einrichtung
-        ? `Einrichtung zugeordnet: ${einrichtung.name}`
+        ? `Einrichtung zugeordnet: ${einrichtung.einrichtung || einrichtung.name}`
         : "Einrichtungs-Zuordnung entfernt",
       timestamp: Date.now(),
     });
