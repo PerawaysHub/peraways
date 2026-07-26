@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { SignInButton } from "@clerk/nextjs";
 import { translations } from "./translations";
 
 const navLinks = [
@@ -80,9 +79,6 @@ export function Footer() {
           <Link href="/datenschutz" className="text-[13px] text-[#3A5A38] no-underline">
             {content.footer.datenschutz}
           </Link>
-          <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
-            <button className="cursor-pointer text-[13px] text-[#3A5A38]">CRM Login</button>
-          </SignInButton>
         </div>
       </div>
     </footer>

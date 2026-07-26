@@ -39,9 +39,9 @@ const outfit = Outfit({
 
 const siteUrl = "https://peraways.de";
 const siteUrlDe = "https://peraways.de";
-const title = "PeraWays | PFA-Azubis aus Kenia vermitteln – Ethisch & Schnell";
+const title = "PeraWays | Bildungswege für Pflegetalente aus Kenia";
 const description =
-  "Vermittlung von Pflegefachassistenz-Auszubildenden (PFA) aus Kenia  nach § 16a AufenthG. Schuldenfreie Einreise, B1-Deutsch vor Anreise, 20h/Woche ab Ankunft. ROI in 90 Tagen.";
+  "Wir vermitteln kein Personal. Wir eröffnen Berufswege. Ethisch, schuldenfrei, direkt aus Nakuru.";
 const keywords =
   "Pflegekräfte aus Kenia, PFA Azubi Vermittlung, Pflegepersonal rekrutieren, § 16a AufenthG, Pflegefachassistenz, LEA Berlin, Pflegekräfte finden, nursing recruitment Kenya, nursing staff Germany, PFA trainee placement, healthcare staffing, debt-free relocation, § 16a visa";
 const twitterHandle = "@peraways";

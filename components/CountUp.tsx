@@ -14,7 +14,10 @@ interface CountUpProps {
 export function CountUp({ target, prefix = "", suffix = "", delay = 0, className }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
-  const [display, setDisplay] = useState(`${prefix}0${suffix}`);
+  const finalDisplay = `${prefix}${target.toLocaleString("de-DE")}${suffix}`;
+  // Default to the real final value so it's never wrong if JS is slow, blocked, or the
+  // in-view animation never fires — the count-up is a progressive enhancement on top of it.
+  const [display, setDisplay] = useState(finalDisplay);
 
   useEffect(() => {
     if (!isInView) return;
@@ -25,7 +28,7 @@ export function CountUp({ target, prefix = "", suffix = "", delay = 0, className
       const interval = setInterval(() => {
         count += inc;
         if (count >= target) {
-          setDisplay(`${prefix}${target.toLocaleString("de-DE")}${suffix}`);
+          setDisplay(finalDisplay);
           clearInterval(interval);
         } else {
           setDisplay(`${prefix}${Math.floor(count).toLocaleString("de-DE")}${suffix}`);
@@ -35,7 +38,7 @@ export function CountUp({ target, prefix = "", suffix = "", delay = 0, className
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [isInView, target, prefix, suffix, delay]);
+  }, [isInView, target, prefix, suffix, delay, finalDisplay]);
 
   return (
     <span ref={ref} className={className}>

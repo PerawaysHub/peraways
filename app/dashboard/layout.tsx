@@ -22,6 +22,7 @@ import {
   Mail,
   Trash2,
   BookOpen,
+  Globe,
 } from "lucide-react"
 import {
   Sidebar,
@@ -325,11 +326,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <button
               type="button"
               onClick={() => setLang(lang === "de" ? "en" : "de")}
-              className="rounded-md border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700 transition-colors"
+              className="flex items-center gap-1.5 rounded-full border border-gray-200 px-2 py-1 hover:border-gray-300 transition-colors"
               aria-label="Sprache wechseln / Switch language"
               title="Sprache wechseln / Switch language"
             >
-              {lang === "de" ? "DE" : "EN"}
+              <Globe className="hidden sm:block size-3.5 text-gray-400" />
+              <span className={`text-[11px] font-semibold transition-colors ${lang === "de" ? "text-primary" : "text-gray-400"}`}>
+                DE
+              </span>
+              <span
+                className={`relative inline-flex h-4 w-8 shrink-0 items-center rounded-full transition-colors ${
+                  lang === "en" ? "bg-primary" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`inline-block size-3 rounded-full bg-white shadow transition-transform ${
+                    lang === "en" ? "translate-x-[18px]" : "translate-x-0.5"
+                  }`}
+                />
+              </span>
+              <span className={`text-[11px] font-semibold transition-colors ${lang === "en" ? "text-primary" : "text-gray-400"}`}>
+                EN
+              </span>
             </button>
             <UserButton />
           </div>
