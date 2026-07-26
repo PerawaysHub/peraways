@@ -47,12 +47,6 @@ export function Form() {
     try {
       await submitContact({ name, email, telefon, einrichtung, nachricht, lang: "de" });
 
-      fetch("/api/send-contact-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, telefon, einrichtung, nachricht, lang: "de" }),
-      }).catch(() => {});
-
       window.location.href = `${origin}/danke`;
     } catch {
       setError(content.formError);
