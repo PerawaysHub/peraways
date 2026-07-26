@@ -59,7 +59,7 @@ function TerminRowItem({
   return (
     <div className={`flex items-center justify-between gap-3 py-3 border-l-2 pl-3 ${accentClass}`}>
       <div className="flex items-center gap-3 min-w-0">
-        <span className="flex size-8 items-center justify-center bg-primary/5 text-primary ring-1 ring-primary/10 shrink-0">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary ring-1 ring-primary/10 shrink-0">
           <ArtIcon className="size-4" />
         </span>
         <div className="min-w-0">
@@ -158,7 +158,7 @@ export default function HeutePage() {
     <div className="space-y-6 pb-8">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <span className="flex size-8 items-center justify-center bg-primary/5 ring-1 ring-primary/10">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5 ring-1 ring-primary/10">
             <CalendarCheck2 className="size-4 text-primary" />
           </span>
           <div>
@@ -257,7 +257,7 @@ export default function HeutePage() {
               value={candidateId}
               onChange={(e) => setCandidateId(e.target.value)}
               required
-              className="h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             >
               <option value="">Talent auswählen *</option>
               {candidates?.map((c) => (
@@ -270,20 +270,20 @@ export default function HeutePage() {
                 value={datum}
                 onChange={(e) => setDatum(e.target.value)}
                 required
-                className="h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                className="h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
               />
               <input
                 type="time"
                 value={uhrzeit}
                 onChange={(e) => setUhrzeit(e.target.value)}
                 required
-                className="h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                className="h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
               />
             </div>
             <select
               value={art}
               onChange={(e) => setArt(e.target.value as (typeof TERMIN_ARTEN)[number])}
-              className="h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             >
               {TERMIN_ARTEN.map((a) => (
                 <option key={a} value={a}>{a}</option>

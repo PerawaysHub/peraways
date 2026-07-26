@@ -130,14 +130,14 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
   )
 
   return (
-    <div className="bg-white border border-gray-200 shadow-sm bg-gradient-to-br from-white via-white to-[var(--surface)]/40">
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm bg-gradient-to-br from-white via-white to-[var(--surface)]/40">
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {announcement}
       </div>
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <span className="flex size-8 items-center justify-center bg-primary/5 ring-1 ring-primary/10">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5 ring-1 ring-primary/10">
             <LayoutPanelTop className="size-4 text-primary" />
           </span>
           <div>

@@ -143,7 +143,7 @@ export default function DocumentsPage() {
     return (
       <div className="space-y-6 pb-8">
         <div className="flex items-center gap-3">
-          <span className="flex size-8 items-center justify-center bg-primary/5 ring-1 ring-primary/10">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5 ring-1 ring-primary/10">
             <FileText className="size-4 text-primary" />
           </span>
           <div>
@@ -163,7 +163,7 @@ export default function DocumentsPage() {
   return (
     <div className="space-y-6 pb-8">
       <div className="flex items-center gap-3">
-        <span className="flex size-8 items-center justify-center bg-primary/5 ring-1 ring-primary/10">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5 ring-1 ring-primary/10">
           <FileText className="size-4 text-primary" />
         </span>
         <div>

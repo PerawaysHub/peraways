@@ -105,7 +105,7 @@ function getInitials(name: string) {
 function DetailRow({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3">
-      <div className="mt-0.5 flex size-8 items-center justify-center bg-primary/5 text-primary ring-1 ring-primary/10">
+      <div className="mt-0.5 flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary ring-1 ring-primary/10">
         <Icon className="size-4" />
       </div>
       <div className="min-w-0">
@@ -512,7 +512,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={stammdatenDraft.geburtsdatum || toDateInputValue(candidate.geburtsdatum)}
               onChange={(e) => setStammdatenDraft((d) => ({ ...d, geburtsdatum: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -521,7 +521,7 @@ export default function CandidateDetailPage() {
               type="text"
               value={stammdatenDraft.passnummer || candidate.passnummer || ""}
               onChange={(e) => setStammdatenDraft((d) => ({ ...d, passnummer: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -530,7 +530,7 @@ export default function CandidateDetailPage() {
               type="text"
               value={stammdatenDraft.herkunftsland || candidate.herkunftsland || ""}
               onChange={(e) => setStammdatenDraft((d) => ({ ...d, herkunftsland: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -543,7 +543,7 @@ export default function CandidateDetailPage() {
                   einrichtungId: e.target.value ? (e.target.value as Id<"contacts">) : undefined,
                 })
               }
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             >
               <option value="">— keine —</option>
               {contacts?.map((c) => (
@@ -574,7 +574,7 @@ export default function CandidateDetailPage() {
             <select
               value={qualifikationDraft.b1Status || candidate.b1Status || ""}
               onChange={(e) => setQualifikationDraft((d) => ({ ...d, b1Status: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             >
               <option value="">—</option>
               {B1_STATUS_OPTIONS.map((opt) => (
@@ -588,7 +588,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={qualifikationDraft.datumB1Pruefung || toDateInputValue(candidate.datumB1Pruefung)}
               onChange={(e) => setQualifikationDraft((d) => ({ ...d, datumB1Pruefung: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -597,7 +597,7 @@ export default function CandidateDetailPage() {
               type="text"
               value={qualifikationDraft.aktuellerSprachkurs || candidate.aktuellerSprachkurs || ""}
               onChange={(e) => setQualifikationDraft((d) => ({ ...d, aktuellerSprachkurs: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
         </div>
@@ -624,7 +624,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={logistikDraft.flugdatum || toDateInputValue(candidate.flugdatum)}
               onChange={(e) => setLogistikDraft((d) => ({ ...d, flugdatum: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -633,7 +633,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={logistikDraft.landungsdatumBerlin || toDateInputValue(candidate.landungsdatumBerlin)}
               onChange={(e) => setLogistikDraft((d) => ({ ...d, landungsdatumBerlin: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -645,7 +645,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={logistikDraft.ablaufdatumVisum || toDateInputValue(candidate.ablaufdatumVisum)}
               onChange={(e) => setLogistikDraft((d) => ({ ...d, ablaufdatumVisum: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
           <label className="text-xs font-medium text-muted-foreground/70">
@@ -654,7 +654,7 @@ export default function CandidateDetailPage() {
               type="date"
               value={logistikDraft.ersterArbeitstag || toDateInputValue(candidate.ersterArbeitstag)}
               onChange={(e) => setLogistikDraft((d) => ({ ...d, ersterArbeitstag: e.target.value }))}
-              className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             />
           </label>
         </div>
@@ -803,19 +803,19 @@ export default function CandidateDetailPage() {
             value={terminDraft.datum}
             onChange={(e) => setTerminDraft((d) => ({ ...d, datum: e.target.value }))}
             required
-            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           />
           <input
             type="time"
             value={terminDraft.uhrzeit}
             onChange={(e) => setTerminDraft((d) => ({ ...d, uhrzeit: e.target.value }))}
             required
-            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           />
           <select
             value={terminDraft.art}
             onChange={(e) => setTerminDraft((d) => ({ ...d, art: e.target.value as (typeof TERMIN_ARTEN)[number] }))}
-            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           >
             {TERMIN_ARTEN.map((a) => (
               <option key={a} value={a}>{a}</option>
@@ -826,7 +826,7 @@ export default function CandidateDetailPage() {
             placeholder="Notizen (optional)"
             value={terminDraft.notizen}
             onChange={(e) => setTerminDraft((d) => ({ ...d, notizen: e.target.value }))}
-            className="h-8 min-w-[140px] flex-1 border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            className="h-8 min-w-[140px] flex-1 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           />
           <Button
             type="submit"
@@ -978,7 +978,7 @@ export default function CandidateDetailPage() {
                   <select
                     value={finanzen.honorarbetrag}
                     onChange={(e) => handleHonorarChange(e.target.value as (typeof HONORARBETRAG_OPTIONS)[number])}
-                    className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                    className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
                   >
                     <option value="8500">8.500 € (Standard)</option>
                     <option value="8000">8.000 € (Neukundenrabatt)</option>
@@ -993,7 +993,7 @@ export default function CandidateDetailPage() {
                     type="date"
                     value={bezahldatumDraft || toDateInputValue(finanzen.bezahldatum)}
                     onChange={(e) => handleBezahldatumChange(e.target.value)}
-                    className="mt-1 w-full h-9 border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                    className="mt-1 w-full h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
                   />
                 </label>
               </div>
@@ -1041,7 +1041,7 @@ export default function CandidateDetailPage() {
           <select
             value={docType}
             onChange={(e) => setDocType(e.target.value)}
-            className="h-8 border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           >
             <option value="cv">Lebenslauf</option>
             <option value="zeugnis">Zeugnis</option>
