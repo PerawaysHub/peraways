@@ -20,6 +20,8 @@ import { ROLE_LABELS as roleLabels, ROLE_COLORS as roleColors } from "@/convex/s
 
 const VIEW_ROLES = ["admin", "editor", "integrationshelfer"];
 
+type Role = "admin" | "editor" | "viewer" | "integrationshelfer" | "gstc";
+
 export default function UsersPage() {
   const currentUser = useQuery(api.users.getCurrentUser);
   const users = useQuery(api.users.list);
@@ -29,6 +31,8 @@ export default function UsersPage() {
 
   const [deleteTarget, setDeleteTarget] = useState<Doc<"users"> | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [pendingRoleChange, setPendingRoleChange] = useState<{ user: Doc<"users">; newRole: Role } | null>(null);
+  const [changingRole, setChangingRole] = useState(false);
 
   const canView = !!currentUser && VIEW_ROLES.includes(currentUser.role);
   const isAdmin = currentUser?.role === "admin";
@@ -52,6 +56,26 @@ export default function UsersPage() {
       setDeleteTarget(null);
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleRoleSelect = (user: Doc<"users">, newRole: Role) => {
+    if (newRole === user.role) return;
+    if (user.role === "admin") {
+      setPendingRoleChange({ user, newRole });
+      return;
+    }
+    updateRole({ userId: user._id, role: newRole });
+  };
+
+  const confirmRoleChange = async () => {
+    if (!pendingRoleChange) return;
+    setChangingRole(true);
+    try {
+      await updateRole({ userId: pendingRoleChange.user._id, role: pendingRoleChange.newRole });
+      setPendingRoleChange(null);
+    } finally {
+      setChangingRole(false);
     }
   };
 
@@ -80,8 +104,8 @@ export default function UsersPage() {
                 <td className="px-4 py-3">
                   {isAdmin ? (
                     <select
-                      defaultValue={user.role}
-                      onChange={(e) => updateRole({ userId: user._id, role: e.target.value as "admin" | "editor" | "viewer" | "integrationshelfer" | "gstc" })}
+                      value={user.role}
+                      onChange={(e) => handleRoleSelect(user, e.target.value as Role)}
                       className={`rounded-md border px-2 py-1 text-xs font-medium ${roleColors[user.role]}`}
                     >
                       {Object.entries(roleLabels).map(([value, label]) => (
@@ -135,6 +159,25 @@ export default function UsersPage() {
             </Button>
             <Button variant="destructive" disabled={deleting} onClick={handleDelete}>
               Entfernen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!pendingRoleChange} onOpenChange={(open) => !open && setPendingRoleChange(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Admin-Rolle ändern</DialogTitle>
+            <DialogDescription>
+              Du bist dabei, {pendingRoleChange?.user.name || pendingRoleChange?.user.email} von Admin zu &quot;{pendingRoleChange ? (roleLabels[pendingRoleChange.newRole] ?? pendingRoleChange.newRole) : ""}&quot; zu ändern. Bist du dir sicher?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingRoleChange(null)}>
+              Abbrechen
+            </Button>
+            <Button variant="destructive" disabled={changingRole} onClick={confirmRoleChange}>
+              Bestätigen
             </Button>
           </DialogFooter>
         </DialogContent>

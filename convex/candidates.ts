@@ -71,6 +71,21 @@ export const setEinrichtung = mutation({
   },
 });
 
+export const listSummaries = query({
+  args: {},
+  handler: async (ctx) => {
+    const all = await ctx.db.query("candidates").collect();
+    return await Promise.all(
+      all.map(async (c) => ({
+        _id: c._id,
+        name: c.name,
+        geburtsdatum: c.geburtsdatum,
+        avatarUrl: c.avatarStorageId ? await ctx.storage.getUrl(c.avatarStorageId) : null,
+      }))
+    );
+  },
+});
+
 export const getAvatarUrl = query({
   args: { candidateId: v.id("candidates") },
   handler: async (ctx, args) => {
