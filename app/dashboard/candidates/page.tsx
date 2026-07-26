@@ -15,6 +15,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { LayoutPanelTop, Loader2, Download } from "lucide-react"
+import { useLanguage } from "@/components/LanguageContext"
+import { CANDIDATE_STATUS_LABELS_EN } from "@/convex/schema"
 
 function BoardSkeleton() {
   return (
@@ -56,6 +58,7 @@ function BoardSkeleton() {
 }
 
 export default function CandidatesPage() {
+  const { t, lang } = useLanguage()
   const candidates = useQuery(api.candidates.list)
   const createCandidate = useMutation(api.candidates.create)
 
@@ -94,19 +97,19 @@ export default function CandidatesPage() {
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary/5">
               <LayoutPanelTop className="size-4 text-primary" />
             </span>
-            Talente
+            {t("Talente", "Talents")}
           </h1>
           <p className="text-sm text-muted-foreground/70 mt-1.5 ml-[42px]">
-            Pipeline-Übersicht — per Drag & Drop den Status ändern
+            {t("Pipeline-Übersicht — per Drag & Drop den Status ändern", "Pipeline overview — drag & drop to change status")}
           </p>
         </div>
         <a
           href="/api/export-candidates"
           download
-          className="inline-flex items-center gap-1.5 border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 hover:text-primary hover:border-gray-300 transition-all shadow-sm"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-600 hover:text-primary hover:border-gray-300 transition-all shadow-sm"
         >
           <Download className="size-3.5" />
-          CSV exportieren
+          {t("CSV exportieren", "Export CSV")}
         </a>
       </div>
 
@@ -117,29 +120,29 @@ export default function CandidatesPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Talent hinzufügen</DialogTitle>
+            <DialogTitle>{t("Talent hinzufügen", "Add talent")}</DialogTitle>
             <DialogDescription>
-              Neues Talent wird hinzugefügt zu &quot;{selectedStatus}&quot;
+              {t("Neues Talent wird hinzugefügt zu", "New talent will be added to")} &quot;{lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[selectedStatus] ?? selectedStatus) : selectedStatus}&quot;
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <Input
-              placeholder="Name *"
+              placeholder={t("Name *", "Name *")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
             <Input
               type="email"
-              placeholder="E-Mail *"
+              placeholder={t("E-Mail *", "Email *")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
               type="tel"
-              placeholder="Telefon"
+              placeholder={t("Telefon", "Phone")}
               value={telefon}
               onChange={(e) => setTelefon(e.target.value)}
             />
@@ -147,7 +150,7 @@ export default function CandidatesPage() {
             <DialogFooter>
               <Button type="submit" disabled={submitting}>
                 {submitting && <Loader2 className="size-4 animate-spin" />}
-                Talent hinzufügen
+                {t("Talent hinzufügen", "Add talent")}
               </Button>
             </DialogFooter>
           </form>

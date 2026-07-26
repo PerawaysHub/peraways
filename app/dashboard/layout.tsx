@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { useLanguage } from "@/components/LanguageContext"
 
 const sidebarLinks = [
   { href: "/dashboard", label: "Übersicht", icon: LayoutDashboard },
@@ -91,6 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter()
   const currentUser = useQuery(api.users.getCurrentUser)
   const role = currentUser?.role
+  const { lang, setLang } = useLanguage()
   const canSeeNotifications = !!role && role !== "gstc" && role !== "viewer"
   const unread = useQuery(api.notifications.listUnread, canSeeNotifications ? {} : "skip")
   const unreadCount = useQuery(api.notifications.countUnread, canSeeNotifications ? {} : "skip")
@@ -302,6 +304,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {ROLE_LABELS[role] ?? role}
               </span>
             )}
+            <button
+              type="button"
+              onClick={() => setLang(lang === "de" ? "en" : "de")}
+              className="rounded-md border border-gray-200 px-2 py-1 text-[11px] font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700 transition-colors"
+              aria-label="Sprache wechseln / Switch language"
+              title="Sprache wechseln / Switch language"
+            >
+              {lang === "de" ? "DE" : "EN"}
+            </button>
             <UserButton />
           </div>
         </div>

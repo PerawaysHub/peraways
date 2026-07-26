@@ -7,6 +7,8 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { KanbanCard } from "./card"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/components/LanguageContext"
+import { CANDIDATE_STATUS_LABELS_EN } from "@/convex/schema"
 import type { Doc } from "@/convex/_generated/dataModel"
 
 type Candidate = Doc<"candidates">
@@ -63,6 +65,8 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
+  const { lang } = useLanguage()
+  const statusLabel = lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[status] ?? status) : status
   const theme = THEMES[status] ?? THEMES["Qualifizierung"]
   const ids = useMemo(() => candidates.map((c) => c._id), [candidates])
 
@@ -82,7 +86,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
         <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0 border-b border-black/[0.04]">
           <div className="flex items-center gap-2 min-w-0">
             <span className={cn("size-2 shrink-0 ring-[1.5px] ring-inset", theme.dot)} aria-hidden="true" />
-            <h3 className="font-heading text-sm font-bold text-gray-700 truncate tracking-tight">{status}</h3>
+            <h3 className="font-heading text-sm font-bold text-gray-700 truncate tracking-tight">{statusLabel}</h3>
             <span className={cn(
               "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
               theme.count
@@ -94,7 +98,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             type="button"
             onClick={onAddClick}
             className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
-            aria-label={`Talent zu ${status} hinzufügen`}
+            aria-label={`Talent zu ${statusLabel} hinzufügen`}
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>
@@ -112,7 +116,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
               <div className="size-7 rounded flex items-center justify-center mb-2 bg-black/[0.02]">
                 <Plus className="size-3.5 text-gray-300" />
               </div>
-              <p className="text-[11px] font-medium text-gray-300">Hierher ziehen</p>
+              <p className="text-[11px] font-medium text-gray-300">{lang === "en" ? "Drag here" : "Hierher ziehen"}</p>
             </div>
           )}
         </div>

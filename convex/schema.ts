@@ -72,6 +72,33 @@ export const COMPLIANCE_DOC_LABELS: Record<string, string> = {
   berufsausuebungserlaubnis: "Berufsausübungserlaubnis (§1 PflFAG)",
 };
 
+// English labels — used by the Talente board / detail page / compliance
+// checklist when the DE/EN toggle is set to English (relevant for the
+// GSTC partner, who is not a German speaker).
+export const CANDIDATE_STATUS_LABELS_EN: Record<string, string> = {
+  Qualifizierung: "Qualification",
+  "LEA-Fast-Lane": "LEA Fast-Lane",
+  Visum: "Visa",
+  "Onboarding / Berlin-Phase": "Onboarding / Berlin Phase",
+  Abgeschlossen: "Completed",
+};
+
+export const COMPLIANCE_DOC_LABELS_EN: Record<string, string> = {
+  ausbildungsvertrag: "Training Contract",
+  vorfinanzierungsvereinbarung: "Pre-Financing Agreement (Nakuru County)",
+  erklaerung_beschaeftigungsverhaeltnis: "Employment Relationship Declaration",
+  vollmachtskette: "Chain of Authorization (§81a AufenthG)",
+  reisepass_kopie: "Passport Copy",
+  geburtsurkunde: "Birth Certificate (certified)",
+  kcse_zeugnis: "KCSE Certificate (certified)",
+  b1_zertifikat: "B1 Certificate",
+  nita_nachweis: "NITA Proof",
+  wohnraumzusage: "Housing Confirmation",
+  schulprognose: "School Prognosis (§13 PflFAG)",
+  uebernahme_arbeitsvertrag: "Takeover Employment Contract (after 18 mo.)",
+  berufsausuebungserlaubnis: "Professional Practice Permit (§1 PflFAG)",
+};
+
 export default defineSchema({
   contacts: defineTable({
     name: v.string(),

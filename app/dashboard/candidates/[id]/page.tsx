@@ -15,10 +15,11 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES } from "@/convex/schema"
+import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES, CANDIDATE_STATUS_LABELS_EN, COMPLIANCE_DOC_LABELS_EN } from "@/convex/schema"
 import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 import { daysUntil, probezeitEnde, terminUrgency } from "@/lib/utils"
+import { useLanguage } from "@/components/LanguageContext"
 
 const STATUS_COLORS: Record<string, string> = {
   Qualifizierung: "bg-violet-100 text-violet-700 border-violet-200",
@@ -119,6 +120,7 @@ export default function CandidateDetailPage() {
   const params = useParams()
   const router = useRouter()
   const id = params.id as Id<"candidates">
+  const { t, lang } = useLanguage()
   const currentUser = useQuery(api.users.getCurrentUser)
   const candidate = useQuery(api.candidates.getById, { id })
   const documents = useQuery(api.documents.listByCandidate, { candidateId: id })
@@ -302,9 +304,9 @@ export default function CandidateDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <User className="size-10 text-muted-foreground/40" />
-        <p className="mt-4 text-sm font-medium text-muted-foreground">Talent nicht gefunden</p>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">{t("Talent nicht gefunden", "Talent not found")}</p>
         <Link href="/dashboard/candidates" className="mt-2 text-sm text-primary hover:underline">
-          Zurück zu Talenten
+          {t("Zurück zu Talenten", "Back to Talents")}
         </Link>
       </div>
     )
@@ -404,7 +406,7 @@ export default function CandidateDetailPage() {
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors w-fit"
         >
           <ArrowLeft className="size-4" />
-          Zurück zu Talenten
+          {t("Zurück zu Talenten", "Back to Talents")}
         </Link>
         {!isGstc && (
           <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} className="gap-1.5">
@@ -460,17 +462,17 @@ export default function CandidateDetailPage() {
           <div>
             <h1 className="font-heading text-2xl font-bold text-primary">{candidate.name}</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Hinzugefügt am {new Date(candidate._creationTime).toLocaleDateString("de-DE")}
+              {t("Hinzugefügt am", "Added on")} {new Date(candidate._creationTime).toLocaleDateString(lang === "en" ? "en-GB" : "de-DE")}
             </p>
           </div>
         </div>
       </div>
 
       <div className="grid gap-4 border border-gray-200 bg-white p-5 rounded-2xl sm:grid-cols-2">
-        <DetailRow icon={User} label="Name" value={candidate.name} />
-        <DetailRow icon={Mail} label="E-Mail" value={candidate.email} />
-        <DetailRow icon={Phone} label="Telefon" value={candidate.telefon || "—"} />
-        <DetailRow icon={Globe} label="Sprache" value={candidate.lang.toUpperCase()} />
+        <DetailRow icon={User} label={t("Name", "Name")} value={candidate.name} />
+        <DetailRow icon={Mail} label={t("E-Mail", "Email")} value={candidate.email} />
+        <DetailRow icon={Phone} label={t("Telefon", "Phone")} value={candidate.telefon || "—"} />
+        <DetailRow icon={Globe} label={t("Sprache", "Language")} value={candidate.lang.toUpperCase()} />
         {!isGstc && (
           <>
             <DetailRow icon={Cake} label="Geburtsdatum" value={formatDate(candidate.geburtsdatum)} />
@@ -681,11 +683,11 @@ export default function CandidateDetailPage() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Briefcase className="size-4 text-primary" />
-            <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">Compliance-Dokumente</h2>
+            <h2 className="font-heading text-sm font-bold text-foreground tracking-tight">{t("Compliance-Dokumente", "Compliance Documents")}</h2>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-muted-foreground/70">
-              {complianceStatus ? `${complianceStatus.receivedCount} / ${complianceStatus.totalCount} erhalten` : "…"}
+              {complianceStatus ? `${complianceStatus.receivedCount} / ${complianceStatus.totalCount} ${t("erhalten", "received")}` : "…"}
             </span>
             {complianceStatus?.allReceived && (
               <span className="inline-flex items-center gap-1 border border-emerald-200 bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700">
@@ -704,7 +706,7 @@ export default function CandidateDetailPage() {
           <div className="divide-y divide-gray-100">
             {complianceStatus.items.map((item) => (
               <div key={item.docType} className="flex items-center justify-between gap-3 py-2.5">
-                <p className="text-sm text-gray-700 min-w-0 truncate">{item.label}</p>
+                <p className="text-sm text-gray-700 min-w-0 truncate">{lang === "en" ? (COMPLIANCE_DOC_LABELS_EN[item.docType] ?? item.label) : item.label}</p>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {item.url && (
                     <a
@@ -721,7 +723,7 @@ export default function CandidateDetailPage() {
                       type="button"
                       onClick={() => removeComplianceDocument({ candidateId: id, docType: item.docType })}
                       className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
-                      aria-label={`Datei zu ${item.label} entfernen`}
+                      aria-label={t(`Datei zu ${item.label} entfernen`, `Remove file for ${COMPLIANCE_DOC_LABELS_EN[item.docType] ?? item.label}`)}
                     >
                       <Trash2 className="size-3.5" />
                     </button>
@@ -755,7 +757,7 @@ export default function CandidateDetailPage() {
                       ) : (
                         <Circle className="size-3.5" />
                       )}
-                      {item.status}
+                      {t(item.status, item.status === "Erhalten" ? "Received" : "Missing")}
                     </span>
                   ) : (
                     <button
@@ -778,7 +780,7 @@ export default function CandidateDetailPage() {
                       ) : (
                         <Circle className="size-3.5" />
                       )}
-                      {item.status}
+                      {t(item.status, item.status === "Erhalten" ? "Received" : "Missing")}
                     </button>
                   )}
                 </div>
@@ -917,7 +919,7 @@ export default function CandidateDetailPage() {
               STATUS_COLORS[candidate.status] ?? "bg-muted text-muted-foreground border-border"
             }`}
           >
-            {candidate.status}
+            {lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[candidate.status] ?? candidate.status) : candidate.status}
           </span>
         ) : (
           <div className="relative" ref={statusRef}>
@@ -928,7 +930,7 @@ export default function CandidateDetailPage() {
                 STATUS_COLORS[candidate.status] ?? "bg-muted text-muted-foreground border-border"
               }`}
             >
-              {candidate.status}
+              {lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[candidate.status] ?? candidate.status) : candidate.status}
               <ChevronDown className={`size-3.5 transition-transform duration-200 ${statusOpen ? "rotate-180" : ""}`} />
             </button>
 
@@ -947,7 +949,7 @@ export default function CandidateDetailPage() {
                           : "text-foreground hover:bg-gray-50"
                       }`}
                     >
-                      {s}
+                      {lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[s] ?? s) : s}
                     </button>
                   ))}
                 </div>
