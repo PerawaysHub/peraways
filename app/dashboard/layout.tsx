@@ -32,6 +32,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -44,6 +45,29 @@ const sidebarLinks = [
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
   { href: "/dashboard/trash", label: "Papierkorb", icon: Trash2 },
 ]
+
+function SidebarNavLink({
+  link,
+  isActive,
+}: {
+  link: { href: string; label: string; icon: React.ElementType }
+  isActive: boolean
+}) {
+  const { setOpenMobile } = useSidebar()
+  const Icon = link.icon
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={<Link href={link.href} onClick={() => setOpenMobile(false)} />}
+        isActive={isActive}
+        tooltip={link.label}
+      >
+        <Icon aria-hidden="true" />
+        <span>{link.label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
+}
 
 function notificationLink(n: { type: string; relatedId?: string }) {
   if (n.type === "new_contact" && n.relatedId) return `/dashboard/contacts/${n.relatedId}`
@@ -212,21 +236,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <SidebarContent>
           <SidebarMenu>
-            {links.map((link) => {
-              const Icon = link.icon
-              return (
-                <SidebarMenuItem key={link.href}>
-                  <SidebarMenuButton
-                    render={<Link href={link.href} />}
-                    isActive={pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href))}
-                    tooltip={link.label}
-                  >
-                    <Icon aria-hidden="true" />
-                    <span>{link.label}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )
-            })}
+            {links.map((link) => (
+              <SidebarNavLink
+                key={link.href}
+                link={link}
+                isActive={pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href))}
+              />
+            ))}
           </SidebarMenu>
         </SidebarContent>
 
