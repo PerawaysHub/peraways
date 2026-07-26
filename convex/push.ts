@@ -1,5 +1,6 @@
 import { mutation, internalMutation, internalQuery } from "./_generated/server"
 import { v } from "convex/values"
+import { eligibleRolesFor } from "./notifications"
 
 export const subscribe = mutation({
   args: {
@@ -52,11 +53,12 @@ export const unsubscribe = mutation({
 })
 
 export const listRecipientSubscriptions = internalQuery({
-  args: {},
-  handler: async (ctx) => {
+  args: { type: v.string() },
+  handler: async (ctx, args) => {
+    const eligibleRoles = eligibleRolesFor(args.type)
     const users = await ctx.db.query("users").collect()
     const eligibleIds = new Set(
-      users.filter((u) => u.role !== "gstc" && u.role !== "viewer").map((u) => u._id)
+      users.filter((u) => eligibleRoles.includes(u.role)).map((u) => u._id)
     )
     const subs = await ctx.db.query("pushSubscriptions").collect()
     return subs.filter((s) => eligibleIds.has(s.userId))

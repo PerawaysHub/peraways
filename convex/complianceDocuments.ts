@@ -37,6 +37,28 @@ export const getComplianceStatus = query({
   },
 })
 
+export const listAllUploaded = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("complianceDocuments").collect()
+    const uploaded = rows.filter((r) => r.storageId)
+    return await Promise.all(
+      uploaded.map(async (row) => {
+        const candidate = await ctx.db.get(row.candidateId)
+        return {
+          _id: row._id,
+          candidateId: row.candidateId,
+          candidateName: candidate?.name ?? "Unbekannt",
+          name: COMPLIANCE_DOC_LABELS[row.docType] ?? row.docType,
+          docType: row.docType,
+          uploadedAt: row.uploadedAt ?? 0,
+          url: row.storageId ? await ctx.storage.getUrl(row.storageId) : null,
+        }
+      })
+    )
+  },
+})
+
 export const getComplianceSummary = query({
   args: { candidateId: v.id("candidates") },
   handler: async (ctx, args) => {

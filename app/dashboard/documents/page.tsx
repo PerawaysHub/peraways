@@ -4,18 +4,63 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
 import { FileText, Download, Trash2, Loader2, FolderOpen } from "lucide-react"
-import type { Doc, Id } from "@/convex/_generated/dataModel"
+import type { Id } from "@/convex/_generated/dataModel"
 
-interface DocumentListItem extends Doc<"documents"> {
-  url: string | null
+type MergedDoc = {
+  _id: string
+  kind: "document" | "compliance"
+  candidateId: Id<"candidates">
   candidateName: string
+  name: string
+  type: string
+  docType?: string
+  uploadedAt: number
+  url: string | null
 }
 
 export default function DocumentsPage() {
-  const allDocs = useQuery(api.documents.listAll) as DocumentListItem[] | undefined
+  const documents = useQuery(api.documents.listAll)
+  const complianceDocs = useQuery(api.complianceDocuments.listAllUploaded)
   const deleteDocument = useMutation(api.documents.remove)
+  const removeComplianceDocument = useMutation(api.complianceDocuments.removeDocument)
 
-  if (allDocs === undefined) {
+  const loading = documents === undefined || complianceDocs === undefined
+
+  const allDocs: MergedDoc[] = loading
+    ? []
+    : [
+        ...documents.map((d) => ({
+          _id: d._id,
+          kind: "document" as const,
+          candidateId: d.candidateId,
+          candidateName: d.candidateName,
+          name: d.name,
+          type: d.type,
+          uploadedAt: d.uploadedAt,
+          url: d.url,
+        })),
+        ...complianceDocs.map((d) => ({
+          _id: d._id,
+          kind: "compliance" as const,
+          candidateId: d.candidateId,
+          candidateName: d.candidateName,
+          name: d.name,
+          type: "Compliance",
+          docType: d.docType,
+          uploadedAt: d.uploadedAt,
+          url: d.url,
+        })),
+      ].sort((a, b) => b.uploadedAt - a.uploadedAt)
+
+  const handleDelete = (doc: MergedDoc) => {
+    if (doc.kind === "compliance" && doc.docType) {
+      removeComplianceDocument({ candidateId: doc.candidateId, docType: doc.docType })
+    } else {
+      deleteDocument({ id: doc._id as Id<"documents"> })
+    }
+  }
+
+  if (loading) {
     return (
       <div className="space-y-6 pb-8">
         <div className="flex items-center gap-3">
@@ -54,7 +99,7 @@ export default function DocumentsPage() {
         <div className="border border-gray-200 bg-white">
           <div className="divide-y divide-gray-100">
             {allDocs.map((doc) => (
-              <div key={doc._id} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50/50 transition-colors">
+              <div key={`${doc.kind}-${doc._id}`} className="flex items-center justify-between px-5 py-3 hover:bg-gray-50/50 transition-colors">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="flex size-8 items-center justify-center bg-primary/5 shrink-0">
                     <FileText className="size-4 text-primary" />
@@ -88,7 +133,7 @@ export default function DocumentsPage() {
                   )}
                   <button
                     type="button"
-                    onClick={() => deleteDocument({ id: doc._id })}
+                    onClick={() => handleDelete(doc)}
                     className="flex items-center justify-center size-7 text-gray-300 hover:text-red-500 transition-colors"
                   >
                     <Trash2 className="size-3.5" />

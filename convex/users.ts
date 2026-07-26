@@ -81,6 +81,7 @@ export const upsertUser = mutation({
     });
 
     await ctx.scheduler.runAfter(0, internal.pushSend.sendPushToRecipients, {
+      type: "new_user_registered",
       title: "Neue Registrierung",
       body: `${args.name || args.email} wartet auf Freischaltung.`,
       url: "/dashboard/users",

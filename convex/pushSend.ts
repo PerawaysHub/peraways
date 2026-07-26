@@ -13,12 +13,13 @@ webpush.setVapidDetails(
 
 export const sendPushToRecipients = internalAction({
   args: {
+    type: v.string(),
     title: v.string(),
     body: v.string(),
     url: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const subs = await ctx.runQuery(internal.push.listRecipientSubscriptions, {})
+    const subs = await ctx.runQuery(internal.push.listRecipientSubscriptions, { type: args.type })
     await Promise.all(
       subs.map(async (sub) => {
         try {
