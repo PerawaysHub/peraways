@@ -17,7 +17,7 @@ function detectPlatform(): Platform {
 }
 
 export default function InstallPage() {
-  const { t } = useLanguage()
+  const { t, lang, setLang } = useLanguage()
   const [platform, setPlatform] = useState<Platform | null>(null)
 
   useEffect(() => {
@@ -28,6 +28,17 @@ export default function InstallPage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#F7EDE9] px-6 py-16">
       <div className="w-full max-w-md">
+        <div className="mb-3 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setLang(lang === "de" ? "en" : "de")}
+            className="rounded-md border border-gray-200 bg-white/60 px-2 py-1 text-[11px] font-semibold text-gray-500 hover:border-gray-300 hover:text-gray-700 transition-colors"
+            aria-label="Sprache wechseln / Switch language"
+            title="Sprache wechseln / Switch language"
+          >
+            {lang === "de" ? "DE" : "EN"}
+          </button>
+        </div>
         <div className="mb-8 flex justify-center">
           <Image src="/logo-full.png" alt="PeraWays" width={180} height={48} priority />
         </div>
@@ -56,7 +67,7 @@ export default function InstallPage() {
                 <li className="flex gap-3">
                   <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">2</span>
                   <span className="flex items-center gap-1.5 flex-wrap">
-                    {t("Tippe unten in Safari auf", "Tap the")} <Share className="inline size-4 text-primary" /> {t("(Teilen).", "(Share) icon in Safari.")}
+                    {t("Tippe unten in Safari auf", "Tap the icon at the bottom of Safari")} <Share className="inline size-4 text-primary" /> {t("(Teilen).", "(Share).")}
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -80,7 +91,7 @@ export default function InstallPage() {
                 <li className="flex gap-3">
                   <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">2</span>
                   <span className="flex items-center gap-1.5 flex-wrap">
-                    {t("Tippe oben rechts auf", "Tap the")} <MoreVertical className="inline size-4 text-primary" /> {t("(Menü).", "(menu) icon top-right.")}
+                    {t("Tippe oben rechts auf", "Tap the icon in the top-right corner")} <MoreVertical className="inline size-4 text-primary" /> {t("(Menü).", "(menu).")}
                   </span>
                 </li>
                 <li className="flex gap-3">
@@ -95,7 +106,7 @@ export default function InstallPage() {
 
           <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
             <button className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-br from-primary to-[#2A6B5E] px-6 py-3 text-sm font-semibold text-white shadow-sm">
-              {t("Jetzt anmelden & Dashboard öffnen", "Sign in & open dashboard")}
+              {t("Jetzt anmelden & Dashboard öffnen", "Sign in & open the dashboard")}
               <ArrowRight className="size-4" />
             </button>
           </SignInButton>
