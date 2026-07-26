@@ -65,8 +65,7 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
     return candidates.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        c.source?.toLowerCase().includes(q)
+        c.email.toLowerCase().includes(q)
     )
   }, [candidates, search])
 

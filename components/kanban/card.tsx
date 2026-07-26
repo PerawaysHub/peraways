@@ -37,7 +37,6 @@ function areCandidatesEqual(a: { candidate: Candidate }, b: { candidate: Candida
     && a.candidate.position === b.candidate.position
     && a.candidate.name === b.candidate.name
     && a.candidate.email === b.candidate.email
-    && a.candidate.source === b.candidate.source
     && a.candidate.notes === b.candidate.notes
     && a.candidate.ablaufdatumVisum === b.candidate.ablaufdatumVisum
     && a.candidate.ersterArbeitstag === b.candidate.ersterArbeitstag
@@ -196,11 +195,6 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
                 {complianceSummary.receivedCount}/{complianceSummary.totalCount}
               </span>
             )
-          )}
-          {candidate.source && (
-            <span className="inline-flex items-center border border-gray-200/70 bg-gray-50/80 px-1.5 py-[3px] text-[9px] font-semibold text-gray-500/80 leading-none">
-              {candidate.source}
-            </span>
           )}
         </div>
       </div>

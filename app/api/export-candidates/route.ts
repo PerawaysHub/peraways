@@ -9,13 +9,12 @@ export async function GET() {
     const candidates = await convex.query(api.candidates.list)
     const statuses = ["Neue Bewerbung", "Kontaktiert", "Gespräch", "Angebot", "Visum", "Gestartet"]
 
-    const headers = ["Name", "Email", "Telefon", "Status", "Source", "Language", "Created"]
+    const headers = ["Name", "Email", "Telefon", "Status", "Language", "Created"]
     const rows = candidates.map((c: any) => [
       `"${c.name}"`,
       `"${c.email}"`,
       `"${c.telefon || ""}"`,
       `"${c.status}"`,
-      `"${c.source || ""}"`,
       c.lang?.toUpperCase() || "DE",
       new Date(c._creationTime).toLocaleDateString("de-DE"),
     ])

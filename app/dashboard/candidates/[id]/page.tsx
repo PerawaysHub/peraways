@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Tag, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -470,7 +470,6 @@ export default function CandidateDetailPage() {
         <DetailRow icon={User} label="Name" value={candidate.name} />
         <DetailRow icon={Mail} label="E-Mail" value={candidate.email} />
         <DetailRow icon={Phone} label="Telefon" value={candidate.telefon || "—"} />
-        <DetailRow icon={Tag} label="Quelle" value={candidate.source || "—"} />
         <DetailRow icon={Globe} label="Sprache" value={candidate.lang.toUpperCase()} />
         {!isGstc && (
           <>

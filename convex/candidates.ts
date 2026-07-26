@@ -99,7 +99,6 @@ export const create = mutation({
     name: v.string(),
     email: v.string(),
     telefon: v.optional(v.string()),
-    source: v.string(),
     lang: v.string(),
   },
   handler: async (ctx, args) => {
@@ -117,7 +116,6 @@ export const create = mutation({
       status: initialStatus,
       position: maxPosition + 1,
       notes: "",
-      source: args.source,
       lang: args.lang,
     });
     await ctx.db.insert("activityLog", {

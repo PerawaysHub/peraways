@@ -95,7 +95,6 @@ export default defineSchema({
     status: v.string(),
     position: v.number(),
     notes: v.string(),
-    source: v.string(),
     lang: v.string(),
     deletedAt: v.optional(v.number()),
     geburtsdatum: v.optional(v.number()),

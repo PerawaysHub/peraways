@@ -64,7 +64,6 @@ export default function CandidatesPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [telefon, setTelefon] = useState("")
-  const [source, setSource] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
   const handleAddCandidate = (status: string) => {
@@ -72,7 +71,6 @@ export default function CandidatesPage() {
     setName("")
     setEmail("")
     setTelefon("")
-    setSource("")
     setDialogOpen(true)
   }
 
@@ -81,7 +79,7 @@ export default function CandidatesPage() {
     if (!name || !email) return
     setSubmitting(true)
     try {
-      await createCandidate({ name, email, telefon, source, lang: "de" })
+      await createCandidate({ name, email, telefon, lang: "de" })
       setDialogOpen(false)
     } finally {
       setSubmitting(false)
@@ -144,11 +142,6 @@ export default function CandidatesPage() {
               placeholder="Telefon"
               value={telefon}
               onChange={(e) => setTelefon(e.target.value)}
-            />
-            <Input
-              placeholder="Quelle (z.B. LinkedIn, Website)"
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
             />
 
             <DialogFooter>
