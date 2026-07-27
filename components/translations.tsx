@@ -66,12 +66,12 @@ export const translations = {
     investment: {
       label: "Die Investition",
       h2: "Eine unbesetzte Stelle kostet 9.000 € im Monat.",
-      p: "Das Einmalhonorar von 8.500 € ist in unter 60 Tagen produktiver Tätigkeit vollständig refinanziert. Kein anderes Modell im Berliner Markt schafft das.",
+      p: "Das Einmalhonorar ist in unter 60 Tagen produktiver Tätigkeit vollständig refinanziert.",
       cta: "Jetzt Erstgespräch anfragen",
       s1Value: "9.000 €",
       s1Label: "Monatlicher Vakanzschaden",
-      s2Value: "8.500 €",
-      s2Label: "Einmalhonorar netto",
+      s2Value: "Auf Anfrage",
+      s2Label: "Einmalhonorar",
       s3Value: "< 60 Tage",
       s3Label: "bis ROI",
       s4Value: "0 €",
@@ -108,7 +108,7 @@ export const translations = {
     story: {
       label: "Warum PeraWays?",
       h2: "Pflege ist {highlight}persönlich.{/highlight}",
-      p1: "Gründer Mario Pereira kennt die Berliner Pflege nicht aus Statistiken. Seine Mutter lebt in einer Pflegeeinrichtung in Berlin. Er hat erlebt, was ein eingespieltes Team für seine Mutter bedeutet. Und er hat erlebt, was fehlt, wenn eine Stelle über Wochen unbesetzt bleibt.",
+      p1: "Unser Gründer kennt die Berliner Pflege nicht aus Statistiken. Seine Mutter lebt in einer Pflegeeinrichtung in Berlin. Er hat erlebt, was ein eingespieltes Team für seine Mutter bedeutet. Und er hat erlebt, was fehlt, wenn eine Stelle über Wochen unbesetzt bleibt.",
       p2: "PeraWays vermittelt kein fertiges Personal. Wir eröffnen jungen Menschen in Kenia einen qualifizierten Berufsweg in die deutsche Pflege, von der ersten Ausbildungsstunde an, als Bildungsermöglicher.",
       badgeLabel: "Unser Partner",
       badgeName: "Gillian Sabatia Training College",
@@ -240,7 +240,7 @@ export const translations = {
     story: {
       label: "Why PeraWays?",
       h2: "Care is {highlight}personal.{/highlight}",
-      p1: "Founder Mario Pereira doesn't know Berlin's care sector from statistics. His mother lives in a care facility in Berlin. He has experienced what a well-coordinated team means for his mother — and what's missing when a position stays unfilled for weeks.",
+      p1: "Our founder doesn't know Berlin's care sector from statistics. His mother lives in a care facility in Berlin. He has experienced what a well-coordinated team means for his mother — and what's missing when a position stays unfilled for weeks.",
       p2: "PeraWays doesn't place ready-made staff. We open up a qualified career path into German care for young people in Kenya, from their very first hour of training, as an education enabler.",
       badgeLabel: "Our Partner",
       badgeName: "Gillian Sabatia Training College",

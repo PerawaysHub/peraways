@@ -10,8 +10,15 @@ export const submit = mutation({
     einrichtung: v.optional(v.string()),
     nachricht: v.string(),
     lang: v.string(),
+    captchaA: v.number(),
+    captchaB: v.number(),
+    captchaAnswer: v.number(),
   },
   handler: async (ctx, args) => {
+    if (args.captchaAnswer !== args.captchaA + args.captchaB) {
+      throw new Error("Captcha ungültig.");
+    }
+
     const recent = await ctx.db
       .query("contacts")
       .order("desc")

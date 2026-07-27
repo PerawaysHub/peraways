@@ -12,7 +12,7 @@ export function ROI() {
 
   const stats = [
     { target: 9000, suffix: " €", delay: 0, label: content.s1Label },
-    { target: 8500, suffix: " €", delay: 500, label: content.s2Label, accent: true },
+    { text: content.s2Value, label: content.s2Label, accent: true },
     { target: 60, prefix: "< ", suffix: " Tage", delay: 1000, label: content.s3Label },
     { target: 0, suffix: " €", delay: 0, label: content.s4Label },
   ];
@@ -57,15 +57,25 @@ export function ROI() {
                 key={s.label}
                 className="rounded-2xl border border-white/15 bg-white/10 p-7 text-center backdrop-blur-sm"
               >
-                <CountUp
-                  target={s.target}
-                  prefix={s.prefix}
-                  suffix={s.suffix}
-                  delay={s.delay}
-                  className={`font-heading text-[28px] font-semibold ${
-                    s.accent ? "text-secondary" : "text-white"
-                  }`}
-                />
+                {s.text ? (
+                  <div
+                    className={`font-heading text-[28px] font-semibold ${
+                      s.accent ? "text-secondary" : "text-white"
+                    }`}
+                  >
+                    {s.text}
+                  </div>
+                ) : (
+                  <CountUp
+                    target={s.target as number}
+                    prefix={s.prefix}
+                    suffix={s.suffix}
+                    delay={s.delay}
+                    className={`font-heading text-[28px] font-semibold ${
+                      s.accent ? "text-secondary" : "text-white"
+                    }`}
+                  />
+                )}
                 <div className="mt-2 text-xs leading-tight text-[#A9C2A2]">{s.label}</div>
               </div>
             ))}

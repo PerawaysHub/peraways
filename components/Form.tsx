@@ -17,6 +17,10 @@ export function Form() {
   const mountTime = useRef(Date.now());
   const honeyRef = useRef<HTMLInputElement>(null);
   const submitContact = useMutation(api.contact.submit);
+  const [captcha] = useState(() => ({
+    a: Math.floor(Math.random() * 9) + 1,
+    b: Math.floor(Math.random() * 9) + 1,
+  }));
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://peraways.de";
 
@@ -43,9 +47,26 @@ export function Form() {
     const email = (formData.get("Email") as string) || "";
     const telefon = (formData.get("Telefon") as string) || "";
     const nachricht = (formData.get("Nachricht") as string) || "";
+    const captchaAnswer = Number((formData.get("Captcha") as string) || "");
+
+    if (captchaAnswer !== captcha.a + captcha.b) {
+      setError(`Bitte die Rechenaufgabe lösen: ${captcha.a} + ${captcha.b} = ?`);
+      setSubmitting(false);
+      return;
+    }
 
     try {
-      await submitContact({ name, email, telefon, einrichtung, nachricht, lang: "de" });
+      await submitContact({
+        name,
+        email,
+        telefon,
+        einrichtung,
+        nachricht,
+        lang: "de",
+        captchaA: captcha.a,
+        captchaB: captcha.b,
+        captchaAnswer,
+      });
 
       window.location.href = `${origin}/danke`;
     } catch {
@@ -132,6 +153,20 @@ export function Form() {
             </div>
 
             <Textarea name="Nachricht" placeholder="Nachricht (optional)" rows={3} className="rounded-xl" />
+
+            <div className="flex items-center gap-3">
+              <label htmlFor="captcha-answer" className="text-sm font-medium text-[#3A4A42] whitespace-nowrap">
+                {captcha.a} + {captcha.b} =
+              </label>
+              <Input
+                id="captcha-answer"
+                type="number"
+                name="Captcha"
+                inputMode="numeric"
+                className="h-12 w-24 rounded-xl"
+                required
+              />
+            </div>
 
             <input
               ref={honeyRef}
