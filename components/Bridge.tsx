@@ -13,7 +13,7 @@ const features = [
   {
     number: "01",
     title: "Ethisch",
-    desc: "Die Reise- und Transferkosten trägt das Nakuru County vor. Kein Talent zahlt einen Cent. Kein Vorschuss für Sie.",
+    desc: "Die Vorkosten für Reise und Transport trägt das Nakuru County. Die Talente zahlen also keinen Cent und Sie keinen Vorschuss.",
     modalTitle: "Ethisch, weil sie es verdienen.",
     modalText:
       "Wir folgen konsequent dem Employer Pays Principle der WHO. Die Reise- und Transferkosten der Talente werden durch das Nakuru County vorfinanziert. Ihr Azubi zahlt für seinen Bildungsweg nichts, weder Agenturgebühren noch eine Rückzahlungsklausel im Arbeitsvertrag. Und Sie treten erst dann in Vorleistung, wenn Ihr Azubi seinen ersten dokumentierten Arbeitstag bei Ihnen hatte.",
@@ -148,8 +148,8 @@ export function Bridge() {
                 </DialogDescription>
                 <div className="flex flex-col gap-2">
                   {feature.tags.map((tag) => (
-                    <span key={tag} className="flex items-center gap-2 text-sm text-primary/80">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+                    <span key={tag} className="flex items-start gap-2 text-sm text-primary/80">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
                       {tag}
                     </span>
                   ))}

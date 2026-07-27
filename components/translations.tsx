@@ -146,7 +146,7 @@ export const translations = {
       s1Feature2: "B1 Deutsch vor Einreise",
       s1Feature3: "Wohnraum als Partnerschaftsbeitrag",
       s2Title: "Simultanes Sprachtraining",
-      s2Desc: "10 Monate Intensivtraining parallel zur klinischen Ausbildung. ÖSD-Zertifikat B1 vor Einreise. Kein separater Kurs für Sie.",
+      s2Desc: "10 Monate Intensivtraining parallel zur klinischen Ausbildung. ÖSD-Zertifikat B1 vor Einreise.",
       s2Feature1: "ÖSD-zertifiziert",
       s2Feature2: "Praxisintegriert",
       s2Feature3: "BAMF-Sprachkurs B2 ab Einreise",
