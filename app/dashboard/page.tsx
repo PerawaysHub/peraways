@@ -82,8 +82,13 @@ export default function DashboardPage() {
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.totalCandidates}
           </p>
-          <div className="mt-2 flex items-center gap-1.5">
-            <span className="text-[11px] font-medium text-emerald-600">{stats.placed} vermittelt</span>
+          <div className="mt-2 flex items-center justify-between gap-1.5">
+            <span className="text-[11px] font-medium text-emerald-600">
+              {stats.placed} von {stats.totalCandidates} vermittelt
+            </span>
+            <Link href="/dashboard/candidates" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1 shrink-0">
+              Alle ansehen <ArrowRight className="size-3" />
+            </Link>
           </div>
         </div>
 
@@ -108,8 +113,13 @@ export default function DashboardPage() {
           <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
             {stats.placed}
           </p>
-          <div className="mt-2 flex items-center gap-1.5">
-            <span className="text-[11px] font-medium text-emerald-600">Abgeschlossen</span>
+          <div className="mt-2 flex items-center justify-between gap-1.5">
+            <span className="text-[11px] font-medium text-emerald-600">
+              {stats.placedInClosedEinrichtung} von {stats.placed} Abgeschlossen
+            </span>
+            <Link href="/dashboard/contacts" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1 shrink-0">
+              Alle ansehen <ArrowRight className="size-3" />
+            </Link>
           </div>
         </div>
 

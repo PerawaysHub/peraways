@@ -1,5 +1,41 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
+import type { Id } from "./_generated/dataModel";
+
+// Keeps an Einrichtung's pipeline status in sync with its linked Talente:
+// - No active (non-deleted) Talent linked -> drop back to "Gespräch" (only
+//   if it was further along, i.e. "Vertrag"/"Abgeschlossen" — an Einrichtung
+//   that's still early in its own pipeline is left alone).
+// - Every linked Talent is "Abgeschlossen" -> promote to "Abgeschlossen".
+// - Not every linked Talent is "Abgeschlossen" but the Einrichtung is
+//   currently marked "Abgeschlossen" (e.g. a new Talent got assigned after
+//   the fact) -> drop back to "Vertrag" so it reads as in-progress again.
+// Always overridable afterwards — this only runs as a side effect of a
+// Talent-side change, it doesn't re-assert itself on every read.
+export async function recomputeStatusFromCandidates(ctx: MutationCtx, einrichtungId: Id<"contacts">) {
+  const contact = await ctx.db.get(einrichtungId);
+  if (!contact || contact.deletedAt) return;
+
+  const linked = await ctx.db
+    .query("candidates")
+    .withIndex("by_einrichtung", (q) => q.eq("einrichtungId", einrichtungId))
+    .collect();
+  const active = linked.filter((c) => !c.deletedAt);
+
+  if (active.length === 0) {
+    if (contact.status === "Vertrag" || contact.status === "Abgeschlossen") {
+      await ctx.db.patch(einrichtungId, { status: "Gespräch" });
+    }
+    return;
+  }
+
+  const allPlaced = active.every((c) => c.status === "Abgeschlossen");
+  if (allPlaced && contact.status !== "Abgeschlossen") {
+    await ctx.db.patch(einrichtungId, { status: "Abgeschlossen" });
+  } else if (!allPlaced && contact.status === "Abgeschlossen") {
+    await ctx.db.patch(einrichtungId, { status: "Vertrag" });
+  }
+}
 
 export const list = query({
   args: {},

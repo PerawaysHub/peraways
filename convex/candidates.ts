@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { CANDIDATE_STATUSES, COMPLIANCE_DOC_TYPES } from "./schema";
 import { recomputeFaelligkeitsdatum } from "./finanzen";
+import { recomputeStatusFromCandidates } from "./contacts";
 import { getCurrentUserRole } from "./permissions";
 
 export const list = query({
@@ -58,6 +59,7 @@ export const setEinrichtung = mutation({
   handler: async (ctx, args) => {
     const candidate = await ctx.db.get(args.id);
     if (!candidate) return;
+    const previousEinrichtungId = candidate.einrichtungId;
     const einrichtung = args.einrichtungId ? await ctx.db.get(args.einrichtungId) : null;
     await ctx.db.patch(args.id, { einrichtungId: args.einrichtungId });
     await ctx.db.insert("activityLog", {
@@ -68,6 +70,12 @@ export const setEinrichtung = mutation({
         : "Einrichtungs-Zuordnung entfernt",
       timestamp: Date.now(),
     });
+    if (previousEinrichtungId) {
+      await recomputeStatusFromCandidates(ctx, previousEinrichtungId);
+    }
+    if (args.einrichtungId && args.einrichtungId !== previousEinrichtungId) {
+      await recomputeStatusFromCandidates(ctx, args.einrichtungId);
+    }
   },
 });
 
@@ -274,6 +282,9 @@ export const updateStatus = mutation({
       status: args.status,
       position: args.position,
     });
+    if (candidate.einrichtungId) {
+      await recomputeStatusFromCandidates(ctx, candidate.einrichtungId);
+    }
   },
 });
 
@@ -322,7 +333,11 @@ export const remove = mutation({
   handler: async (ctx, args) => {
     const role = await getCurrentUserRole(ctx);
     if (role === "gstc") throw new Error("Not authorized");
+    const candidate = await ctx.db.get(args.id);
     await ctx.db.patch(args.id, { deletedAt: Date.now() });
+    if (candidate?.einrichtungId) {
+      await recomputeStatusFromCandidates(ctx, candidate.einrichtungId);
+    }
   },
 });
 
@@ -331,7 +346,11 @@ export const restore = mutation({
   handler: async (ctx, args) => {
     const role = await getCurrentUserRole(ctx);
     if (role === "gstc") throw new Error("Not authorized");
+    const candidate = await ctx.db.get(args.id);
     await ctx.db.patch(args.id, { deletedAt: undefined });
+    if (candidate?.einrichtungId) {
+      await recomputeStatusFromCandidates(ctx, candidate.einrichtungId);
+    }
   },
 });
 

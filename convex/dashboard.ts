@@ -9,7 +9,8 @@ export const getStats = query({
       ctx.db.query("contacts").order("desc").take(200),
     ])
     const candidates = allCandidates.filter((c) => !c.deletedAt)
-    const contacts = allContacts.filter((c) => !c.deletedAt).slice(0, 100)
+    const activeContacts = allContacts.filter((c) => !c.deletedAt)
+    const contacts = activeContacts.slice(0, 100)
 
     const statusCounts: { status: string; count: number }[] = CANDIDATE_STATUSES.map((s) => ({
       status: s,
@@ -28,7 +29,14 @@ export const getStats = query({
 
     const activeStatuses = ["Qualifizierung", "LEA-Fast-Lane", "Visum", "Onboarding / Berlin-Phase"]
     const activePipeline = candidates.filter((c) => activeStatuses.includes(c.status)).length
-    const placed = candidates.filter((c) => c.status === "Abgeschlossen").length
+    const placedCandidates = candidates.filter((c) => c.status === "Abgeschlossen")
+    const placed = placedCandidates.length
+
+    const contactsById = new Map(activeContacts.map((c) => [c._id, c]))
+    const placedInClosedEinrichtung = placedCandidates.filter((c) => {
+      if (!c.einrichtungId) return false
+      return contactsById.get(c.einrichtungId)?.status === "Abgeschlossen"
+    }).length
 
     const now = Date.now()
     const msPerDay = 24 * 60 * 60 * 1000
@@ -50,6 +58,7 @@ export const getStats = query({
       statusCounts,
       activePipeline,
       placed,
+      placedInClosedEinrichtung,
       recentCandidates,
       recentContacts,
       fristenWarnungCount,
