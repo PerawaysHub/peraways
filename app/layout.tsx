@@ -41,7 +41,7 @@ const siteUrl = "https://peraways.de";
 const siteUrlDe = "https://peraways.de";
 const title = "PeraWays | Bildungswege für Pflegetalente aus Kenia";
 const description =
-  "Wir vermitteln kein Personal. Wir eröffnen Berufswege. Ethisch, schuldenfrei, direkt aus Nakuru.";
+  "PeraWays ermöglicht Bildung, die hält. Ethisch, schuldenfrei, direkt aus Nakuru.";
 const keywords =
   "Pflegekräfte aus Kenia, PFA Azubi Vermittlung, Pflegepersonal rekrutieren, § 16a AufenthG, Pflegefachassistenz, LEA Berlin, Pflegekräfte finden, nursing recruitment Kenya, nursing staff Germany, PFA trainee placement, healthcare staffing, debt-free relocation, § 16a visa";
 const twitterHandle = "@peraways";

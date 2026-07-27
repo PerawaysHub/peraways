@@ -2,7 +2,7 @@ export const translations = {
   de: {
     video: {
       label: "Unsere Mission in 2 Minuten",
-      youtubeId: "Src8lbdQWg4",
+      youtubeId: "WmlBFC_TUHA",
       title: "PeraWays. Unsere Mission in zwei Minuten.",
     },
     gstc: {
@@ -86,7 +86,7 @@ export const translations = {
     },
     hero: {
       label: "Nakuru × Berlin · Beyond Borders",
-      h1: "Wir ermöglichen {highlight}Bildung,{/highlight} die hält.",
+      h1: "PeraWays ermöglicht {highlight}Bildung,{/highlight} die hält.",
       tagline: "Junge Menschen aus Kenia. Qualifiziert und schuldenfrei, mit echtem Willen anzupacken.",
       subtitle: "Als neues Teammitglied in Ihrer Pflegeeinrichtung.",
       cta: "Erstgespräch vereinbaren",
