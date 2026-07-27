@@ -1,10 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import { FadeUp } from "./FadeUp";
 import { translations } from "./translations";
 
+// iOS Safari bug: rotating the phone while the embedded YouTube video is in
+// native fullscreen (common on landscape rotation), then exiting fullscreen
+// and rotating back to portrait, can leave Safari's internal layout-viewport
+// width stuck at the old (landscape) value — the page renders as if it's
+// still wide even though the visible screen is narrow, breaking every
+// section below the video. A synthetic resize event alone doesn't fix this
+// (it only nudges JS listeners, not WebKit's own viewport metrics); toggling
+// the <meta name="viewport"> content attribute forces Safari to recompute it.
+function useFullscreenViewportFix() {
+  useEffect(() => {
+    const fix = () => {
+      const meta = document.querySelector('meta[name="viewport"]');
+      const original = meta?.getAttribute("content");
+      if (!meta || !original) return;
+      meta.setAttribute("content", `${original}, shrink-to-fit=no`);
+      requestAnimationFrame(() => {
+        meta.setAttribute("content", original);
+        window.dispatchEvent(new Event("resize"));
+      });
+    };
+    document.addEventListener("fullscreenchange", fix);
+    document.addEventListener("webkitfullscreenchange", fix);
+    return () => {
+      document.removeEventListener("fullscreenchange", fix);
+      document.removeEventListener("webkitfullscreenchange", fix);
+    };
+  }, []);
+}
+
 export function Video() {
   const content = translations.de.video;
+  useFullscreenViewportFix();
 
   return (
     <section id="video" className="bg-[var(--cream)] px-6 py-16 text-center lg:py-24">

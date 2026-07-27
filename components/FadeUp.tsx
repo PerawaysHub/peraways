@@ -1,7 +1,39 @@
 "use client";
 
 import { motion, useInView, type Variants } from "framer-motion";
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+
+/**
+ * Framer Motion's IntersectionObserver-based useInView can miss the correct
+ * reading during an abrupt viewport change (e.g. a mobile orientation flip
+ * right after a scroll), leaving a "once: true" element permanently stuck at
+ * opacity 0 even though it's clearly on screen. This is a fallback: on the
+ * next resize, manually check the element's actual position and force it
+ * visible if it's genuinely in the viewport. No-op once already shown.
+ */
+function useResizeRecovery(ref: RefObject<HTMLElement | null>, alreadyShown: boolean) {
+  const [forceShow, setForceShow] = useState(false);
+
+  useEffect(() => {
+    if (alreadyShown) return;
+    const recheck = () => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setForceShow(true);
+      }
+    };
+    window.addEventListener("resize", recheck);
+    window.addEventListener("orientationchange", recheck);
+    return () => {
+      window.removeEventListener("resize", recheck);
+      window.removeEventListener("orientationchange", recheck);
+    };
+  }, [alreadyShown, ref]);
+
+  return forceShow;
+}
 
 interface FadeUpProps {
   children: ReactNode;
@@ -31,9 +63,10 @@ const fadeUpVariants: Variants = {
 };
 
 export function FadeUp({ children, delay = 0, className = "", immediate = false }: FadeUpProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const show = immediate || isInView;
+  const recovered = useResizeRecovery(ref, immediate || isInView);
+  const show = immediate || isInView || recovered;
 
   return (
     <motion.div
@@ -66,14 +99,16 @@ const staggerContainer: Variants = {
 };
 
 export function StaggerContainer({ children, className = "" }: StaggerContainerProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const recovered = useResizeRecovery(ref, isInView);
+  const show = isInView || recovered;
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={show ? "visible" : "hidden"}
       variants={staggerContainer}
       className={className}
     >
@@ -128,14 +163,16 @@ const fadeInVariants: Variants = {
 };
 
 export function FadeIn({ children, className = "" }: FadeInProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const recovered = useResizeRecovery(ref, isInView);
+  const show = isInView || recovered;
 
   return (
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={show ? "visible" : "hidden"}
       variants={fadeInVariants}
       className={className}
     >
