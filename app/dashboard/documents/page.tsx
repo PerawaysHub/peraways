@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { FileText, Download, Trash2, Loader2, FolderOpen, ChevronDown } from "lucide-react"
+import { FileText, Eye, Trash2, Loader2, FolderOpen, ChevronDown } from "lucide-react"
 import type { Id } from "@/convex/_generated/dataModel"
 import { COMPLIANCE_DOC_TYPES, COMPLIANCE_DOC_LABELS } from "@/convex/schema"
 
@@ -273,8 +273,10 @@ export default function DocumentsPage() {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                              aria-label={`${doc.name} ansehen`}
+                              title="Ansehen"
                             >
-                              <Download className="size-3.5" />
+                              <Eye className="size-3.5" />
                             </a>
                           )}
                           <button

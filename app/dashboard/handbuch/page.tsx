@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { BookOpen, Loader2, Download, Trash2, Plus, FolderOpen, X } from "lucide-react"
+import { BookOpen, Loader2, Eye, Trash2, Plus, FolderOpen, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -136,8 +136,10 @@ export default function HandbuchPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                        aria-label={t(`${doc.title} ansehen`, `View ${doc.title}`)}
+                        title={t("Ansehen", "View")}
                       >
-                        <Download className="size-3.5" />
+                        <Eye className="size-3.5" />
                       </a>
                     )}
                     <button
@@ -200,8 +202,10 @@ export default function HandbuchPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center size-8 shrink-0 text-gray-400 hover:text-primary transition-colors"
+                    aria-label={t(`${doc.title} ansehen`, `View ${doc.title}`)}
+                    title={t("Ansehen", "View")}
                   >
-                    <Download className="size-4" />
+                    <Eye className="size-4" />
                   </a>
                 )}
               </div>

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, FileText, ChevronDown, Upload, Download, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, FileText, ChevronDown, Upload, Eye, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -725,8 +725,10 @@ export default function CandidateDetailPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                      aria-label={t(`${item.label} ansehen`, `View ${COMPLIANCE_DOC_LABELS_EN[item.docType] ?? item.label}`)}
+                      title={t("Ansehen", "View")}
                     >
-                      <Download className="size-3.5" />
+                      <Eye className="size-3.5" />
                     </a>
                   )}
                   {item.url && !isGstc && (
@@ -1096,8 +1098,10 @@ export default function CandidateDetailPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center size-7 text-gray-400 hover:text-primary transition-colors"
+                      aria-label={t(`${doc.name} ansehen`, `View ${doc.name}`)}
+                      title={t("Ansehen", "View")}
                     >
-                      <Download className="size-3.5" />
+                      <Eye className="size-3.5" />
                     </a>
                   )}
                   {!isGstc && (
