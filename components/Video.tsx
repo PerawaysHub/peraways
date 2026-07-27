@@ -12,6 +12,10 @@ import { translations } from "./translations";
 // section below the video. A synthetic resize event alone doesn't fix this
 // (it only nudges JS listeners, not WebKit's own viewport metrics); toggling
 // the <meta name="viewport"> content attribute forces Safari to recompute it.
+// Also listen for plain orientationchange, not just fullscreenchange: a
+// cross-origin YouTube iframe's fullscreen transitions don't reliably raise
+// fullscreenchange on the top document on iOS, but a physical rotation always
+// fires orientationchange regardless of what triggered it.
 function useFullscreenViewportFix() {
   useEffect(() => {
     const fix = () => {
@@ -24,11 +28,19 @@ function useFullscreenViewportFix() {
         window.dispatchEvent(new Event("resize"));
       });
     };
+    // iOS settles its own layout a moment after orientationchange fires, so a
+    // fix run immediately can get overwritten — nudge again shortly after.
+    const delayedFix = () => {
+      fix();
+      setTimeout(fix, 300);
+    };
     document.addEventListener("fullscreenchange", fix);
     document.addEventListener("webkitfullscreenchange", fix);
+    window.addEventListener("orientationchange", delayedFix);
     return () => {
       document.removeEventListener("fullscreenchange", fix);
       document.removeEventListener("webkitfullscreenchange", fix);
+      window.removeEventListener("orientationchange", delayedFix);
     };
   }, []);
 }
