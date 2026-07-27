@@ -2,7 +2,7 @@ export const translations = {
   de: {
     video: {
       label: "Unsere Mission in 2 Minuten",
-      youtubeId: "WmlBFC_TUHA",
+      youtubeId: "waXjI4f3xO4",
       title: "PeraWays. Unsere Mission in zwei Minuten.",
     },
     gstc: {
