@@ -10,6 +10,7 @@ import { api } from "@/convex/_generated/api"
 import Link from "next/link"
 import { X, ShieldCheck, Pencil, AlertTriangle } from "lucide-react"
 import { cn, daysUntil, probezeitEnde } from "@/lib/utils"
+import { useLanguage } from "@/components/LanguageContext"
 import type { Doc } from "@/convex/_generated/dataModel"
 import {
   Dialog,
@@ -63,6 +64,7 @@ function getFristenBadge(candidate: Candidate) {
 
 export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: Candidate }) {
   const router = useRouter()
+  const { t } = useLanguage()
   const currentUser = useQuery(api.users.getCurrentUser)
   const isGstc = currentUser?.role === "gstc"
   const deleteCandidate = useMutation(api.candidates.remove)
@@ -141,7 +143,7 @@ export const KanbanCard = memo(function KanbanCard({ candidate }: { candidate: C
             href={`/dashboard/candidates/${candidate._id}`}
             onClick={(e) => e.stopPropagation()}
             className="shrink-0 flex items-center justify-center size-4 text-gray-300 hover:text-primary transition-colors"
-            aria-label={`${candidate.name} bearbeiten`}
+            aria-label={t(`${candidate.name} bearbeiten`, `Edit ${candidate.name}`)}
           >
             <Pencil className="size-3" aria-hidden="true" />
           </Link>

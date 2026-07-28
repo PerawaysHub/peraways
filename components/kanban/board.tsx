@@ -19,6 +19,7 @@ import { Search, Plus, LayoutPanelTop } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { CANDIDATE_STATUSES } from "@/convex/schema"
+import { useLanguage } from "@/components/LanguageContext"
 import type { Doc, Id } from "@/convex/_generated/dataModel"
 
 type Candidate = Doc<"candidates">
@@ -37,6 +38,7 @@ function groupByStatus(candidates: Candidate[]) {
 }
 
 export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
+  const { t } = useLanguage()
   const [activeId, setActiveId] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [cardWidth, setCardWidth] = useState(0)
@@ -142,10 +144,10 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
           </span>
           <div>
             <h2 className="font-heading text-base font-bold text-gray-900 leading-tight tracking-tight">
-              Talente-Pipeline
+              {t("Talente-Pipeline", "Talent pipeline")}
             </h2>
             <p className="text-[11px] font-medium text-gray-400/80">
-              {totalCount} Talent{totalCount !== 1 ? "e" : ""}
+              {totalCount} {t(`Talent${totalCount !== 1 ? "e" : ""}`, `Talent${totalCount !== 1 ? "s" : ""}`)}
             </p>
           </div>
         </div>
@@ -155,7 +157,7 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
           className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
         >
           <Plus className="size-3.5" />
-          Talent hinzufügen
+          {t("Talent hinzufügen", "Add talent")}
         </Button>
       </div>
 
@@ -163,8 +165,8 @@ export function KanbanBoard({ candidates, onAddCandidate }: KanbanBoardProps) {
       <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100/60">
         <div className="relative w-60">
           <Input
-            placeholder="Talente durchsuchen..."
-            aria-label="Talente durchsuchen"
+            placeholder={t("Talente durchsuchen...", "Search talents...")}
+            aria-label={t("Talente durchsuchen", "Search talents")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9 h-9 bg-gray-50/80 border-gray-200/80 text-sm placeholder:text-gray-400 focus-visible:border-primary/30 focus-visible:ring-[1.5px] focus-visible:ring-primary/15"

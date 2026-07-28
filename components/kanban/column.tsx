@@ -65,7 +65,7 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const statusLabel = lang === "en" ? (CANDIDATE_STATUS_LABELS_EN[status] ?? status) : status
   const theme = THEMES[status] ?? THEMES["Qualifizierung"]
   const ids = useMemo(() => candidates.map((c) => c._id), [candidates])
@@ -74,7 +74,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
       <div
         ref={setNodeRef}
         role="region"
-        aria-label={`Spalte ${status}`}
+        aria-label={t(`Spalte ${statusLabel}`, `Column ${statusLabel}`)}
         className={cn(
           "relative flex flex-1 flex-col border rounded-2xl overflow-hidden min-w-[240px] md:min-w-[260px] max-w-[320px] md:max-w-[340px]",
           "transition-all duration-200",
@@ -90,7 +90,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             <span className={cn(
               "inline-flex items-center justify-center h-[18px] min-w-[18px] px-1 text-[10px] font-bold shrink-0 leading-none",
               theme.count
-            )} aria-label={`${candidates.length} Talente`}>
+            )} aria-label={t(`${candidates.length} Talente`, `${candidates.length} talents`)}>
               {candidates.length}
             </span>
           </div>
@@ -98,7 +98,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
             type="button"
             onClick={onAddClick}
             className="flex items-center justify-center size-6 text-gray-400 hover:text-gray-600 hover:bg-white/70 transition-all focus-visible:ring-2 focus-visible:ring-primary/40"
-            aria-label={`Talent zu ${statusLabel} hinzufügen`}
+            aria-label={t(`Talent zu ${statusLabel} hinzufügen`, `Add talent to ${statusLabel}`)}
           >
             <Plus className="size-3.5" aria-hidden="true" />
           </button>
@@ -135,7 +135,7 @@ export function KanbanColumn({ status, candidates, onAddClick }: KanbanColumnPro
           )}
         >
           <Plus className="size-3.5" />
-          Hinzufügen
+          {t("Hinzufügen", "Add")}
         </button>
       </div>
     </div>
