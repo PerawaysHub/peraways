@@ -72,6 +72,7 @@ export const KanbanCard = memo(function KanbanCard({ contact, isNew }: { contact
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    touchAction: "none",
   }
 
   const handleDeleteClick = (e: React.MouseEvent) => {
