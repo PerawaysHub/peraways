@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { Analytics } from "@vercel/analytics/react";
 import { CookieConsent } from "@/components/CookieConsent";
+import { ViewportBugFix } from "@/components/ViewportBugFix";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -225,6 +226,7 @@ export default function RootLayout({
               {children}
               <Analytics />
               <CookieConsent />
+              <ViewportBugFix />
              </TooltipProvider>
            </LanguageProvider>
             </ConvexClientProvider>
