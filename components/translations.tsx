@@ -86,7 +86,7 @@ export const translations = {
     },
     hero: {
       label: "Nakuru × Berlin · Beyond Borders",
-      h1: "PeraWays ermöglicht {highlight}Bildung,{/highlight} die hält.",
+      h1: "PeraWays ermöglicht {highlight}Bildung{/highlight} und schafft echte {highlight}Perspektiven{/highlight}.",
       tagline: "Junge Menschen aus Kenia. Qualifiziert und schuldenfrei, mit echtem Willen anzupacken.",
       subtitle: "Als neues Teammitglied in Ihrer Pflegeeinrichtung.",
       cta: "Erstgespräch vereinbaren",
@@ -218,7 +218,7 @@ export const translations = {
     },
     hero: {
       label: "Nakuru × Berlin · Beyond Borders",
-      h1: "We enable {highlight}education{/highlight} that lasts.",
+      h1: "We enable {highlight}education{/highlight} and create real {highlight}opportunities{/highlight}.",
       tagline: "Young people from Kenya. Qualified and debt-free, with a genuine will to work.",
       subtitle: "As a new team member in your care facility.",
       cta: "Book a call",
