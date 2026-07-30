@@ -16,6 +16,14 @@ import { translations } from "./translations";
 // cross-origin YouTube iframe's fullscreen transitions don't reliably raise
 // fullscreenchange on the top document on iOS, but a physical rotation always
 // fires orientationchange regardless of what triggered it.
+//
+// Neither event covers the most common case though: watching the fullscreen
+// video in portrait and exiting without ever rotating — no fullscreenchange,
+// no orientationchange, nothing fires, and the layout viewport can still end
+// up stuck. So on top of the event listeners, poll window.visualViewport
+// (which reflects the true on-screen width even when the layout viewport is
+// wrong) against document.documentElement.clientWidth and self-heal on any
+// mismatch, regardless of what triggered it.
 function useFullscreenViewportFix() {
   useEffect(() => {
     const fix = () => {
@@ -37,10 +45,22 @@ function useFullscreenViewportFix() {
     document.addEventListener("fullscreenchange", fix);
     document.addEventListener("webkitfullscreenchange", fix);
     window.addEventListener("orientationchange", delayedFix);
+
+    let lastFixAt = 0;
+    const poll = window.setInterval(() => {
+      if (document.visibilityState !== "visible" || !window.visualViewport) return;
+      const drift = document.documentElement.clientWidth - window.visualViewport.width;
+      if (drift > 20 && Date.now() - lastFixAt > 1000) {
+        lastFixAt = Date.now();
+        fix();
+      }
+    }, 1000);
+
     return () => {
       document.removeEventListener("fullscreenchange", fix);
       document.removeEventListener("webkitfullscreenchange", fix);
       window.removeEventListener("orientationchange", delayedFix);
+      window.clearInterval(poll);
     };
   }, []);
 }
