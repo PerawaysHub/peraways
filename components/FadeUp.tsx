@@ -49,16 +49,27 @@ interface FadeUpProps {
   immediate?: boolean;
 }
 
+// When useResizeRecovery force-shows an element, it must snap straight to
+// its final state instead of running the normal entrance animation: the
+// recovery path fires from a resize/orientationchange handler, so an
+// in-flight `transform` animation would coincide with exactly the moment
+// iOS WebKit is recomputing layout for that event — which is what caused a
+// lazy-loaded, fill+aspect-ratio image card (Services.tsx) to get stuck
+// rendered at the wrong (pre-rotation) width. `duration: 0` avoids ever
+// having a live transform in flight during that window while still
+// guaranteeing the element ends up visible.
 const fadeUpVariants: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: (delay: number) => ({
+  visible: ({ delay, instant }: { delay: number; instant?: boolean }) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      delay,
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
+    transition: instant
+      ? { type: "tween" as const, duration: 0 }
+      : {
+          delay,
+          duration: 0.8,
+          ease: [0.25, 0.46, 0.45, 0.94],
+        },
   }),
 };
 
@@ -74,7 +85,7 @@ export function FadeUp({ children, delay = 0, className = "", immediate = false 
       initial="hidden"
       animate={show ? "visible" : "hidden"}
       variants={fadeUpVariants}
-      custom={delay}
+      custom={{ delay, instant: recovered && !isInView }}
       className={className}
     >
       {children}
@@ -89,13 +100,12 @@ interface StaggerContainerProps {
 
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
-  visible: {
+  visible: (instant: boolean = false) => ({
     opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.15,
-    },
-  },
+    transition: instant
+      ? { duration: 0, staggerChildren: 0, delayChildren: 0 }
+      : { staggerChildren: 0.08, delayChildren: 0.15 },
+  }),
 };
 
 export function StaggerContainer({ children, className = "" }: StaggerContainerProps) {
@@ -110,6 +120,7 @@ export function StaggerContainer({ children, className = "" }: StaggerContainerP
       initial="hidden"
       animate={show ? "visible" : "hidden"}
       variants={staggerContainer}
+      custom={recovered && !isInView}
       className={className}
     >
       {children}
@@ -153,13 +164,10 @@ interface FadeInProps {
 
 const fadeInVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: {
+  visible: (instant: boolean = false) => ({
     opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
+    transition: instant ? { type: "tween" as const, duration: 0 } : { duration: 0.6, ease: "easeOut" },
+  }),
 };
 
 export function FadeIn({ children, className = "" }: FadeInProps) {
@@ -174,6 +182,7 @@ export function FadeIn({ children, className = "" }: FadeInProps) {
       initial="hidden"
       animate={show ? "visible" : "hidden"}
       variants={fadeInVariants}
+      custom={recovered && !isInView}
       className={className}
     >
       {children}

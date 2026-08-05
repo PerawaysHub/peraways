@@ -84,6 +84,7 @@ export function Services() {
                   src={service.image}
                   alt={service.alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                   style={{ objectPosition: service.objectPosition }}
                 />
