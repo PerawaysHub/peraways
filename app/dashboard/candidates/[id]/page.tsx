@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, FileText, ChevronDown, Upload, Eye, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle } from "lucide-react"
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, FileText, ChevronDown, Upload, Eye, Trash2, Clock, Plus, ArrowRightCircle, FileUp, Activity, Cake, CreditCard, MapPin, GraduationCap, Plane, CalendarClock, Briefcase, ShieldCheck, CheckCircle2, Circle, Paperclip, CalendarPlus, Stamp, Landmark, Building2, MoreHorizontal, Camera, Euro, AlertTriangle, Lock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -140,6 +140,7 @@ export default function CandidateDetailPage() {
   const createTermin = useMutation(api.termine.create)
   const updateTerminStatus = useMutation(api.termine.updateStatus)
   const removeTermin = useMutation(api.termine.remove)
+  const updateTermin = useMutation(api.termine.update)
   const avatarUrl = useQuery(api.candidates.getAvatarUrl, { candidateId: id })
   const setAvatar = useMutation(api.candidates.setAvatar)
   const removeAvatarMutation = useMutation(api.candidates.removeAvatar)
@@ -185,6 +186,7 @@ export default function CandidateDetailPage() {
     uhrzeit: "",
     art: "LEA" as (typeof CANDIDATE_TERMIN_ARTEN)[number],
     notizen: "",
+    visibility: "alle" as "alle" | "nur_ich",
   })
   const [addingTermin, setAddingTermin] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -285,8 +287,9 @@ export default function CandidateDetailPage() {
         uhrzeit: terminDraft.uhrzeit,
         art: terminDraft.art,
         notizen: terminDraft.notizen || undefined,
+        visibility: terminDraft.visibility,
       })
-      setTerminDraft({ datum: "", uhrzeit: "", art: "LEA", notizen: "" })
+      setTerminDraft({ datum: "", uhrzeit: "", art: "LEA", notizen: "", visibility: "alle" })
     } finally {
       setAddingTermin(false)
     }
@@ -397,6 +400,7 @@ export default function CandidateDetailPage() {
   }
 
   const isGstc = currentUser?.role === "gstc"
+  const isAdmin = currentUser?.role === "admin"
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -841,6 +845,16 @@ export default function CandidateDetailPage() {
             onChange={(e) => setTerminDraft((d) => ({ ...d, notizen: e.target.value }))}
             className="h-8 min-w-[140px] flex-1 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           />
+          {isAdmin && (
+            <select
+              value={terminDraft.visibility}
+              onChange={(e) => setTerminDraft((d) => ({ ...d, visibility: e.target.value as "alle" | "nur_ich" }))}
+              className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+            >
+              <option value="alle">Sichtbar: Alle</option>
+              <option value="nur_ich">Sichtbar: Nur ich</option>
+            </select>
+          )}
           <Button
             type="submit"
             size="sm"
@@ -872,15 +886,38 @@ export default function CandidateDetailPage() {
                   <div className="flex items-center gap-2.5 min-w-0">
                     <ArtIcon className="size-4 text-gray-400 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {formatDate(termin.datum)} · {termin.uhrzeit} · {termin.art}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {formatDate(termin.datum)} · {termin.uhrzeit} · {termin.art}
+                        </p>
+                        {termin.visibility === "nur_ich" && (
+                          <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 shrink-0">
+                            <Lock className="size-2.5" />
+                            Nur ich
+                          </span>
+                        )}
+                      </div>
                       {termin.notizen && (
                         <p className="text-[11px] text-gray-400 truncate">{termin.notizen}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateTermin({
+                            id: termin._id,
+                            visibility: termin.visibility === "nur_ich" ? "alle" : "nur_ich",
+                          })
+                        }
+                        title={termin.visibility === "nur_ich" ? "Für alle sichtbar machen" : "Nur für mich sichtbar machen"}
+                        className="flex items-center justify-center size-7 text-gray-300 hover:text-primary transition-colors"
+                      >
+                        {termin.visibility === "nur_ich" ? <Lock className="size-3.5" /> : <Users className="size-3.5" />}
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() =>

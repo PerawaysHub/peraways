@@ -5,7 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users, MapPin, CalendarPlus, Plus, Circle, CheckCircle2, PhoneCall, Handshake, MoreHorizontal } from "lucide-react";
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users, MapPin, CalendarPlus, Plus, Circle, CheckCircle2, PhoneCall, Handshake, MoreHorizontal, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -71,6 +71,7 @@ export default function ContactDetailPage() {
   const linkedCandidates = useQuery(api.candidates.listByEinrichtung, { einrichtungId: id });
   const termine = useQuery(api.termine.listByContact, { contactId: id });
   const unread = useQuery(api.notifications.listUnread);
+  const currentUser = useQuery(api.users.getCurrentUser);
   const updateContact = useMutation(api.contacts.update);
   const updateStatus = useMutation(api.contacts.updateStatus);
   const deleteContact = useMutation(api.contacts.remove);
@@ -79,6 +80,8 @@ export default function ContactDetailPage() {
   const createTermin = useMutation(api.termine.create);
   const updateTerminStatus = useMutation(api.termine.updateStatus);
   const removeTermin = useMutation(api.termine.remove);
+  const updateTermin = useMutation(api.termine.update);
+  const isAdmin = currentUser?.role === "admin";
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -91,6 +94,7 @@ export default function ContactDetailPage() {
     uhrzeit: "",
     art: "Rückruf" as (typeof CONTACT_TERMIN_ARTEN)[number],
     notizen: "",
+    visibility: "alle" as "alle" | "nur_ich",
   });
   const [addingTermin, setAddingTermin] = useState(false);
   const hasScrolledToTermine = useRef(false);
@@ -200,8 +204,9 @@ export default function ContactDetailPage() {
         uhrzeit: terminDraft.uhrzeit,
         art: terminDraft.art,
         notizen: terminDraft.notizen || undefined,
+        visibility: terminDraft.visibility,
       });
-      setTerminDraft({ datum: "", uhrzeit: "", art: "Rückruf", notizen: "" });
+      setTerminDraft({ datum: "", uhrzeit: "", art: "Rückruf", notizen: "", visibility: "alle" });
     } finally {
       setAddingTermin(false);
     }
@@ -487,6 +492,16 @@ export default function ContactDetailPage() {
                 onChange={(e) => setTerminDraft((d) => ({ ...d, notizen: e.target.value }))}
                 className="h-8 min-w-[140px] flex-1 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
               />
+              {isAdmin && (
+                <select
+                  value={terminDraft.visibility}
+                  onChange={(e) => setTerminDraft((d) => ({ ...d, visibility: e.target.value as "alle" | "nur_ich" }))}
+                  className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+                >
+                  <option value="alle">Sichtbar: Alle</option>
+                  <option value="nur_ich">Sichtbar: Nur ich</option>
+                </select>
+              )}
               <Button
                 type="submit"
                 size="sm"
@@ -518,15 +533,38 @@ export default function ContactDetailPage() {
                       <div className="flex items-center gap-2.5 min-w-0">
                         <ArtIcon className="h-4 w-4 text-gray-400 shrink-0" />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {formatDateOnly(termin.datum)} · {termin.uhrzeit} · {termin.art}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {formatDateOnly(termin.datum)} · {termin.uhrzeit} · {termin.art}
+                            </p>
+                            {termin.visibility === "nur_ich" && (
+                              <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 shrink-0">
+                                <Lock className="h-2.5 w-2.5" />
+                                Nur ich
+                              </span>
+                            )}
+                          </div>
                           {termin.notizen && (
                             <p className="text-[11px] text-gray-400 truncate">{termin.notizen}</p>
                           )}
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
+                        {isAdmin && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateTermin({
+                                id: termin._id,
+                                visibility: termin.visibility === "nur_ich" ? "alle" : "nur_ich",
+                              })
+                            }
+                            title={termin.visibility === "nur_ich" ? "Für alle sichtbar machen" : "Nur für mich sichtbar machen"}
+                            className="flex items-center justify-center h-7 w-7 text-gray-300 hover:text-primary transition-colors"
+                          >
+                            {termin.visibility === "nur_ich" ? <Lock className="h-3.5 w-3.5" /> : <Users className="h-3.5 w-3.5" />}
+                          </button>
+                        )}
                         <button
                           type="button"
                           onClick={() =>

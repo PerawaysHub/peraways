@@ -184,6 +184,9 @@ export default defineSchema({
     ),
     status: v.union(v.literal("Offen"), v.literal("Erledigt")),
     notizen: v.optional(v.string()),
+    // Missing/undefined visibility is treated as "alle" everywhere it's read.
+    visibility: v.optional(v.union(v.literal("alle"), v.literal("nur_ich"))),
+    createdBy: v.optional(v.id("users")),
   })
     .index("by_candidate", ["candidateId"])
     .index("by_contact", ["contactId"])
