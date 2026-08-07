@@ -34,7 +34,11 @@ export const COMPLIANCE_DOC_TYPES = [
   "berufsausuebungserlaubnis",
 ] as const;
 
-export const TERMIN_ARTEN = ["LEA", "Bankeröffnung", "Bürgeramt", "Sonstiges"] as const;
+export const TERMIN_ARTEN = ["LEA", "Bankeröffnung", "Bürgeramt", "Rückruf", "Treffen", "Sonstiges"] as const;
+
+// Subset of TERMIN_ARTEN shown when adding a Termin for a Talent vs. an Einrichtung.
+export const CANDIDATE_TERMIN_ARTEN = ["LEA", "Bankeröffnung", "Bürgeramt", "Sonstiges"] as const;
+export const CONTACT_TERMIN_ARTEN = ["Rückruf", "Treffen", "Sonstiges"] as const;
 
 export const FINANZEN_STATUSES = ["Offen", "Fällig", "Bezahlt"] as const;
 
@@ -115,6 +119,7 @@ export default defineSchema({
     ansprechpartnerTelefon: v.optional(v.string()),
     rahmenvertragUnterschrieben: v.optional(v.boolean()),
     adresse: v.optional(v.string()),
+    notizen: v.optional(v.string()),
   }).index("by_status", ["status", "position"]),
   candidates: defineTable({
     name: v.string(),
@@ -163,19 +168,25 @@ export default defineSchema({
     uploadedAt: v.number(),
   }).index("by_candidate", ["candidateId"]),
   termine: defineTable({
-    candidateId: v.id("candidates"),
+    // Exactly one of candidateId / contactId is set, depending on whether
+    // this Termin belongs to a Talent or an Einrichtung.
+    candidateId: v.optional(v.id("candidates")),
+    contactId: v.optional(v.id("contacts")),
     datum: v.number(),
     uhrzeit: v.string(),
     art: v.union(
       v.literal("LEA"),
       v.literal("Bankeröffnung"),
       v.literal("Bürgeramt"),
+      v.literal("Rückruf"),
+      v.literal("Treffen"),
       v.literal("Sonstiges")
     ),
     status: v.union(v.literal("Offen"), v.literal("Erledigt")),
     notizen: v.optional(v.string()),
   })
     .index("by_candidate", ["candidateId"])
+    .index("by_contact", ["contactId"])
     .index("by_datum", ["datum"]),
   finanzen: defineTable({
     candidateId: v.id("candidates"),

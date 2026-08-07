@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { CANDIDATE_STATUSES, TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES, CANDIDATE_STATUS_LABELS_EN, COMPLIANCE_DOC_LABELS_EN } from "@/convex/schema"
+import { CANDIDATE_STATUSES, CANDIDATE_TERMIN_ARTEN, HONORARBETRAG_OPTIONS, FINANZEN_STATUSES, CANDIDATE_STATUS_LABELS_EN, COMPLIANCE_DOC_LABELS_EN } from "@/convex/schema"
 import { useRef, useState, useCallback, useEffect } from "react"
 import type { Id } from "@/convex/_generated/dataModel"
 import { daysUntil, probezeitEnde, terminUrgency } from "@/lib/utils"
@@ -183,7 +183,7 @@ export default function CandidateDetailPage() {
   const [terminDraft, setTerminDraft] = useState({
     datum: "",
     uhrzeit: "",
-    art: "LEA" as (typeof TERMIN_ARTEN)[number],
+    art: "LEA" as (typeof CANDIDATE_TERMIN_ARTEN)[number],
     notizen: "",
   })
   const [addingTermin, setAddingTermin] = useState(false)
@@ -827,10 +827,10 @@ export default function CandidateDetailPage() {
           />
           <select
             value={terminDraft.art}
-            onChange={(e) => setTerminDraft((d) => ({ ...d, art: e.target.value as (typeof TERMIN_ARTEN)[number] }))}
+            onChange={(e) => setTerminDraft((d) => ({ ...d, art: e.target.value as (typeof CANDIDATE_TERMIN_ARTEN)[number] }))}
             className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
           >
-            {TERMIN_ARTEN.map((a) => (
+            {CANDIDATE_TERMIN_ARTEN.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
           </select>

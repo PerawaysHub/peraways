@@ -4,8 +4,8 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users, MapPin } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Loader2, User, Mail, Phone, MessageSquare, Globe, Building2, Pencil, Trash2, X, Check, Contact, FileCheck2, Users, MapPin, CalendarPlus, Plus, Circle, CheckCircle2, PhoneCall, Handshake, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,8 +17,19 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { CONTACT_STATUSES } from "@/convex/schema";
+import { CONTACT_STATUSES, CONTACT_TERMIN_ARTEN } from "@/convex/schema";
 import type { Id } from "@/convex/_generated/dataModel";
+import { terminUrgency } from "@/lib/utils";
+
+const CONTACT_ART_ICONS: Record<string, React.ElementType> = {
+  "Rückruf": PhoneCall,
+  Treffen: Handshake,
+  Sonstiges: MoreHorizontal,
+};
+
+function formatDateOnly(ts: number) {
+  return new Date(ts).toLocaleDateString("de-DE");
+}
 
 const TALENT_STATUS_COLORS: Record<string, string> = {
   Qualifizierung: "bg-violet-50 text-violet-700 border-violet-200",
@@ -58,16 +69,31 @@ export default function ContactDetailPage() {
   const id = params.id as Id<"contacts">;
   const contact = useQuery(api.contacts.getById, { id });
   const linkedCandidates = useQuery(api.candidates.listByEinrichtung, { einrichtungId: id });
+  const termine = useQuery(api.termine.listByContact, { contactId: id });
   const unread = useQuery(api.notifications.listUnread);
   const updateContact = useMutation(api.contacts.update);
   const updateStatus = useMutation(api.contacts.updateStatus);
   const deleteContact = useMutation(api.contacts.remove);
   const markAsRead = useMutation(api.notifications.markAsRead);
+  const updateNotizen = useMutation(api.contacts.updateNotizen);
+  const createTermin = useMutation(api.termine.create);
+  const updateTerminStatus = useMutation(api.termine.updateStatus);
+  const removeTermin = useMutation(api.termine.remove);
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [notizenDraft, setNotizenDraft] = useState("");
+  const [savingNotizen, setSavingNotizen] = useState(false);
+  const [terminDraft, setTerminDraft] = useState({
+    datum: "",
+    uhrzeit: "",
+    art: "Rückruf" as (typeof CONTACT_TERMIN_ARTEN)[number],
+    notizen: "",
+  });
+  const [addingTermin, setAddingTermin] = useState(false);
+  const hasScrolledToTermine = useRef(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -87,6 +113,13 @@ export default function ContactDetailPage() {
     const matching = unread.filter((n) => n.type === "new_contact" && n.relatedId === id);
     for (const n of matching) markAsRead({ id: n._id });
   }, [unread, id, markAsRead]);
+
+  useEffect(() => {
+    if (contact && !hasScrolledToTermine.current && window.location.hash === "#termine-section") {
+      hasScrolledToTermine.current = true;
+      document.getElementById("termine-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [contact]);
 
   if (contact === undefined) {
     return (
@@ -144,6 +177,33 @@ export default function ContactDetailPage() {
       setEditing(false);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSaveNotizen = async () => {
+    setSavingNotizen(true);
+    try {
+      await updateNotizen({ id, notizen: notizenDraft || contact.notizen || "" });
+    } finally {
+      setSavingNotizen(false);
+    }
+  };
+
+  const handleAddTermin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!terminDraft.datum || !terminDraft.uhrzeit) return;
+    setAddingTermin(true);
+    try {
+      await createTermin({
+        contactId: id,
+        datum: new Date(terminDraft.datum).getTime(),
+        uhrzeit: terminDraft.uhrzeit,
+        art: terminDraft.art,
+        notizen: terminDraft.notizen || undefined,
+      });
+      setTerminDraft({ datum: "", uhrzeit: "", art: "Rückruf", notizen: "" });
+    } finally {
+      setAddingTermin(false);
     }
   };
 
@@ -365,6 +425,144 @@ export default function ContactDetailPage() {
             <p className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
               {contact.nachricht || "—"}
             </p>
+          </div>
+
+          <div className="rounded-xl border bg-white p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageSquare className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold text-foreground">Notizen</h2>
+            </div>
+            <Textarea
+              placeholder="Notizen zu dieser Einrichtung hinzufügen..."
+              value={notizenDraft || contact.notizen || ""}
+              onChange={(e) => setNotizenDraft(e.target.value)}
+              rows={5}
+              className="mb-3 border-gray-200 bg-gray-50/50 text-sm focus-visible:border-primary/30 focus-visible:ring-[1.5px] focus-visible:ring-primary/15"
+            />
+            <Button
+              onClick={handleSaveNotizen}
+              disabled={savingNotizen || notizenDraft === (contact.notizen ?? "")}
+              size="sm"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm text-xs h-8"
+            >
+              {savingNotizen && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              Notizen speichern
+            </Button>
+          </div>
+
+          <div id="termine-section" className="rounded-xl border bg-white p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <CalendarPlus className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold text-foreground">Termine</h2>
+            </div>
+
+            <form onSubmit={handleAddTermin} className="flex flex-wrap items-end gap-2 mb-4">
+              <input
+                type="date"
+                value={terminDraft.datum}
+                onChange={(e) => setTerminDraft((d) => ({ ...d, datum: e.target.value }))}
+                required
+                className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              />
+              <input
+                type="time"
+                value={terminDraft.uhrzeit}
+                onChange={(e) => setTerminDraft((d) => ({ ...d, uhrzeit: e.target.value }))}
+                required
+                className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              />
+              <select
+                value={terminDraft.art}
+                onChange={(e) => setTerminDraft((d) => ({ ...d, art: e.target.value as (typeof CONTACT_TERMIN_ARTEN)[number] }))}
+                className="h-8 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs font-medium text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              >
+                {CONTACT_TERMIN_ARTEN.map((a) => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Notizen (optional)"
+                value={terminDraft.notizen}
+                onChange={(e) => setTerminDraft((d) => ({ ...d, notizen: e.target.value }))}
+                className="h-8 min-w-[140px] flex-1 rounded-lg border border-gray-200 bg-gray-50/80 px-2 text-xs text-gray-600 focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
+              />
+              <Button
+                type="submit"
+                size="sm"
+                disabled={addingTermin}
+                className="text-xs gap-1.5 h-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+              >
+                {addingTermin ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                Hinzufügen
+              </Button>
+            </form>
+
+            {termine === undefined ? (
+              <div className="h-8 flex items-center">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-400" />
+              </div>
+            ) : termine.length > 0 ? (
+              <div className="divide-y divide-gray-100">
+                {[...termine].sort((a, b) => a.datum - b.datum).map((termin) => {
+                  const ArtIcon = CONTACT_ART_ICONS[termin.art] ?? MoreHorizontal;
+                  const urgency = terminUrgency(termin.datum, termin.status);
+                  const urgencyBorder =
+                    urgency === "ueberfaellig"
+                      ? "border-red-400"
+                      : urgency === "bald"
+                        ? "border-amber-400"
+                        : "border-transparent";
+                  return (
+                    <div key={termin._id} className={`flex items-center justify-between gap-3 py-2.5 border-l-2 pl-2.5 ${urgencyBorder}`}>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <ArtIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {formatDateOnly(termin.datum)} · {termin.uhrzeit} · {termin.art}
+                          </p>
+                          {termin.notizen && (
+                            <p className="text-[11px] text-gray-400 truncate">{termin.notizen}</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateTerminStatus({
+                              id: termin._id,
+                              status: termin.status === "Offen" ? "Erledigt" : "Offen",
+                            })
+                          }
+                          className={`flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold transition-all ${
+                            termin.status === "Erledigt"
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                              : "bg-gray-50 text-gray-500 border-gray-200"
+                          }`}
+                        >
+                          {termin.status === "Erledigt" ? (
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          ) : (
+                            <Circle className="h-3.5 w-3.5" />
+                          )}
+                          {termin.status}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeTermin({ id: termin._id })}
+                          className="flex items-center justify-center h-7 w-7 text-gray-300 hover:text-red-500 transition-colors"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 py-2">Noch keine Termine.</p>
+            )}
           </div>
 
           <div className="rounded-xl border bg-white p-6">

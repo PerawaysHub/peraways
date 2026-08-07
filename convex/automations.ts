@@ -16,7 +16,9 @@ export const runAbendBot = internalAction({
     const endOfDay = startOfDay + 24 * 60 * 60 * 1000
 
     const termine = await ctx.runQuery(api.termine.listToday, { startOfDay, endOfDay })
-    const offenTermine = termine.filter((t) => t.status === "Offen")
+    // Only Talent-Termine trigger the evening reminder — Einrichtungs-Termine
+    // (Rückrufe/Treffen) are a separate concern, not part of this Berlin-team bot.
+    const offenTermine = termine.filter((t) => t.status === "Offen" && t.candidateId)
     if (offenTermine.length === 0) return
 
     const recipients = await ctx.runQuery(internal.users.listRecipientEmails, {})

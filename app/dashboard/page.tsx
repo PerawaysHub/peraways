@@ -298,9 +298,9 @@ export default function DashboardPage() {
               >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-gray-900 truncate group-hover:text-primary transition-colors">
-                    {c.name}
+                    {c.einrichtung || c.name}
                   </p>
-                  <p className="text-[11px] text-gray-400 truncate">{c.email}</p>
+                  <p className="text-[11px] text-gray-400 truncate">{c.einrichtung ? c.name : c.email}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-[10px] font-medium text-gray-400">{c.lang?.toUpperCase()}</span>

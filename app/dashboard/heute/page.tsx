@@ -4,7 +4,7 @@ import { useState, useMemo } from "react"
 import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Link from "next/link"
-import { CalendarCheck2, Loader2, Plus, CheckCircle2, Circle, Stamp, Landmark, Building2, MoreHorizontal } from "lucide-react"
+import { CalendarCheck2, Loader2, Plus, CheckCircle2, Circle, Stamp, Landmark, Building2, MoreHorizontal, PhoneCall, Handshake } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -15,13 +15,15 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { TERMIN_ARTEN } from "@/convex/schema"
+import { CANDIDATE_TERMIN_ARTEN } from "@/convex/schema"
 import type { Id } from "@/convex/_generated/dataModel"
 
 const ART_ICONS: Record<string, React.ElementType> = {
   LEA: Stamp,
   "Bankeröffnung": Landmark,
   "Bürgeramt": Building2,
+  "Rückruf": PhoneCall,
+  Treffen: Handshake,
   Sonstiges: MoreHorizontal,
 }
 
@@ -37,8 +39,10 @@ function getTodayLocalDateString() {
 
 type TerminRow = {
   _id: Id<"termine">
-  candidateId: Id<"candidates">
-  candidateName: string
+  candidateId?: Id<"candidates">
+  contactId?: Id<"contacts">
+  relatedName: string
+  relatedHref: string
   datum: number
   uhrzeit: string
   art: string
@@ -65,10 +69,10 @@ function TerminRowItem({
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <Link
-              href={`/dashboard/candidates/${termin.candidateId}#termine-section`}
+              href={termin.relatedHref}
               className="text-sm font-semibold text-gray-900 hover:text-primary transition-colors truncate"
             >
-              {termin.candidateName}
+              {termin.relatedName}
             </Link>
             <span className="text-[11px] font-medium text-muted-foreground/70 shrink-0">
               {new Date(termin.datum).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })} · {termin.uhrzeit} · {termin.art}
@@ -116,7 +120,7 @@ export default function HeutePage() {
   const [candidateId, setCandidateId] = useState("")
   const [datum, setDatum] = useState(todayStr)
   const [uhrzeit, setUhrzeit] = useState("")
-  const [art, setArt] = useState<(typeof TERMIN_ARTEN)[number]>("LEA")
+  const [art, setArt] = useState<(typeof CANDIDATE_TERMIN_ARTEN)[number]>("LEA")
   const [notizen, setNotizen] = useState("")
   const [submitting, setSubmitting] = useState(false)
 
@@ -282,10 +286,10 @@ export default function HeutePage() {
             </div>
             <select
               value={art}
-              onChange={(e) => setArt(e.target.value as (typeof TERMIN_ARTEN)[number])}
+              onChange={(e) => setArt(e.target.value as (typeof CANDIDATE_TERMIN_ARTEN)[number])}
               className="h-9 rounded-lg border border-gray-200 bg-gray-50/50 px-2 text-sm text-foreground focus:outline-none focus:border-primary/30 focus:ring-[1.5px] focus:ring-primary/15"
             >
-              {TERMIN_ARTEN.map((a) => (
+              {CANDIDATE_TERMIN_ARTEN.map((a) => (
                 <option key={a} value={a}>{a}</option>
               ))}
             </select>

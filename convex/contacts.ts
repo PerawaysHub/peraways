@@ -164,9 +164,23 @@ export const restore = mutation({
   },
 });
 
+export const updateNotizen = mutation({
+  args: { id: v.id("contacts"), notizen: v.string() },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { notizen: args.notizen });
+  },
+});
+
 export const permanentlyDelete = mutation({
   args: { id: v.id("contacts") },
   handler: async (ctx, args) => {
+    const termine = await ctx.db
+      .query("termine")
+      .withIndex("by_contact", (q) => q.eq("contactId", args.id))
+      .collect();
+    for (const termin of termine) {
+      await ctx.db.delete(termin._id);
+    }
     await ctx.db.delete(args.id);
   },
 });
