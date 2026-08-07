@@ -45,6 +45,7 @@ const sidebarLinks = [
   { href: "/dashboard", label: "Übersicht", icon: LayoutDashboard },
   { href: "/dashboard/contacts", label: "Einrichtungen", icon: MessageSquare },
   { href: "/dashboard/candidates", label: "Talente", icon: LayoutPanelTop },
+  { href: "/dashboard/finanzen", label: "Finanzen", icon: Euro },
   { href: "/dashboard/termine", label: "Termine", icon: CalendarCheck2 },
   { href: "/dashboard/documents", label: "Dokumente", icon: FileText },
   { href: "/dashboard/handbuch", label: "Handbuch", icon: BookOpen },
@@ -214,11 +215,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates" || l.href === "/dashboard/handbuch")
       : VIEW_USERS_ROLES.includes(role ?? "")
         ? [
-            ...sidebarLinks,
+            ...sidebarLinks.filter((l) => l.href !== "/dashboard/finanzen" || role === "admin"),
             { href: "/dashboard/users", label: "Nutzer", icon: Users },
-            ...(role === "admin" ? [{ href: "/dashboard/finanzen", label: "Finanzen", icon: Euro }] : []),
           ]
-        : sidebarLinks
+        : sidebarLinks.filter((l) => l.href !== "/dashboard/finanzen")
 
   return (
     <SidebarProvider className="dashboard-shell flex h-screen w-full">
