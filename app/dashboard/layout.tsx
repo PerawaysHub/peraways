@@ -23,6 +23,7 @@ import {
   Trash2,
   BookOpen,
   Globe,
+  Euro,
 } from "lucide-react"
 import {
   Sidebar,
@@ -59,6 +60,7 @@ const SIDEBAR_LABELS_EN: Record<string, string> = {
   Handbuch: "Handbook",
   Papierkorb: "Trash",
   Nutzer: "Users",
+  Finanzen: "Finances",
 }
 
 function SidebarNavLink({
@@ -89,6 +91,7 @@ function SidebarNavLink({
 function notificationLink(n: { type: string; relatedId?: string }) {
   if (n.type === "new_contact" && n.relatedId) return `/dashboard/contacts/${n.relatedId}`
   if (n.type === "new_user_registered") return "/dashboard/users"
+  if (n.type === "finanzen_faellig" && n.relatedId) return `/dashboard/candidates/${n.relatedId}`
   return null
 }
 
@@ -210,7 +213,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     : role === "gstc"
       ? sidebarLinks.filter((l) => l.href === "/dashboard/candidates" || l.href === "/dashboard/handbuch")
       : VIEW_USERS_ROLES.includes(role ?? "")
-        ? [...sidebarLinks, { href: "/dashboard/users", label: "Nutzer", icon: Users }]
+        ? [
+            ...sidebarLinks,
+            { href: "/dashboard/users", label: "Nutzer", icon: Users },
+            ...(role === "admin" ? [{ href: "/dashboard/finanzen", label: "Finanzen", icon: Euro }] : []),
+          ]
         : sidebarLinks
 
   return (

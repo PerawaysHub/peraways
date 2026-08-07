@@ -164,6 +164,11 @@ export default function DashboardPage() {
             <p className="font-heading text-3xl font-bold text-gray-900 tabular-nums tracking-tight">
               {formatCurrency(finanzStats.bezahlterUmsatz)}
             </p>
+            <div className="mt-2 flex items-center gap-1.5">
+              <Link href="/dashboard/finanzen" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
+                Alle ansehen <ArrowRight className="size-3" />
+              </Link>
+            </div>
           </div>
 
           <div className="border border-gray-200 bg-white p-5 rounded-2xl">
@@ -180,6 +185,11 @@ export default function DashboardPage() {
                 <span className="text-[11px] font-medium text-amber-600">{finanzStats.faelligCount} fällig</span>
               </div>
             )}
+            <div className="mt-2 flex items-center gap-1.5">
+              <Link href="/dashboard/finanzen" className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1">
+                Alle ansehen <ArrowRight className="size-3" />
+              </Link>
+            </div>
           </div>
         </div>
       )}

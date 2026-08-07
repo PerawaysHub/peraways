@@ -32,3 +32,21 @@ export const runAbendBot = internalAction({
     })
   },
 })
+
+export const runFaelligkeitReminder = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    const overdue = await ctx.runQuery(internal.finanzen.listOverdueForReminder, {})
+    if (overdue.length === 0) return
+
+    const recipients = await ctx.runQuery(internal.users.listAdminEmails, {})
+    await ctx.runAction(internal.sendEmails.sendFaelligkeitReminderEmail, {
+      rows: overdue.map((r) => ({
+        candidateName: r.candidateName,
+        honorarbetrag: r.honorarbetrag,
+        daysOverdue: r.daysOverdue,
+      })),
+      recipients,
+    })
+  },
+})

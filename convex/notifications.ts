@@ -9,6 +9,7 @@ import { v } from "convex/values";
 // page, but the notification itself isn't actionable for them.
 export function eligibleRolesFor(type: string): string[] {
   if (type === "new_user_registered") return ["admin"];
+  if (type === "finanzen_faellig") return ["admin"];
   return ["admin", "editor", "integrationshelfer"];
 }
 

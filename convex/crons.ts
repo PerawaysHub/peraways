@@ -15,4 +15,10 @@ crons.daily(
   internal.finanzen.checkFaelligkeit
 )
 
+crons.daily(
+  "honorar-ueberfaellig-reminder",
+  { hourUTC: 5, minuteUTC: 30 },
+  internal.automations.runFaelligkeitReminder
+)
+
 export default crons

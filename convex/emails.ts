@@ -113,6 +113,31 @@ export function abendBotReminder(
   return { subject, html: templateWrapper(body, "de") }
 }
 
+export function faelligkeitReminder(
+  rows: { candidateName: string; honorarbetrag: string; daysOverdue: number }[]
+): { subject: string; html: string } {
+  const subject = `Überfällige Honorarforderungen — ${rows.length} Talent${rows.length === 1 ? "" : "e"}`
+
+  const items = rows
+    .map(
+      (r) => `
+    <div class="label">${r.candidateName}</div>
+    <div class="value">${Number(r.honorarbetrag).toLocaleString("de-DE")} € — seit ${r.daysOverdue} Tagen fällig</div>
+  `
+    )
+    .join("")
+
+  const body = `
+    <h2>Überfällige Honorarforderungen</h2>
+    <p>Die folgenden Honorarforderungen sind seit mindestens 7 Tagen fällig und noch nicht als bezahlt markiert:</p>
+    ${items}
+    <hr>
+    <p style="font-size:13px;color:#999;">Status im Finanzen-Bereich des Dashboards aktualisieren, sobald bezahlt.</p>
+  `
+
+  return { subject, html: templateWrapper(body, "de") }
+}
+
 export function newUserNotification(name: string, email: string): { subject: string; html: string } {
   const subject = `Neue Registrierung: ${name || email}`
   const body = `

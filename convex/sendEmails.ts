@@ -3,7 +3,7 @@
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { Resend } from "resend";
-import { autoResponse, teamNotification, abendBotReminder, newUserNotification } from "./emails";
+import { autoResponse, teamNotification, abendBotReminder, newUserNotification, faelligkeitReminder } from "./emails";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -65,6 +65,27 @@ export const sendAbendBotEmail = internalAction({
     });
     if (result.error) {
       console.error("Resend Abend-Bot email failed:", JSON.stringify(result.error));
+    }
+  },
+});
+
+export const sendFaelligkeitReminderEmail = internalAction({
+  args: {
+    rows: v.array(
+      v.object({ candidateName: v.string(), honorarbetrag: v.string(), daysOverdue: v.number() })
+    ),
+    recipients: v.array(v.string()),
+  },
+  handler: async (_ctx, args) => {
+    const { subject, html } = faelligkeitReminder(args.rows);
+    const result = await resend.emails.send({
+      from: "PeraWays <team@peraways.de>",
+      to: args.recipients,
+      subject,
+      html,
+    });
+    if (result.error) {
+      console.error("Resend Fälligkeits-Reminder email failed:", JSON.stringify(result.error));
     }
   },
 });

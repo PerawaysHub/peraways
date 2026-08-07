@@ -14,6 +14,18 @@ export const listRecipientEmails = internalQuery({
   },
 });
 
+export const listAdminEmails = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    const admins = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("role"), "admin"))
+      .collect();
+    const emails = admins.map((u) => u.email).filter((e) => e && e.length > 0);
+    return emails.length > 0 ? emails : ["team@peraways.de"];
+  },
+});
+
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
